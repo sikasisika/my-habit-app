@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>マイ習慣＆ボディ管理</title>
+
+  <!-- PWA・アプリ化用の設定 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#111111">
+  <link rel="apple-touch-icon" href="kibana.png">
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root, [data-theme="kibana"] {
@@ -43,6 +51,12 @@
       --sub-text: #d8d5e0;
       --input-bg: rgba(8, 7, 10, 0.6);
       --item-bg: rgba(26, 23, 33, 0.5);
+    }
+
+    html, body {
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      touch-action: pan-x pan-y;
     }
 
     body {
@@ -325,7 +339,7 @@
 
     let myChart = null;
 
-document.querySelector('.btn-save').addEventListener('click', function() {
+    document.querySelector('.btn-save').addEventListener('click', function() {
       const weightInput = document.getElementById('weight').value;
       const diaryInput = document.getElementById('diary').value;
 
@@ -376,6 +390,7 @@ document.querySelector('.btn-save').addEventListener('click', function() {
       msg.textContent = oshiQuotes[currentTheme][0];
       alert('記録を更新したぜ！その調子だ！');
     });
+
     function updateDiaryList() {
       const history = JSON.parse(localStorage.getItem('weightHistory')) || [];
       const diaryListDiv = document.getElementById('diary-list');
