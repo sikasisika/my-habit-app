@@ -1,6 +1,6 @@
 {
-  "name": "習慣記録アプリ",
-  "short_name": "習慣記録",
+  "name": "マイ習慣＆ボディ管理",
+  "short_name": "習慣管理",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#111111",
@@ -8,7 +8,7 @@
   "icons": [
     {
       "src": "kibana.png",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/png"
     }
   ]
