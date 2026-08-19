@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お小遣い＆資産管理</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f7f9fa;
+      margin: 0;
+      padding: 16px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* 上部ナビゲーション＆設定バー */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .back-nav a {
+      color: #0070f3;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* 確認通知トグルスイッチ */
+    .confirm-toggle-label {
+      font-size: 12px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      padding: 4px 8px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .card-suica {
+      border: 2px solid #28a745;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-top: 0;
+      margin-bottom: 12px;
+      border-left: 4px solid #0070f3;
+      padding-left: 8px;
+    }
+
+    .suica-title {
+      border-left-color: #28a745;
+      color: #1e7e34;
+    }
+
+    /* メイン資産サマリー */
+    .total-summary {
+      background: linear-gradient(135deg, #0070f3, #00c6ff);
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .total-summary p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .total-summary .grand-total {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 4px 0;
+    }
+
+    .balance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .balance-item {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 4px;
+      text-align: center;
+    }
+    .balance-item span {
+      font-size: 11px;
+      display: block;
+      white-space: nowrap;
+    }
+    .balance-item strong {
+      font-size: 14px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Suica専用サマリー */
+    .suica-summary {
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .suica-summary p {
+      margin: 0;
+      font-size: 12px;
+      color: #2e7d32;
+    }
+    .suica-summary .suica-total {
+      font-size: 22px;
+      font-weight: bold;
+      color: #1b5e20;
+    }
+
+    /* 🚆 通勤クイックボタン */
+    .commute-box {
+      background: #f1f8f3;
+      border: 1px dashed #28a745;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+    }
+    .commute-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #1e7e34;
+    }
+    .commute-config-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .commute-route-select {
+      font-size: 11px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .commute-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn-quick {
+      padding: 6px 4px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      background-color: #28a745;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-quick:active { opacity: 0.8; }
+
+    .commute-settings {
+      display: none;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 11px;
+    }
+    .commute-settings input {
+      width: 60px;
+      padding: 2px 4px;
+      font-size: 11px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* 入力フォーム共通 */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .input-group select, .input-group input {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-main { background-color: #0070f3; }
+    .btn-suica { background-color: #28a745; }
+    .btn:active { opacity: 0.8; }
+
+    /* 履歴リスト */
+    .expense-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .expense-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed #eee;
+      font-size: 13px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-right: 4px;
+      color: white;
+    }
+    .badge-cash { background-color: #ff9800; }
+    .badge-bank { background-color: #00bcd4; }
+    
+    .amount-plus { color: #28a745; font-weight: bold; margin-right: 8px; }
+    .amount-minus { color: #333; font-weight: bold; margin-right: 8px; }
+
+    .delete-btn {
+      background-color: #ff4d4f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ナビ ＆ 確認通知トグル -->
+    <div class="top-bar">
+      <div class="back-nav">
+        <a href="index.html">◀ ポータルへ戻る</a>
+      </div>
+      <label class="confirm-toggle-label">
+        <input type="checkbox" id="confirm-toggle" onchange="toggleConfirmSetting()">
+        <span>🔔 記録前の確認</span>
+      </label>
+    </div>
+
+    <h1>💰 お小遣い・資産管理</h1>
+
+    <!-- 1. 総資産サマリー -->
+    <div class="total-summary">
+      <p>現在の総資産合計（現金＋銀行＋Suica）</p>
+      <div class="grand-total"><span id="total-assets">0</span> 円</div>
+      
+      <div class="balance-grid">
+        <div class="balance-item">
+          <span>💵 手持ち現金</span>
+          <strong><span id="cash-balance">0</span> 円</strong>
+        </div>
+        <div class="balance-item">
+          <span>🏦 銀行・通帳</span>
+          <strong><span id="bank-balance">0</span> 円</strong>
+        </div>
+        <div class="balance-item">
+          <span>🐧 Suica残高</span>
+          <strong><span id="top-suica-balance">0</span> 円</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 現金・銀行の記録 -->
+    <div class="card">
+      <h2>📝 現金・銀行の記録</h2>
+      <div class="input-group">
+        <select id="main-direction">
+          <option value="expense">🔻 支出・引き落とし（減らす）</option>
+          <option value="income">🔺 入金・チャージ（増やす）</option>
+        </select>
+        <select id="main-account">
+          <option value="cash">💵 手持ち現金</option>
+          <option value="bank">🏦 銀行・通帳</option>
+        </select>
+        <input type="number" id="main-amount" placeholder="金額 (円) ※必須" min="1">
+        <input type="text" id="main-memo" placeholder="内容 (例: おやつ、携帯代)">
+      </div>
+      <button type="button" class="btn btn-main" onclick="recordMainTransaction()">記録する</button>
+
+      <h3 style="font-size: 13px; margin: 14px 0 6px; color: #666;">最近の現金・銀行履歴</h3>
+      <ul id="main-log-list" class="expense-list"></ul>
+    </div>
+
+    <!-- 3. Suica専用管理 ＆ 通勤クイックボタン -->
+    <div class="card card-suica">
+      <h2 class="suica-title">🐧 Suica残高管理</h2>
+      
+      <div class="suica-summary">
+        <p>現在のSuica残高</p>
+        <div class="suica-total"><span id="suica-balance">0</span> 円</div>
+      </div>
+
+      <!-- 通勤ワンタップ -->
+      <div class="commute-box">
+        <div class="commute-header">
+          <div>
+            <span>🚆 通勤ワンタップ: </span>
+            <select id="route-select" class="commute-route-select" onchange="switchRoute()">
+              <option value="A">ルートA</option>
+              <option value="B">ルートB</option>
+            </select>
+          </div>
+          <button type="button" class="commute-config-btn" onclick="toggleCommuteSettings()">⚙️ 運賃設定</button>
+        </div>
+
+        <div class="commute-actions">
+          <button type="button" class="btn-quick" onclick="quickCommute('行き')">
+            行き (<span id="btn-fare-go">0</span>円)
+          </button>
+          <button type="button" class="btn-quick" onclick="quickCommute('帰り')">
+            帰り (<span id="btn-fare-back">0</span>円)
+          </button>
+        </div>
+
+        <div id="commute-settings-panel" class="commute-settings">
+          <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <span>Aルート:</span>
+            <span>行き <input type="number" id="fare-a-go">円</span>
+            <span>帰り <input type="number" id="fare-a-back">円</span>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <span>Bルート:</span>
+            <span>行き <input type="number" id="fare-b-go">円</span>
+            <span>帰り <input type="number" id="fare-b-back">円</span>
+          </div>
+          <button type="button" style="width: 100%; font-size: 11px; padding: 3px;" onclick="saveFares()">運賃を保存</button>
+        </div>
+      </div>
+
+      <!-- Suica手動記録 -->
+      <div class="input-group">
+        <select id="suica-direction">
+          <option value="expense">🔻 支払い・買い物（減らす）</option>
+          <option value="income">🔺 チャージ（増やす）</option>
+        </select>
+        <input type="number" id="suica-amount" placeholder="金額 (円) ※必須" min="1">
+        <input type="text" id="suica-memo" placeholder="内容 (例: 自販機、コンビニ)">
+      </div>
+      <button type="button" class="btn btn-suica" onclick="recordSuicaTransaction()">Suicaを記録する</button>
+
+      <h3 style="font-size: 13px; margin: 14px 0 6px; color: #666;">最近のSuica履歴</h3>
+      <ul id="suica-log-list" class="expense-list"></ul>
+    </div>
+
+  </div>
+
+  <script>
+    let cashBalance = Number(localStorage.getItem('myCashBalance')) || 0;
+    let bankBalance = Number(localStorage.getItem('myBankBalance')) || 0;
+    let mainLogs = JSON.parse(localStorage.getItem('myMainLogs')) || [];
+
+    let suicaBalance = Number(localStorage.getItem('mySuicaBalance')) || 0;
+    let suicaLogs = JSON.parse(localStorage.getItem('mySuicaLogs')) || [];
+
+    let fares = JSON.parse(localStorage.getItem('myCommuteFares')) || {
+      aGo: 220,
+      aBack: 220,
+      bGo: 350,
+      bBack: 350
+    };
+    let currentRoute = localStorage.getItem('myCurrentRoute') || 'A';
+
+    // 確認通知のON/OFF設定（デフォルトはON）
+    let isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+
+    function updateDisplay() {
+      // 確認トグルの状態反映
+      document.getElementById('confirm-toggle').checked = isConfirmEnabled;
+
+      // メイン ＆ 総資産
+      document.getElementById('cash-balance').textContent = cashBalance.toLocaleString();
+      document.getElementById('bank-balance').textContent = bankBalance.toLocaleString();
+      document.getElementById('top-suica-balance').textContent = suicaBalance.toLocaleString();
+      
+      const total = cashBalance + bankBalance + suicaBalance;
+      document.getElementById('total-assets').textContent = total.toLocaleString();
+
+      const mainList = document.getElementById('main-log-list');
+      mainList.innerHTML = '';
+      if (mainLogs.length === 0) {
+        mainList.innerHTML = '<li style="color:#999; justify-content:center;">履歴はありません</li>';
+      } else {
+        for (let i = mainLogs.length - 1; i >= 0; i--) {
+          const item = mainLogs[i];
+          const li = document.createElement('li');
+          const badgeClass = item.account === 'cash' ? 'badge-cash' : 'badge-bank';
+          const badgeText = item.account === 'cash' ? '現金' : '銀行';
+          const isIncome = item.direction === 'income';
+          const sign = isIncome ? '+' : '-';
+          const amountClass = isIncome ? 'amount-plus' : 'amount-minus';
+
+          li.innerHTML = `
+            <div>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+              <strong>${item.memo}</strong>
+              <div style="font-size:11px; color:#888;">${item.date}</div>
+            </div>
+            <div>
+              <span class="${amountClass}">${sign}${Number(item.amount).toLocaleString()}円</span>
+              <button class="delete-btn" onclick="deleteMainLog(${i})">削除</button>
+            </div>
+          `;
+          mainList.appendChild(li);
+        }
+      }
+
+      // Suica専用カード側
+      document.getElementById('suica-balance').textContent = suicaBalance.toLocaleString();
+      const suicaList = document.getElementById('suica-log-list');
+      suicaList.innerHTML = '';
+      if (suicaLogs.length === 0) {
+        suicaList.innerHTML = '<li style="color:#999; justify-content:center;">履歴はありません</li>';
+      } else {
+        for (let i = suicaLogs.length - 1; i >= 0; i--) {
+          const item = suicaLogs[i];
+          const li = document.createElement('li');
+          const isIncome = item.direction === 'income';
+          const sign = isIncome ? '+' : '-';
+          const amountClass = isIncome ? 'amount-plus' : 'amount-minus';
+
+          li.innerHTML = `
+            <div>
+              <strong>${item.memo}</strong>
+              <div style="font-size:11px; color:#888;">${item.date}</div>
+            </div>
+            <div>
+              <span class="${amountClass}">${sign}${Number(item.amount).toLocaleString()}円</span>
+              <button class="delete-btn" onclick="deleteSuicaLog(${i})">削除</button>
+            </div>
+          `;
+          suicaList.appendChild(li);
+        }
+      }
+
+      updateCommuteButtonLabels();
+    }
+
+    function toggleConfirmSetting() {
+      isConfirmEnabled = document.getElementById('confirm-toggle').checked;
+      localStorage.setItem('myConfirmSetting', isConfirmEnabled);
+    }
+
+    function updateCommuteButtonLabels() {
+      document.getElementById('route-select').value = currentRoute;
+      const goFare = currentRoute === 'A' ? fares.aGo : fares.bGo;
+      const backFare = currentRoute === 'A' ? fares.aBack : fares.bBack;
+
+      document.getElementById('btn-fare-go').textContent = Number(goFare).toLocaleString();
+      document.getElementById('btn-fare-back').textContent = Number(backFare).toLocaleString();
+    }
+
+    function switchRoute() {
+      currentRoute = document.getElementById('route-select').value;
+      localStorage.setItem('myCurrentRoute', currentRoute);
+      updateCommuteButtonLabels();
+    }
+
+    function toggleCommuteSettings() {
+      const panel = document.getElementById('commute-settings-panel');
+      const isOpen = panel.style.display === 'block';
+      panel.style.display = isOpen ? 'none' : 'block';
+
+      if (!isOpen) {
+        document.getElementById('fare-a-go').value = fares.aGo;
+        document.getElementById('fare-a-back').value = fares.aBack;
+        document.getElementById('fare-b-go').value = fares.bGo;
+        document.getElementById('fare-b-back').value = fares.bBack;
+      }
+    }
+
+    function saveFares() {
+      fares.aGo = Number(document.getElementById('fare-a-go').value) || 0;
+      fares.aBack = Number(document.getElementById('fare-a-back').value) || 0;
+      fares.bGo = Number(document.getElementById('fare-b-go').value) || 0;
+      fares.bBack = Number(document.getElementById('fare-b-back').value) || 0;
+
+      localStorage.setItem('myCommuteFares', JSON.stringify(fares));
+      document.getElementById('commute-settings-panel').style.display = 'none';
+      updateCommuteButtonLabels();
+      alert('運賃設定を更新したぜ！');
+    }
+
+    // 通勤ワンタップ
+    function quickCommute(type) {
+      let amount = 0;
+      if (currentRoute === 'A') {
+        amount = type === '行き' ? fares.aGo : fares.aBack;
+      } else {
+        amount = type === '行き' ? fares.bGo : fares.bBack;
+      }
+
+      if (amount <= 0) {
+        alert('運賃が0円になってるぜ！設定から金額を入れてくれ！');
+        return;
+      }
+
+      // ワンクッション確認
+      if (isConfirmEnabled) {
+        const ok = confirm(`【通勤（${type}）】\nSuicaから ${amount}円 を差し引きますか？`);
+        if (!ok) return;
+      }
+
+      suicaBalance -= amount;
+      localStorage.setItem('mySuicaBalance', suicaBalance);
+
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const memo = `通勤（${type}・ルート${currentRoute}）`;
+
+      suicaLogs.push({ direction: 'expense', amount, memo, date: dateStr });
+      localStorage.setItem('mySuicaLogs', JSON.stringify(suicaLogs));
+
+      updateDisplay();
+    }
+
+    // メイン記録
+    function recordMainTransaction() {
+      const direction = document.getElementById('main-direction').value;
+      const account = document.getElementById('main-account').value;
+      const amountInput = document.getElementById('main-amount');
+      const memoInput = document.getElementById('main-memo');
+
+      const amount = Number(amountInput.value.trim());
+      const memo = memoInput.value.trim() || (direction === 'income' ? '入金' : '支出');
+
+      if (!amount || amount <= 0) {
+        alert('金額を入力してください！');
+        return;
+      }
+
+      // ワンクッション確認
+      if (isConfirmEnabled) {
+        const actionText = direction === 'income' ? '増やし' : '減らし';
+        const accountText = account === 'cash' ? '手持ち現金' : '銀行・通帳';
+        const ok = confirm(`【${accountText}】\n${memo}：${amount.toLocaleString()}円 を残高から${actionText}ますか？`);
+        if (!ok) return;
+      }
+
+      if (account === 'cash') {
+        cashBalance = direction === 'income' ? cashBalance + amount : cashBalance - amount;
+        localStorage.setItem('myCashBalance', cashBalance);
+      } else {
+        bankBalance = direction === 'income' ? bankBalance + amount : bankBalance - amount;
+        localStorage.setItem('myBankBalance', bankBalance);
+      }
+
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      mainLogs.push({ direction, account, amount, memo, date: dateStr });
+      localStorage.setItem('myMainLogs', JSON.stringify(mainLogs));
+
+      amountInput.value = '';
+      memoInput.value = '';
+      updateDisplay();
+    }
+
+    // Suica手動記録
+    function recordSuicaTransaction() {
+      const direction = document.getElementById('suica-direction').value;
+      const amountInput = document.getElementById('suica-amount');
+      const memoInput = document.getElementById('suica-memo');
+
+      const amount = Number(amountInput.value.trim());
+      const memo = memoInput.value.trim() || (direction === 'income' ? 'チャージ' : '利用');
+
+      if (!amount || amount <= 0) {
+        alert('金額を入力してください！');
+        return;
+      }
+
+      // ワンクッション確認
+      if (isConfirmEnabled) {
+        const actionText = direction === 'income' ? 'チャージ' : '支払い';
+        const ok = confirm(`【Suica】\n${memo}：${amount.toLocaleString()}円 を${actionText}しますか？`);
+        if (!ok) return;
+      }
+
+      suicaBalance = direction === 'income' ? suicaBalance + amount : suicaBalance - amount;
+      localStorage.setItem('mySuicaBalance', suicaBalance);
+
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      suicaLogs.push({ direction, amount, memo, date: dateStr });
+      localStorage.setItem('mySuicaLogs', JSON.stringify(suicaLogs));
+
+      amountInput.value = '';
+      memoInput.value = '';
+      updateDisplay();
+    }
+
+    function deleteMainLog(index) {
+      if (confirm('この記録を削除して残高を元に戻しますか？')) {
+        const item = mainLogs[index];
+        const isIncome = item.direction === 'income';
+        if (item.account === 'cash') {
+          cashBalance = isIncome ? cashBalance - item.amount : cashBalance + item.amount;
+          localStorage.setItem('myCashBalance', cashBalance);
+        } else {
+          bankBalance = isIncome ? bankBalance - item.amount : bankBalance + item.amount;
+          localStorage.setItem('myBankBalance', bankBalance);
+        }
+        mainLogs.splice(index, 1);
+        localStorage.setItem('myMainLogs', JSON.stringify(mainLogs));
+        updateDisplay();
+      }
+    }
+
+    function deleteSuicaLog(index) {
+      if (confirm('このSuica記録を削除して残高を元に戻しますか？')) {
+        const item = suicaLogs[index];
+        const isIncome = item.direction === 'income';
+        suicaBalance = isIncome ? suicaBalance - item.amount : suicaBalance + item.amount;
+        localStorage.setItem('mySuicaBalance', suicaBalance);
+        suicaLogs.splice(index, 1);
+        localStorage.setItem('mySuicaLogs', JSON.stringify(suicaLogs));
+        updateDisplay();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDisplay();
+    });
+  </script>
+
+</body>
+</html>
