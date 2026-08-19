@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>マイ習慣＆ハブ</title>
+  
+  <!-- PWA設定 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="ichigo.jpg">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%);
+      min-height: 100vh;
+      min-height: 100dvh;
+      color: #333;
+      padding: 20px 16px;
+      padding-top: calc(20px + env(safe-area-inset-top));
+      padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* ヘッダー */
+    .portal-header {
+      text-align: center;
+      padding: 12px 0 6px;
+    }
+    .portal-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1e293b;
+      letter-spacing: 0.5px;
+    }
+    .portal-header p {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* タップエフェクト */
+    .press-effect {
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+      user-select: none;
+    }
+    .press-effect:active {
+      transform: scale(0.96);
+      opacity: 0.9;
+    }
+
+    /* アプリカード一覧 */
+    .app-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .app-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .app-icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    /* 各アプリのアイコン背景グラデーション */
+    .icon-money {
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+    }
+    .icon-chat {
+      background: linear-gradient(135deg, #60a5fa, #2563eb);
+      color: #fff;
+    }
+    .icon-health {
+      background: linear-gradient(135deg, #f87171, #dc2626);
+      color: #fff;
+    }
+
+    .app-info {
+      flex: 1;
+    }
+    .app-info h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 3px;
+    }
+    .app-info p {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    .arrow-icon {
+      font-size: 16px;
+      color: #94a3b8;
+      font-weight: bold;
+      padding-right: 4px;
+    }
+
+    /* クイックステータス枠 */
+    .status-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      margin-top: 4px;
+    }
+    .status-item {
+      text-align: center;
+    }
+    .status-item span {
+      display: block;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .status-item strong {
+      font-size: 15px;
+      color: #1e293b;
+      margin-top: 2px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header class="portal-header">
+      <h1>My Private Portal</h1>
+      <p>日常の管理・記録をひとつに集約</p>
+    </header>
+
+    <!-- クイックサマリー表示（localStorageから自動取得） -->
+    <div class="status-panel">
+      <div class="status-item">
+        <span>💰 総資産</span>
+        <strong id="dash-total-assets">--- 円</strong>
+      </div>
+      <div class="status-item">
+        <span>🐧 Suica</span>
+        <strong id="dash-suica-assets">--- 円</strong>
+      </div>
+    </div>
+
+    <!-- アプリ一覧 -->
+    <div class="app-grid">
+      
+      <!-- 1. お小遣い＆資産管理 -->
+      <a href="money.html" class="app-card press-effect">
+        <div class="app-icon-box icon-money">💰</div>
+        <div class="app-info">
+          <h2>お小遣い・資産管理</h2>
+          <p>現金・銀行・Suica残高とワンタップ通勤記録</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+      <!-- 2. プライベートチャット＆メモ -->
+      <a href="message.html" class="app-card press-effect">
+        <div class="app-icon-box icon-chat">💬</div>
+        <div class="app-info">
+          <h2>メッセージ＆メモ</h2>
+          <p>複数端末のリアルタイム共有・固定メモ帳</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+      <!-- 3. 健康・運動管理 -->
+      <a href="health.html" class="app-card press-effect">
+        <div class="app-icon-box icon-health">💪</div>
+        <div class="app-info">
+          <h2>健康・運動管理</h2>
+          <p>日々の運動習慣や体調のクイック記録</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+    </div>
+
+  </div>
+
+  <script>
+    // お小遣い帳のデータをトップ画面にも簡易反映
+    function loadQuickData() {
+      const cash = Number(localStorage.getItem('myCashBalance')) || 0;
+      const bank = Number(localStorage.getItem('myBankBalance')) || 0;
+      const suica = Number(localStorage.getItem('mySuicaBalance')) || 0;
+      
+      const total = cash + bank + suica;
+      document.getElementById('dash-total-assets').textContent = total.toLocaleString() + ' 円';
+      document.getElementById('dash-suica-assets').textContent = suica.toLocaleString() + ' 円';
+    }
+
+    window.addEventListener('DOMContentLoaded', loadQuickData);
+  </script>
+
+</body>
+</html>
