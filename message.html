@@ -13,8 +13,7 @@
     :root {
       --primary-color: #4a90e2;
       --bg-overlay: rgba(255, 255, 255, 0.92);
-      --header-footer-bg: rgba(255, 255, 255, 0.92);
-      --bar-bg: #ffffff;
+      --header-footer-bg: rgba(255, 255, 255, 0.88);
       --text-color: #333333;
     }
 
@@ -25,7 +24,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* スクロールバーを非表示にする設定 */
+    /* スクロールバー非表示 */
     *::-webkit-scrollbar {
       display: none;
     }
@@ -158,7 +157,6 @@
       flex-direction: row-reverse;
     }
 
-    /* アイコン表示 */
     .msg-avatar {
       width: 36px;
       height: 36px;
@@ -282,23 +280,31 @@
       z-index: 10;
     }
 
-    /* メッセージバー本体（画像なし・シンプル枠） */
+    /* メッセージバー（画像枠） */
     .input-wrapper {
       flex: 1;
+      position: relative;
       display: flex;
       align-items: center;
       height: 44px;
-      background-color: var(--bar-bg);
-      border-radius: 22px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
-      padding: 0 14px;
     }
     #text-input {
       width: 100%;
+      padding: 8px 16px;
       border: none;
       outline: none;
       font-size: 15px;
       background: transparent;
+      z-index: 2;
+    }
+    .input-frame-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill; 
+      pointer-events: none;
+      z-index: 1;
     }
 
     .icon-btn {
@@ -332,50 +338,56 @@
       object-fit: contain;
     }
 
-    /* 設定モーダル */
+    /* ⚙️ 設定モーダル（ヘッダー・フッター色と同期・透過） */
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.45);
       z-index: 100;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(4px);
     }
     .modal-content {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
+      background: var(--header-footer-bg);
+      backdrop-filter: blur(16px);
+      padding: 22px;
+      border-radius: 16px;
       width: 90%;
       max-width: 400px;
       max-height: 85vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     .setting-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .wallpaper-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .wallpaper-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .wp-slot {
-      height: 60px;
-      border: 2px dashed #ccc;
-      border-radius: 6px;
+      height: 64px;
+      border: 2px dashed #bbb;
+      border-radius: 8px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       background-size: cover;
       background-position: center;
-      font-size: 10px;
+      font-size: 11px;
       position: relative;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
     .wp-slot.active { border-color: var(--primary-color); border-width: 3px; }
 
-    /* アイコン設定枠 */
     .avatar-setting {
       display: flex;
       align-items: center;
@@ -385,7 +397,7 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background-color: #eee;
+      background-color: rgba(0,0,0,0.05);
       background-size: cover;
       background-position: center;
       border: 2px solid #ccc;
@@ -433,6 +445,7 @@
       <input type="file" id="file-input" accept="image/*" style="display:none;" onchange="uploadImage(event)">
     </label>
     <div class="input-wrapper">
+      <img src="input-frame.png" class="input-frame-bg" alt="">
       <input type="text" id="text-input" placeholder="メッセージ入力...">
     </div>
     <button id="send-btn" class="press-effect" onclick="handleSend()">
@@ -443,44 +456,41 @@
   <!-- ⚙️ 設定画面 -->
   <div id="settings-modal" class="modal">
     <div class="modal-content">
-      <h3>⚙️ 設定</h3>
+      <h3 style="font-size:16px;">⚙️ 設定</h3>
       
-      <!-- アイコン設定 -->
+      <!-- 自分のアイコン設定 -->
       <div>
-        <label style="font-size:12px; display:block; margin-bottom:6px;">自分のアイコン画像</label>
+        <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:bold;">自分のアイコン画像</label>
         <div class="avatar-setting">
           <div class="avatar-preview press-effect" id="my-avatar-preview" onclick="triggerAvatarUpload()"></div>
-          <button type="button" class="press-effect" onclick="triggerAvatarUpload()" style="font-size:12px; padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:#f9f9f9; cursor:pointer;">画像を変更</button>
+          <button type="button" class="press-effect" onclick="triggerAvatarUpload()" style="font-size:12px; padding:6px 12px; border:1px solid #ccc; border-radius:6px; background:rgba(255,255,255,0.7); cursor:pointer;">画像を変更</button>
           <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="saveAvatar(event)">
         </div>
       </div>
 
+      <!-- 背景・テーマカラー設定 -->
       <div class="setting-row">
-        <label style="font-size:12px;">上下ヘッダー・フッターの色</label>
+        <label style="font-size:12px; font-weight:bold;">メニュー・設定パネルの色</label>
         <input type="color" id="ui-color-picker" value="#ffffff">
       </div>
 
-      <div class="setting-row">
-        <label style="font-size:12px;">メッセージバー（入力枠）の色</label>
-        <input type="color" id="bar-color-picker" value="#ffffff">
-      </div>
-
+      <!-- 送信者名設定 -->
       <div>
-        <label style="font-size:12px;">この端末の名前（送信者名）</label>
-        <input type="text" id="user-name-input" placeholder="例: メイン端末 / サブ端末" style="width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box;">
+        <label style="font-size:12px; font-weight:bold;">この端末の名前（送信者名）</label>
+        <input type="text" id="user-name-input" placeholder="例: メイン端末 / サブ端末" style="width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box; background:rgba(255,255,255,0.8);">
       </div>
 
-      <!-- 壁紙スロット -->
+      <!-- 壁紙スロット（タップで切替 / 長押しで上書き） -->
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <label style="font-size:12px;">壁紙スロット（タップで即切替・上書き可）</label>
-          <button type="button" onclick="clearWallpaper()" style="font-size:11px; color:#888; border:none; background:none; cursor:pointer; text-decoration:underline;">壁紙を解除</button>
+          <label style="font-size:12px; font-weight:bold;">壁紙スロット（タップで適用・長押しで上書き）</label>
+          <button type="button" onclick="clearWallpaper()" style="font-size:11px; color:#666; border:none; background:none; cursor:pointer; text-decoration:underline;">壁紙を解除</button>
         </div>
         <div class="wallpaper-grid" id="wp-container"></div>
         <input type="file" id="wp-file-input" accept="image/*" style="display:none;" onchange="saveWallpaper(event)">
       </div>
 
-      <button onclick="saveSettings()" class="press-effect" style="background:var(--primary-color); color:white; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; margin-top:6px;">保存して閉じる</button>
+      <button onclick="saveSettings()" class="press-effect" style="background:var(--primary-color); color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:6px;">保存して閉じる</button>
     </div>
   </div>
 
@@ -510,12 +520,8 @@
     let targetWpSlot = 0;
     
     let uiColorHex = localStorage.getItem('hub_ui_color') || '#ffffff';
-    let barColorHex = localStorage.getItem('hub_bar_color') || '#ffffff';
-    
     document.getElementById('ui-color-picker').value = uiColorHex;
-    document.getElementById('bar-color-picker').value = barColorHex;
     applyUiColor(uiColorHex);
-    applyBarColor(barColorHex);
 
     document.getElementById('user-name-input').value = myName;
     updateAvatarPreview();
@@ -529,16 +535,11 @@
     }
 
     function applyUiColor(hex) {
-      const rgbaColor = hexToRgba(hex, 0.92);
+      const rgbaColor = hexToRgba(hex, 0.88);
       document.documentElement.style.setProperty('--header-footer-bg', rgbaColor);
     }
 
-    function applyBarColor(hex) {
-      document.documentElement.style.setProperty('--bar-bg', hex);
-    }
-
     document.getElementById('ui-color-picker').addEventListener('input', (e) => applyUiColor(e.target.value));
-    document.getElementById('bar-color-picker').addEventListener('input', (e) => applyBarColor(e.target.value));
 
     function switchTab(tab) {
       currentTab = tab;
@@ -558,7 +559,7 @@
       document.getElementById('text-input').placeholder = tab === 'chat' ? 'メッセージ入力...' : '固定メモを追加...';
     }
 
-    // チャット描画（アイコン付き）
+    // チャット描画
     db.collection('chat').orderBy('timestamp', 'asc').limitToLast(60)
       .onSnapshot(snapshot => {
         const chatList = document.getElementById('chat-list');
@@ -574,7 +575,6 @@
             senderHtml = `<div class="msg-sender-name">${escapeHtml(d.sender)}</div>`;
           }
 
-          // アイコンの背景画像スタイル
           const avatarStyle = d.avatar ? `style="background-image: url(${d.avatar});"` : '';
 
           wrapper.innerHTML = `
@@ -701,7 +701,7 @@
       else preview.style.backgroundImage = 'none';
     }
 
-    /* 壁紙管理 */
+    /* 壁紙管理（タップで適用・長押しで上書き） */
     function toggleModal(show) {
       document.getElementById('settings-modal').style.display = show ? 'flex' : 'none';
       if (show) renderWpSlots();
@@ -713,15 +713,38 @@
       wallpapers.forEach((wp, idx) => {
         const slot = document.createElement('div');
         slot.className = `wp-slot press-effect ${selectedWpIdx === idx ? 'active' : ''}`;
+        
+        let pressTimer = null;
+        let isLongPress = false;
+
+        const startPress = () => {
+          isLongPress = false;
+          pressTimer = setTimeout(() => {
+            isLongPress = true;
+            triggerWpUpload(idx); // 長押しで上書きアップロード
+          }, 600);
+        };
+
+        const cancelPress = () => {
+          if (pressTimer) clearTimeout(pressTimer);
+        };
+
+        slot.addEventListener('mousedown', startPress);
+        slot.addEventListener('touchstart', startPress, { passive: true });
+        slot.addEventListener('mouseup', cancelPress);
+        slot.addEventListener('mouseleave', cancelPress);
+        slot.addEventListener('touchend', cancelPress);
+
         if (wp) {
           slot.style.backgroundImage = `url(${wp})`;
-          // タップでその壁紙を適用
-          slot.onclick = () => selectWp(idx);
-          // ダブルタップ/長押し用の上書きボタン代わり
-          slot.title = "タップで適用";
+          slot.onclick = () => {
+            if (!isLongPress) selectWp(idx);
+          };
         } else {
           slot.textContent = `+ 枠${idx+1}`;
-          slot.onclick = () => triggerWpUpload(idx);
+          slot.onclick = () => {
+            if (!isLongPress) triggerWpUpload(idx);
+          };
         }
         container.appendChild(slot);
       });
@@ -775,9 +798,6 @@
       
       uiColorHex = document.getElementById('ui-color-picker').value;
       localStorage.setItem('hub_ui_color', uiColorHex);
-
-      barColorHex = document.getElementById('bar-color-picker').value;
-      localStorage.setItem('hub_bar_color', barColorHex);
 
       toggleModal(false);
       location.reload();
