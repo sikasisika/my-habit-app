@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>マイ習慣＆ボディ管理</title>
 
   <!-- PWA・アプリ化用の設定 -->
@@ -62,6 +62,8 @@
     body {
       margin: 0;
       padding: 16px;
+      padding-top: calc(16px + env(safe-area-inset-top));
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-image: linear-gradient(var(--bg-color), var(--bg-color)), var(--bg-image);
       background-size: cover;
@@ -80,6 +82,29 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+    }
+
+    /* ポータルへ戻るナビゲーション */
+    .top-nav {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: -4px;
+    }
+    .back-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 6px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: opacity 0.2s ease;
+    }
+    .back-btn:active {
+      opacity: 0.7;
     }
 
     .theme-selector {
@@ -205,6 +230,8 @@
       color: var(--text);
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .btn-save {
@@ -226,6 +253,11 @@
 
   <div class="app-container">
 
+    <!-- ポータルへ戻る -->
+    <div class="top-nav">
+      <a href="index.html" class="back-btn">◀ ポータルへ戻る</a>
+    </div>
+
     <div class="theme-selector">
       <button class="theme-btn btn-kibana" onclick="setTheme('kibana')"></button>
       <button class="theme-btn btn-dande" onclick="setTheme('dande')"></button>
@@ -243,11 +275,11 @@
       <h2 id="today-title">今日の目標</h2>
       <div class="task-list">
         <label class="task-item">
-          <input type="checkbox" onchange="onTaskCheck(this)">
+          <input type="checkbox" id="chk-study" onchange="onTaskCheck(this)">
           <span id="study-task">作業タスク</span>
         </label>
         <label class="task-item">
-          <input type="checkbox" onchange="onTaskCheck(this)">
+          <input type="checkbox" id="chk-exercise" onchange="onTaskCheck(this)">
           <span id="exercise-task">運動タスク</span>
         </label>
       </div>
@@ -279,7 +311,7 @@
   </div>
 
   <script>
-    let currentTheme = 'kibana';
+    let currentTheme = localStorage.getItem('myHealthTheme') || 'kibana';
 
     const oshiQuotes = {
       kibana: [
@@ -321,6 +353,7 @@
 
     function setTheme(themeName) {
       currentTheme = themeName;
+      localStorage.setItem('myHealthTheme', themeName);
       document.documentElement.setAttribute('data-theme', themeName);
       
       const msg = document.getElementById('oshi-msg');
@@ -328,10 +361,17 @@
     }
 
     function onTaskCheck(checkbox) {
+      // 当日のタスク状態を保存
+      const todayKey = 'tasks_' + new Date().toDateString();
+      const taskState = {
+        study: document.getElementById('chk-study').checked,
+        exercise: document.getElementById('chk-exercise').checked
+      };
+      localStorage.setItem(todayKey, JSON.stringify(taskState));
+
       if (checkbox.checked) {
         const msg = document.getElementById('oshi-msg');
         const quotes = oshiQuotes[currentTheme];
-        
         const randomIndex = Math.floor(Math.random() * quotes.length);
         msg.textContent = quotes[randomIndex];
       }
@@ -352,15 +392,11 @@
       const dateStr = (today.getMonth() + 1) + '/' + today.getDate();
 
       let history = JSON.parse(localStorage.getItem('weightHistory')) || [];
-
       const existingIndex = history.findIndex(item => item.date === dateStr);
 
       if (existingIndex !== -1) {
         const isOverwrite = confirm('今日の記録がすでにあるぜ！上書きしてもいいか？');
-        
-        if (!isOverwrite) {
-          return;
-        }
+        if (!isOverwrite) return;
 
         history[existingIndex].weight = parseFloat(weightInput);
         history[existingIndex].memo = diaryInput;
@@ -377,7 +413,6 @@
       }
 
       history = history.filter((item, index, self) => index === self.findIndex(t => t.date === item.date));
-
       localStorage.setItem('weightHistory', JSON.stringify(history));
 
       document.getElementById('weight').value = '';
@@ -396,7 +431,6 @@
       const diaryListDiv = document.getElementById('diary-list');
       
       if (!diaryListDiv) return;
-
       diaryListDiv.innerHTML = '';
 
       if (history.length === 0) {
@@ -411,11 +445,10 @@
         div.style.borderRadius = '8px';
         div.style.fontSize = '0.85rem';
         div.style.display = 'flex';
-        div.style.justify = 'space-between';
+        div.style.justifyContent: 'space-between';
         
         const memoText = item.memo ? item.memo : '（メモなし）';
         div.innerHTML = `<span style="font-weight: bold; color: var(--primary);">${item.date}</span> <span>${memoText}</span>`;
-        
         diaryListDiv.appendChild(div);
       });
     }
@@ -425,15 +458,11 @@
       if (!chartCanvas) return;
 
       const history = JSON.parse(localStorage.getItem('weightHistory')) || [];
-      
       const labels = history.map(item => item.date);
       const data = history.map(item => item.weight);
-
       const ctx = chartCanvas.getContext('2d');
 
-      if (myChart) {
-        myChart.destroy();
-      }
+      if (myChart) myChart.destroy();
 
       myChart = new Chart(ctx, {
         type: 'line',
@@ -472,6 +501,8 @@
     }
 
     window.onload = function() {
+      setTheme(currentTheme);
+
       const today = new Date();
       const dayOfWeek = today.getDay();
 
@@ -480,6 +511,14 @@
         document.getElementById('study-task').textContent = schedule[dayOfWeek].study;
         const exerciseIndex = dayOfWeek % exercises.length;
         document.getElementById('exercise-task').textContent = exercises[exerciseIndex];
+      }
+
+      // 今日のタスクチェック復元
+      const todayKey = 'tasks_' + today.toDateString();
+      const savedTasks = JSON.parse(localStorage.getItem(todayKey));
+      if (savedTasks) {
+        document.getElementById('chk-study').checked = !!savedTasks.study;
+        document.getElementById('chk-exercise').checked = !!savedTasks.exercise;
       }
 
       updateChart();
