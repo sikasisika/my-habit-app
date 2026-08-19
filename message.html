@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Private Hub</title>
 
   <!-- Firebase SDK -->
@@ -17,22 +17,30 @@
       --text-color: #333333;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
     
-   body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
       background-color: #f0f2f5;
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      height: 100vh;
-      height: 100dvh;
       display: flex;
       flex-direction: column;
       color: var(--text-color);
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      inset: 0;
+      /* スマホのアドレスバー対策：dvhとSafeAreaに対応 */
+      height: 100vh;
+      height: 100dvh;
     }
 
     /* 共通クリック・タップエフェクト */
@@ -51,10 +59,11 @@
       background: var(--header-footer-bg);
       backdrop-filter: blur(10px);
       padding: 8px 14px;
+      padding-top: calc(8px + env(safe-area-inset-top));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
+      flex-shrink: 0;
       z-index: 10;
     }
 
@@ -76,11 +85,9 @@
       object-fit: contain;
       transition: opacity 0.2s ease;
     }
-    /* 未選択時は少し半透明にして選択中を強調 */
     .tab-btn:not(.active) img {
       opacity: 0.55;
     }
-    /* 選択中の下線アクセント */
     .tab-btn.active::after {
       content: "";
       position: absolute;
@@ -106,21 +113,34 @@
       object-fit: contain;
     }
 
-    /* メイン表示エリア */
+    /* メイン表示エリア（メッセージが伸びてもフッターを押し出さない） */
     main {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .view-section { display: none; flex-direction: column; gap: 12px; height: 100%; }
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+    }
     .view-section.active { display: flex; }
 
     /* チャット */
-    #chat-list { display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto; }
+    #chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
     .msg-card {
       background: var(--bg-overlay);
       backdrop-filter: blur(5px);
@@ -147,7 +167,11 @@
     }
 
     /* メモ帳 */
-    #memo-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    #memo-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
     .memo-card {
       background: var(--bg-overlay);
       padding: 12px;
@@ -174,15 +198,16 @@
       cursor: pointer;
     }
 
-    /* フッター */
+    /* フッター（メッセージバー：画面下部に絶対に固定） */
     footer {
       background: var(--header-footer-bg);
       backdrop-filter: blur(10px);
       padding: 8px 12px;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
       display: flex;
       align-items: center;
-      gap: 10px;
-      position: relative;
+      gap: 8px;
+      flex-shrink: 0;
       z-index: 10;
     }
 
@@ -195,7 +220,7 @@
     }
     #text-input {
       width: 100%;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border: none;
       outline: none;
       font-size: 15px;
@@ -220,6 +245,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     #camera-icon-img {
       width: 32px;
@@ -234,6 +260,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     #send-btn-img {
       height: 36px;
@@ -319,7 +346,7 @@
     </label>
     <div class="input-wrapper">
       <img src="input-frame.png" class="input-frame-bg" alt="">
-      <input type="text" id="text-input" placeholder="  めっせーじ入力...">
+      <input type="text" id="text-input" placeholder="メッセージ入力...">
     </div>
     <button id="send-btn" class="press-effect" onclick="handleSend()">
       <img src="send-btn.png" alt="送信" id="send-btn-img">
