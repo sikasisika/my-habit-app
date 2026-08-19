@@ -247,6 +247,9 @@
       transition: background-color 0.3s ease;
       box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
+    .btn-save:active {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
@@ -295,7 +298,7 @@
         <label for="diary">一行日記</label>
         <input type="text" id="diary" placeholder="例: 今日は何かい事あったか？">
       </div>
-      <button class="btn-save">記録を保存する</button>
+      <button type="button" class="btn-save" onclick="saveRecord()">記録を保存する</button>
     </div>
 
     <div class="card">
@@ -361,7 +364,6 @@
     }
 
     function onTaskCheck(checkbox) {
-      // 当日のタスク状態を保存
       const todayKey = 'tasks_' + new Date().toDateString();
       const taskState = {
         study: document.getElementById('chk-study').checked,
@@ -379,7 +381,7 @@
 
     let myChart = null;
 
-    document.querySelector('.btn-save').addEventListener('click', function() {
+    function saveRecord() {
       const weightInput = document.getElementById('weight').value;
       const diaryInput = document.getElementById('diary').value;
 
@@ -424,7 +426,7 @@
       const msg = document.getElementById('oshi-msg');
       msg.textContent = oshiQuotes[currentTheme][0];
       alert('記録を更新したぜ！その調子だ！');
-    });
+    }
 
     function updateDiaryList() {
       const history = JSON.parse(localStorage.getItem('weightHistory')) || [];
@@ -445,7 +447,7 @@
         div.style.borderRadius = '8px';
         div.style.fontSize = '0.85rem';
         div.style.display = 'flex';
-        div.style.justifyContent: 'space-between';
+        div.style.justifyContent = 'space-between';
         
         const memoText = item.memo ? item.memo : '（メモなし）';
         div.innerHTML = `<span style="font-weight: bold; color: var(--primary);">${item.date}</span> <span>${memoText}</span>`;
