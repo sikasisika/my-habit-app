@@ -14,6 +14,7 @@
       --primary-color: #4a90e2;
       --bg-overlay: rgba(255, 255, 255, 0.92);
       --header-footer-bg: rgba(255, 255, 255, 0.88);
+      --modal-bg: rgba(255, 255, 255, 0.92);
       --text-color: #333333;
     }
 
@@ -338,7 +339,7 @@
       object-fit: contain;
     }
 
-    /* ⚙️ 設定モーダル（ヘッダー・フッター色と同期・透過） */
+    /* ⚙️ 設定モーダル */
     .modal {
       display: none;
       position: fixed;
@@ -350,7 +351,7 @@
       backdrop-filter: blur(4px);
     }
     .modal-content {
-      background: var(--header-footer-bg);
+      background: var(--modal-bg) !important;
       backdrop-filter: blur(16px);
       padding: 22px;
       border-radius: 16px;
@@ -535,8 +536,10 @@
     }
 
     function applyUiColor(hex) {
-      const rgbaColor = hexToRgba(hex, 0.88);
-      document.documentElement.style.setProperty('--header-footer-bg', rgbaColor);
+      const rgbaHeader = hexToRgba(hex, 0.88);
+      const rgbaModal = hexToRgba(hex, 0.90);
+      document.documentElement.style.setProperty('--header-footer-bg', rgbaHeader);
+      document.documentElement.style.setProperty('--modal-bg', rgbaModal);
     }
 
     document.getElementById('ui-color-picker').addEventListener('input', (e) => applyUiColor(e.target.value));
@@ -721,7 +724,7 @@
           isLongPress = false;
           pressTimer = setTimeout(() => {
             isLongPress = true;
-            triggerWpUpload(idx); // 長押しで上書きアップロード
+            triggerWpUpload(idx);
           }, 600);
         };
 
