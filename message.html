@@ -434,13 +434,16 @@
 <body>
 
   <header>
-    <div class="tabs">
-      <button class="tab-btn press-effect active" id="tab-chat" onclick="switchTab('chat')">
-        <img src="chat-tab.png" alt="チャット">
-      </button>
-      <button class="tab-btn press-effect" id="tab-memo" onclick="switchTab('memo')">
-        <img src="memo-tab.png" alt="メモ帳">
-      </button>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="index.html" class="press-effect" style="text-decoration: none; font-size: 13px; font-weight: bold; color: var(--primary-color); display: flex; align-items: center;">◀ 戻る</a>
+      <div class="tabs">
+        <button class="tab-btn press-effect active" id="tab-chat" onclick="switchTab('chat')">
+          <img src="chat-tab.png" alt="チャット">
+        </button>
+        <button class="tab-btn press-effect" id="tab-memo" onclick="switchTab('memo')">
+          <img src="memo-tab.png" alt="メモ帳">
+        </button>
+      </div>
     </div>
     <button class="settings-btn press-effect" onclick="toggleModal(true)">
       <img src="settings-icon.png" alt="設定">
