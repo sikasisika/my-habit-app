@@ -16,6 +16,7 @@
       --header-footer-bg: rgba(255, 255, 255, 0.88);
       --modal-bg: rgba(255, 255, 255, 0.90);
       --text-color: #333333;
+      --app-height: 100vh;
     }
 
     * {
@@ -25,7 +26,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* スクロールバー非表示 */
     *::-webkit-scrollbar {
       display: none;
     }
@@ -34,13 +34,16 @@
       scrollbar-width: none;
     }
 
-    html, body {
+    html {
       width: 100%;
       height: 100%;
       overflow: hidden;
     }
 
     body {
+      width: 100%;
+      height: var(--app-height);
+      overflow: hidden;
       background-color: #7494c0;
       background-size: cover;
       background-position: center;
@@ -48,8 +51,8 @@
       display: flex;
       flex-direction: column;
       color: var(--text-color);
-      height: 100vh;
-      height: 100dvh;
+      position: fixed;
+      inset: 0;
     }
 
     .press-effect {
@@ -121,7 +124,7 @@
 
     /* メイン表示エリア */
     main {
-      flex: 1;
+      flex: 1 1 0%;
       min-height: 0;
       overflow-y: auto;
       padding: 14px;
@@ -237,7 +240,7 @@
       margin-bottom: 2px;
     }
 
-    /* 📌 メモ帳スタイル */
+    /* メモ帳 */
     #memo-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -260,7 +263,6 @@
       line-height: 1.4;
     }
 
-    /* 小さな赤丸の削除ボタン */
     .memo-del-circle {
       position: absolute;
       top: -5px;
@@ -281,7 +283,7 @@
       padding: 0;
     }
 
-    /* フッター */
+    /* フッター（入力欄：絶対に縮まない・隠れない） */
     footer {
       background: var(--header-footer-bg);
       backdrop-filter: blur(10px);
@@ -351,7 +353,7 @@
       object-fit: contain;
     }
 
-    /* ⚙️ 設定モーダル */
+    /* 設定モーダル */
     .modal {
       display: none;
       position: fixed;
@@ -435,7 +437,7 @@
 
   <header>
     <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="index.html" class="press-effect" style="text-decoration: none; font-size: 13px; font-weight: bold; color: var(--primary-color); display: flex; align-items: center;">◀ </a>
+      <a href="index.html" class="press-effect" style="text-decoration:none; font-size:13px; font-weight:bold; color:var(--primary-color);">◀ 戻る</a>
       <div class="tabs">
         <button class="tab-btn press-effect active" id="tab-chat" onclick="switchTab('chat')">
           <img src="chat-tab.png" alt="チャット">
@@ -469,12 +471,11 @@
     </button>
   </footer>
 
-  <!-- ⚙️ 設定画面 -->
+  <!-- 設定画面 -->
   <div id="settings-modal" class="modal">
     <div class="modal-content">
       <h3 style="font-size:16px;">⚙️ 設定</h3>
       
-      <!-- 自分のアイコン設定 -->
       <div>
         <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:bold;">自分のアイコン画像</label>
         <div class="avatar-setting">
@@ -484,19 +485,16 @@
         </div>
       </div>
 
-      <!-- 背景・テーマカラー設定 -->
       <div class="setting-row">
         <label style="font-size:12px; font-weight:bold;">メニュー・設定パネルの色</label>
         <input type="color" id="ui-color-picker" value="#ffffff">
       </div>
 
-      <!-- 送信者名設定 -->
       <div>
         <label style="font-size:12px; font-weight:bold;">この端末の名前（送信者名）</label>
         <input type="text" id="user-name-input" placeholder="例: メイン端末 / サブ端末" style="width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:6px; box-sizing:border-box; background:rgba(255,255,255,0.8);">
       </div>
 
-      <!-- 壁紙スロット（タップで切替 / 長押しで上書き） -->
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <label style="font-size:12px; font-weight:bold;">壁紙スロット（タップで適用・長押しで上書き）</label>
@@ -511,6 +509,15 @@
   </div>
 
   <script>
+    // 画面高さを動的に計算して固定する処理（スマホのバー伸縮対策）
+    function setAppHeight() {
+      const vh = window.innerHeight;
+      document.documentElement.style.setProperty('--app-height', `${vh}px`);
+    }
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    setAppHeight();
+
     const firebaseConfig = {
       apiKey: "AIzaSyDe2qsA9wEb1z3993Cz2EBJR2LY4GzUibk",
       authDomain: "my-private-chat-d5464.firebaseapp.com",
@@ -613,7 +620,7 @@
         chatList.scrollTop = chatList.scrollHeight;
       });
 
-    // 📌 メモ帳描画（小さな赤丸削除ボタン）
+    // メモ帳描画
     db.collection('memos').orderBy('timestamp', 'desc')
       .onSnapshot(snapshot => {
         const memoList = document.getElementById('memo-list');
@@ -717,7 +724,7 @@
       else preview.style.backgroundImage = 'none';
     }
 
-    /* 壁紙管理（タップで適用・長押しで上書き） */
+    /* 壁紙管理 */
     function toggleModal(show) {
       document.getElementById('settings-modal').style.display = show ? 'flex' : 'none';
       if (show) renderWpSlots();
