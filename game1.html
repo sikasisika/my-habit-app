@@ -19,7 +19,7 @@
 
     body {
       background-color: #1e293b;
-      background-image: linear-gradient(rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.85)), url("kibana.png");
+      background-image: linear-gradient(rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.85)), url("images/kibana.png");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -91,7 +91,7 @@
     .game-stage {
       flex: 1;
       background-color: rgba(0, 0, 0, 0.3);
-      background-image: url("game-stage-bg.png");
+      background-image: url("images/game-stage-bg.png");
       background-size: cover;
       background-position: center;
       border-radius: 16px;
@@ -170,7 +170,7 @@
       100% { transform: scale(1.08) translateY(-4px) rotate(3deg); }
     }
 
-    /* 浮き出て溶けて消える（フェードイン・フロート・フェードアウト） */
+    /* 浮き出て溶けて消える */
     .target-circle.fade-melt-mode {
       animation: fadeMelt var(--life-time, 2.2s) forwards ease-in-out;
     }
@@ -382,16 +382,13 @@
 
     <div class="game-stage" id="stage">
       
-      <!-- 左端固定：大きなお題アイコン枠 -->
       <div class="mission-hud-box" id="mission-hud">
-        <img id="mission-target-img" class="mission-hud-img" src="target1.png" alt="">
+        <img id="mission-target-img" class="mission-hud-img" src="images/target1.png" alt="">
         <span id="mission-target-emoji" style="font-size:26px; display:none;">⭐</span>
       </div>
 
-      <!-- ターゲット出現用コンテナ -->
       <div id="target-container" style="position: absolute; inset: 0;"></div>
 
-      <!-- もぐら叩き用グリッド -->
       <div class="mole-grid" id="mole-grid">
         <div class="mole-hole"></div>
         <div class="mole-hole"></div>
@@ -405,7 +402,7 @@
       </div>
 
       <div class="countdown-layer" id="countdown-layer">
-        <img src="ready.png" id="countdown-img" class="countdown-img" alt="" onerror="this.style.display='none';">
+        <img src="images/ready.png" id="countdown-img" class="countdown-img" alt="" onerror="this.style.display='none';">
         <div class="countdown-text" id="countdown-txt">よーい…</div>
       </div>
 
@@ -435,7 +432,7 @@
         </div>
 
         <button class="start-btn-box" onclick="triggerCountdown()">
-          <img src="start-btn.png" alt="スタート" onerror="this.style.display='none'; document.getElementById('start-btn-txt').style.display='block';">
+          <img src="images/start-btn.png" alt="スタート" onerror="this.style.display='none'; document.getElementById('start-btn-txt').style.display='block';">
           <div id="start-btn-txt" class="start-btn-fallback" style="display:none;">スタート！</div>
         </button>
       </div>
@@ -446,10 +443,10 @@
 
   <script>
     const targetImages = [
-      { id: 0, src: 'target1.png', emoji: '⭐' },
-      { id: 1, src: 'target2.png', emoji: '🌸' },
-      { id: 2, src: 'target3.png', emoji: '⚡' },
-      { id: 3, src: 'target4.png', emoji: '💖' }
+      { id: 0, src: 'images/target1.png', emoji: '⭐' },
+      { id: 1, src: 'images/target2.png', emoji: '🌸' },
+      { id: 2, src: 'images/target3.png', emoji: '⚡' },
+      { id: 3, src: 'images/target4.png', emoji: '💖' }
     ];
 
     let gameMode = 'normal';
@@ -567,12 +564,12 @@
       voiceEl.textContent = quotes.ready;
 
       countLayer.style.display = 'flex';
-      countImg.src = 'ready.png';
+      countImg.src = 'images/ready.png';
       countImg.style.display = 'block';
       countTxt.textContent = 'よーい…';
 
       setTimeout(() => {
-        countImg.src = 'go.png';
+        countImg.src = 'images/go.png';
         countTxt.textContent = 'スタート！！';
         countTxt.style.color = '#22c55e';
         fireConfetti();
@@ -637,12 +634,10 @@
       missionImg.src = chosen.src;
     }
 
-    // 継続的生成ループ
     function startSpawningLoop() {
       if (!isPlaying) return;
 
       if (gameMode === 'target') {
-        // 指定狙い：浮き出て溶けて消えるキャラを次々生成
         spawnFloatingTarget();
         const conf = diffSettings[currentDifficulty];
         targetSpawnTimer = setTimeout(startSpawningLoop, conf.spawnInterval);
@@ -653,12 +648,10 @@
         targetSpawnTimer = setTimeout(startSpawningLoop, conf.spawnInterval * 1.5);
 
       } else {
-        // 通常タップ：1体ずつ更新
         spawnSingleTarget();
       }
     }
 
-    // 指定狙いモード：1体ずつポコポコ生成（最大数制限付き）
     function spawnFloatingTarget() {
       const conf = diffSettings[currentDifficulty];
       if (targetContainer.children.length >= conf.maxTargets) return;
@@ -666,7 +659,6 @@
       const stageW = stageEl.clientWidth - 80;
       const stageH = stageEl.clientHeight - 80;
 
-      // ランダム位置（左上HUD枠に重なりにくく計算）
       let randX = Math.max(10, Math.floor(Math.random() * stageW));
       let randY = Math.max(10, Math.floor(Math.random() * stageH));
       if (randX < 85 && randY < 85) {
@@ -674,7 +666,6 @@
         randY += 80;
       }
 
-      // 40%の確率で正解キャラ、60%でダミーキャラ
       let item = (Math.random() < 0.4) ? targetImages[currentTargetId] : targetImages[Math.floor(Math.random() * targetImages.length)];
 
       const el = document.createElement('div');
@@ -691,7 +682,6 @@
       el.addEventListener('pointerdown', (e) => handleTap(e, el, item.id));
       targetContainer.appendChild(el);
 
-      // アニメーション完了後に自然消滅
       setTimeout(() => {
         if (el.parentNode && !el.classList.contains('popped')) {
           el.parentNode.removeChild(el);
@@ -699,7 +689,6 @@
       }, conf.lifeTime * 1000);
     }
 
-    // 通常タップ用出現
     function spawnSingleTarget() {
       targetContainer.innerHTML = '';
       const item = targetImages[Math.floor(Math.random() * targetImages.length)];
@@ -725,7 +714,6 @@
       targetSpawnTimer = setTimeout(() => { if (isPlaying) spawnSingleTarget(); }, speed);
     }
 
-    // もぐら叩き用出現
     function spawnMoleTargets() {
       const holes = Array.from(document.querySelectorAll('.mole-hole'));
       holes.forEach(h => h.innerHTML = '');
@@ -751,7 +739,6 @@
       });
     }
 
-    // タップ判定＆エフェクト
     function handleTap(e, elem, clickedId) {
       e.preventDefault();
       if (!isPlaying || elem.classList.contains('popped')) return;
