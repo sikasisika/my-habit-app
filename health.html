@@ -10,13 +10,13 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#111111">
-  <link rel="apple-touch-icon" href="kibana.png">
+  <link rel="apple-touch-icon" href="images/kibana.png">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root, [data-theme="kibana"] {
       --bg-color: rgba(38, 46, 64, 0.7);
-      --bg-image: url("kibana.png");
+      --bg-image: url("images/kibana.png");
       --card-bg: rgba(49, 59, 82, 0.45);
       --primary: #ff8800;
       --accent: #e6b422;
@@ -29,7 +29,7 @@
 
     [data-theme="dande"] {
       --bg-color: rgba(30, 19, 43, 0.7);
-      --bg-image: url("dande.png");
+      --bg-image: url("images/dande.png");
       --card-bg: rgba(44, 26, 66, 0.45);
       --primary: #e6b422;
       --accent: #5e2dad;
@@ -42,7 +42,7 @@
 
     [data-theme="ichigo"] {
       --bg-color: rgba(8, 7, 10, 0.7);
-      --bg-image: url("ichigo.jpg");
+      --bg-image: url("images/ichigo.jpg");
       --card-bg: rgba(20, 18, 25, 0.45);
       --primary: #f57e07;
       --accent: #ad1d1d;
@@ -133,17 +133,17 @@
     }
 
     .theme-btn.btn-kibana {
-      background-image: url("kibana2.png");
+      background-image: url("images/kibana2.png");
     }
 
     .theme-btn.btn-dande {
-      background-image: url("dande2.png");
+      background-image: url("images/dande2.png");
       background-size: cover;
       background-position: center 20%;
     }
 
     .theme-btn.btn-ichigo {
-      background-image: url("ichigo2.jpg");
+      background-image: url("images/ichigo2.jpg");
     }
 
     .theme-btn:active {
@@ -515,7 +515,6 @@
         document.getElementById('exercise-task').textContent = exercises[exerciseIndex];
       }
 
-      // 今日のタスクチェック復元
       const todayKey = 'tasks_' + today.toDateString();
       const savedTasks = JSON.parse(localStorage.getItem(todayKey));
       if (savedTasks) {
