@@ -48,8 +48,8 @@
       height: -webkit-fill-available;
       overflow: hidden;
       background-color: #262e40;
-      /* ↓ ここに使いたい画像ファイル名を指定するぜ！ */
-      background-image: url("haikei.jpeg");
+      /* ↓ 背景画像のパスを images/ に修正 */
+      background-image: url("images/haikei.jpeg");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -398,15 +398,15 @@
       <a href="index.html" class="press-effect" style="text-decoration:none; font-size:13px; font-weight:bold; color:var(--primary-color);">◀ 戻る</a>
       <div class="tabs">
         <button class="tab-btn press-effect active" id="tab-chat" onclick="switchTab('chat')">
-          <img src="chat-tab.png" alt="チャット">
+          <img src="images/chat-tab.png" alt="チャット">
         </button>
         <button class="tab-btn press-effect" id="tab-memo" onclick="switchTab('memo')">
-          <img src="memo-tab.png" alt="メモ帳">
+          <img src="images/memo-tab.png" alt="メモ帳">
         </button>
       </div>
     </div>
     <button class="settings-btn press-effect" onclick="toggleModal(true)">
-      <img src="settings-icon.png" alt="設定">
+      <img src="images/settings-icon.png" alt="設定">
     </button>
   </header>
 
@@ -417,15 +417,15 @@
 
   <footer>
     <label class="icon-btn press-effect">
-      <img src="camera-icon.png" alt="カメラ" id="camera-icon-img">
+      <img src="images/camera-icon.png" alt="カメラ" id="camera-icon-img">
       <input type="file" id="file-input" accept="image/*" style="display:none;" onchange="uploadImage(event)">
     </label>
     <div class="input-wrapper">
-      <img src="input-frame.png" class="input-frame-bg" alt="">
+      <img src="images/input-frame.png" class="input-frame-bg" alt="">
       <input type="text" id="text-input" placeholder="メッセージ入力...">
     </div>
     <button id="send-btn" class="press-effect" onclick="handleSend()">
-      <img src="send-btn.png" alt="送信" id="send-btn-img">
+      <img src="images/send-btn.png" alt="送信" id="send-btn-img">
     </button>
   </footer>
 
@@ -501,7 +501,6 @@
       document.documentElement.style.setProperty('--modal-bg', rgbaModal);
     }
 
-    // カラーピッカーを動かした瞬間にリアルタイムで色を切り替える
     document.getElementById('ui-color-picker').addEventListener('input', (e) => {
       applyUiColor(e.target.value);
     });
