@@ -215,49 +215,6 @@
     }
     .drop-guide img { width: 80%; height: 80%; object-fit: contain; }
 
-    /* DOMシャボン玉要素（超高画質描画） */
-    .bubble-dom {
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: 6;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(0, 0, 0, 0.15);
-      will-change: transform;
-      transform-origin: center center;
-    }
-    .bubble-pop-anim {
-      animation: bubblePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-    @keyframes bubblePop {
-      0% { transform: scale(0.65); }
-      50% { transform: scale(1.18); }
-      100% { transform: scale(1); }
-    }
-    .bubble-dom::after {
-      content: "";
-      position: absolute;
-      top: 12%;
-      left: 15%;
-      width: 22%;
-      height: 22%;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.75);
-      pointer-events: none;
-    }
-    .bubble-img {
-      width: 84%;
-      height: 84%;
-      object-fit: contain;
-      pointer-events: none;
-      transform-origin: center center;
-    }
-
     /* 下部操作パネル */
     .control-panel {
       background: rgba(255, 255, 255, 0.15);
@@ -388,7 +345,8 @@
         <img id="guide-img" src="images/merge1.png" alt="">
       </div>
 
-      <div id="bubble-container" style="position: absolute; inset: 0; pointer-events: none;"></div>
+      <!-- 高画質描画用キャンバス -->
+      <canvas id="game-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
 
       <div class="overlay-screen" id="overlay" style="display: none;">
         <h2 id="overlay-title">ゲームオーバー</h2>
@@ -409,15 +367,23 @@
 
   <script>
     const FRUITS = [
-      { level: 0, bubbleRadius: 18, score: 2,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.5) 60%, rgba(2,132,199,0.7) 100%)', img: 'images/merge1.png' },
-      { level: 1, bubbleRadius: 25, score: 4,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(168,85,247,0.5) 60%, rgba(126,34,206,0.7) 100%)', img: 'images/merge2.png' },
-      { level: 2, bubbleRadius: 33, score: 8,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(236,72,153,0.5) 60%, rgba(190,24,93,0.7) 100%)',  img: 'images/merge3.png' },
-      { level: 3, bubbleRadius: 44, score: 16,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(245,158,11,0.5) 60%, rgba(180,83,9,0.7) 100%)',   img: 'images/merge4.png' },
-      { level: 4, bubbleRadius: 56, score: 32,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(34,197,94,0.5) 60%, rgba(21,128,61,0.7) 100%)',   img: 'images/merge5.png' },
-      { level: 5, bubbleRadius: 70, score: 64,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(239,68,68,0.5) 60%, rgba(185,28,28,0.7) 100%)',   img: 'images/merge6.png' },
-      { level: 6, bubbleRadius: 86, score: 128, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(14,165,233,0.5) 60%, rgba(3,105,161,0.7) 100%)', img: 'images/merge7.png' },
-      { level: 7, bubbleRadius: 105, score: 256, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8) 0%, rgba(234,179,8,0.6) 60%, rgba(161,98,7,0.8) 100%)',  img: 'images/merge8.png' }
+      { level: 0, bubbleRadius: 18, score: 2,   bubbleColor: 'rgba(56, 189, 248, 0.55)',  borderColor: '#0284c7', img: 'images/merge1.png' },
+      { level: 1, bubbleRadius: 25, score: 4,   bubbleColor: 'rgba(168, 85, 247, 0.55)',  borderColor: '#7e22ce', img: 'images/merge2.png' },
+      { level: 2, bubbleRadius: 33, score: 8,   bubbleColor: 'rgba(236, 72, 153, 0.55)',  borderColor: '#be185d', img: 'images/merge3.png' },
+      { level: 3, bubbleRadius: 44, score: 16,  bubbleColor: 'rgba(245, 158, 11, 0.55)',  borderColor: '#b45309', img: 'images/merge4.png' },
+      { level: 4, bubbleRadius: 56, score: 32,  bubbleColor: 'rgba(34, 197, 94, 0.55)',   borderColor: '#15803d', img: 'images/merge5.png' },
+      { level: 5, bubbleRadius: 70, score: 64,  bubbleColor: 'rgba(239, 68, 68, 0.55)',   borderColor: '#b91c1c', img: 'images/merge6.png' },
+      { level: 6, bubbleRadius: 86, score: 128, bubbleColor: 'rgba(14, 165, 233, 0.55)',  borderColor: '#0369a1', img: 'images/merge7.png' },
+      { level: 7, bubbleRadius: 105, score: 256, bubbleColor: 'rgba(234, 179, 8, 0.65)', borderColor: '#a16207', img: 'images/merge8.png' }
     ];
+
+    // 画像プリロード
+    const loadedImages = {};
+    FRUITS.forEach(f => {
+      const img = new Image();
+      img.src = f.img;
+      loadedImages[f.level] = img;
+    });
 
     let score = 0;
     let currentFruitIndex = 0;
@@ -425,9 +391,11 @@
     let canDrop = true;
     let isGameOver = false;
     let currentAimX = null;
+    let mergeQueue = [];
 
     const stageEl = document.getElementById('stage');
-    const bubbleContainer = document.getElementById('bubble-container');
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
     const controlPanel = document.getElementById('control-panel');
     const controlKnob = document.getElementById('control-knob');
     const guideEl = document.getElementById('drop-guide');
@@ -484,10 +452,16 @@
 
     const { Engine, Runner, Bodies, Composite, Events, Body } = Matter;
     let engine, runner;
+    let dpr = window.devicePixelRatio || 1;
 
     function initPhysics() {
       const width = stageEl.clientWidth;
       const height = stageEl.clientHeight;
+
+      // 高解像度DPI設定
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
 
       engine = Engine.create({ 
         gravity: { x: 0, y: 1.5 },
@@ -506,23 +480,19 @@
       runner = Runner.create();
       Runner.run(runner, engine);
 
-      // DOM位置同期ループ
+      // 描画＆合体キュー処理ループ
       Events.on(engine, 'afterUpdate', () => {
-        const bodies = Composite.allBodies(engine.world);
+        // 安全な合体キュー処理（ゴースト化を完全防止）
+        if (mergeQueue.length > 0) {
+          const queue = [...mergeQueue];
+          mergeQueue = [];
+          queue.forEach(item => processMerge(item.bodyA, item.bodyB));
+        }
 
-        bodies.forEach(body => {
-          if (body.domElement) {
-            const { x, y } = body.position;
-            const r = body.circleRadius;
-            body.domElement.style.transform = `translate3d(${x - r}px, ${y - r}px, 0)`;
-            if (body.domImg) {
-              body.domImg.style.transform = `rotate(${body.angle}rad)`;
-            }
-          }
-        });
+        renderCanvas();
       });
 
-      // 衝突合体判定（多重発火防止）
+      // 衝突判定
       Events.on(engine, 'collisionStart', (e) => {
         e.pairs.forEach(pair => {
           const { bodyA, bodyB } = pair;
@@ -530,10 +500,64 @@
             if (bodyA.fruitLevel === bodyB.fruitLevel && !bodyA._merged && !bodyB._merged) {
               bodyA._merged = true;
               bodyB._merged = true;
-              mergeFruits(bodyA, bodyB);
+              mergeQueue.push({ bodyA, bodyB });
             }
           }
         });
+      });
+    }
+
+    // 高品質Canvasダイレクト描画
+    function renderCanvas() {
+      const width = stageEl.clientWidth;
+      const height = stageEl.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      const bodies = Composite.allBodies(engine.world);
+
+      bodies.forEach(body => {
+        if (body.fruitLevel !== undefined) {
+          const { x, y } = body.position;
+          const r = body.circleRadius;
+          const data = FRUITS[body.fruitLevel];
+
+          ctx.save();
+          ctx.translate(x, y);
+
+          // 1. シャボン玉背景グラデーション
+          const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
+          grad.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+          grad.addColorStop(0.6, data.bubbleColor);
+          grad.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
+
+          ctx.beginPath();
+          ctx.arc(0, 0, r, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // 2. シャボン玉フチ
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.lineWidth = Math.max(1.8, r * 0.04);
+          ctx.stroke();
+
+          // 3. キャライラスト（回転描画）
+          ctx.save();
+          ctx.rotate(body.angle);
+          const imgR = r * 0.84;
+          const img = loadedImages[body.fruitLevel];
+          if (img && img.complete) {
+            ctx.drawImage(img, -imgR, -imgR, imgR * 2, imgR * 2);
+          }
+          ctx.restore();
+
+          // 4. ハイライト光
+          ctx.beginPath();
+          ctx.arc(-r * 0.4, -r * 0.4, r * 0.22, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+          ctx.fill();
+
+          ctx.restore();
+        }
       });
     }
 
@@ -546,7 +570,7 @@
       const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
       const dropX = Math.max(minX, Math.min(maxX, x));
 
-      createFruitBody(dropX, 35, currentFruitIndex, false);
+      createFruitBody(dropX, 35, currentFruitIndex);
 
       guideEl.style.display = 'none';
 
@@ -557,24 +581,9 @@
       }, 500);
     }
 
-    // 生成と同時に初期位置を即時反映（左上スタック防止）
-    function createFruitBody(x, y, level, isMerged = false) {
+    function createFruitBody(x, y, level) {
       const data = FRUITS[level];
       const r = data.bubbleRadius;
-
-      const dom = document.createElement('div');
-      dom.className = 'bubble-dom' + (isMerged ? ' bubble-pop-anim' : '');
-      dom.style.width = (r * 2) + 'px';
-      dom.style.height = (r * 2) + 'px';
-      dom.style.background = data.bubbleColor;
-      dom.style.transform = `translate3d(${x - r}px, ${y - r}px, 0)`; // 生成直後に位置を確定
-
-      const img = document.createElement('img');
-      img.className = 'bubble-img';
-      img.src = data.img;
-      dom.appendChild(img);
-
-      bubbleContainer.appendChild(dom);
 
       const body = Bodies.circle(x, y, r, {
         restitution: 0.12,
@@ -585,26 +594,15 @@
         fruitLevel: level
       });
 
-      body.domElement = dom;
-      body.domImg = img;
       body._merged = false;
-
       Composite.add(engine.world, body);
       return body;
     }
 
-    function mergeFruits(bodyA, bodyB) {
+    function processMerge(bodyA, bodyB) {
       const nextLevel = bodyA.fruitLevel + 1;
       const newX = (bodyA.position.x + bodyB.position.x) / 2;
       const newY = (bodyA.position.y + bodyB.position.y) / 2;
-
-      // 古いDOM要素を完全消去
-      if (bodyA.domElement && bodyA.domElement.parentNode) {
-        bodyA.domElement.parentNode.removeChild(bodyA.domElement);
-      }
-      if (bodyB.domElement && bodyB.domElement.parentNode) {
-        bodyB.domElement.parentNode.removeChild(bodyB.domElement);
-      }
 
       Composite.remove(engine.world, [bodyA, bodyB]);
 
@@ -614,7 +612,7 @@
       createSparkles(newX, newY);
 
       if (nextLevel < FRUITS.length) {
-        const newBody = createFruitBody(newX, newY, nextLevel, true);
+        const newBody = createFruitBody(newX, newY, nextLevel);
         Body.setVelocity(newBody, { x: 0, y: 0.2 });
 
         if (nextLevel === 3) voiceEl.textContent = quotes.merge3;
@@ -652,7 +650,6 @@
       dropFruit(targetX);
     }
 
-    // どこを操作しても即時反応するイベント設定
     stageEl.addEventListener('pointermove', (e) => updateAimPosition(e.clientX));
     stageEl.addEventListener('pointerup', (e) => {
       updateAimPosition(e.clientX);
@@ -692,7 +689,6 @@
 
     function restartGame() {
       document.getElementById('overlay').style.display = 'none';
-      bubbleContainer.innerHTML = '';
       Composite.clear(engine.world, false, true);
       initPhysicsWalls();
       score = 0;
