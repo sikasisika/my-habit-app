@@ -47,7 +47,7 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
       justify-content: flex-start;
     }
 
@@ -64,7 +64,7 @@
       font-size: 11px;
       font-weight: bold;
       background: rgba(0, 0, 0, 0.4);
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 20px;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -75,7 +75,7 @@
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(8px);
       border-radius: 10px;
-      padding: 3px 8px;
+      padding: 4px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -84,21 +84,21 @@
     }
     .score-item { text-align: center; }
     .score-item span { display: block; font-size: 8px; color: #cbd5e1; }
-    .score-item strong { font-size: 14px; color: #f59e0b; }
+    .score-item strong { font-size: 15px; color: #f59e0b; }
 
     .next-preview {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       background: rgba(0, 0, 0, 0.3);
-      padding: 2px 6px;
+      padding: 2px 8px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    .next-preview span { font-size: 8px; color: #94a3b8; font-weight: bold; }
+    .next-preview span { font-size: 9px; color: #94a3b8; font-weight: bold; }
     .next-bubble-box {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
       border: 1.2px solid rgba(255, 255, 255, 0.8);
@@ -107,13 +107,13 @@
       justify-content: center;
       box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
     }
-    .next-img { width: 16px; height: 16px; object-fit: contain; }
+    .next-img { width: 18px; height: 18px; object-fit: contain; }
 
     /* セリフエリア */
     .voice-bubble {
       background: rgba(15, 23, 42, 0.75);
       border-left: 3px solid #FFA500;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 6px;
       font-size: 10px;
       font-weight: bold;
@@ -124,16 +124,16 @@
       flex-shrink: 0;
     }
 
-    /* シャボン玉の進化順サンプルバー */
+    /* 進化順サークルチャート（拡大版） */
     .evolution-chart {
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(6px);
-      border-radius: 10px;
-      padding: 4px 8px;
+      border-radius: 12px;
+      padding: 6px 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       flex-shrink: 0;
       overflow-x: auto;
       scrollbar-width: none;
@@ -143,25 +143,25 @@
     .evo-item {
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       flex-shrink: 0;
     }
     .evo-bubble {
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
     }
     .evo-bubble img {
-      width: 80%;
-      height: 80%;
+      width: 82%;
+      height: 82%;
       object-fit: contain;
     }
     .evo-arrow {
-      font-size: 8px;
-      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.6);
       font-weight: bold;
     }
 
@@ -181,10 +181,10 @@
       flex-shrink: 0;
     }
 
-    /* 危険ライン */
+    /* 危険ライン（ゆとりを持たせて配置） */
     .danger-line {
       position: absolute;
-      top: 45px;
+      top: 75px;
       left: 0;
       right: 0;
       height: 2px;
@@ -194,12 +194,12 @@
       pointer-events: none;
     }
 
-    /* ドロップガイド */
+    /* ドロップガイド（待機エリア） */
     .drop-guide {
       position: absolute;
-      top: 6px;
-      width: 32px;
-      height: 32px;
+      top: 15px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 60%, rgba(255,165,0,0.5) 100%);
       border: 1.5px solid rgba(255, 255, 255, 0.95);
@@ -216,6 +216,8 @@
     /* DOMシャボン玉要素 */
     .bubble-dom {
       position: absolute;
+      top: 0;
+      left: 0;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -374,10 +376,8 @@
       「シャボン玉同士をぶつけて、でっかく進化させろよ！」
     </div>
 
-    <!-- 進化順（サイズ順）サンプルバー -->
-    <div class="evolution-chart" id="evo-chart">
-      <!-- JavaScriptでLv.1〜8のシャボン玉を自動配置 -->
-    </div>
+    <!-- 進化順サークルチャート -->
+    <div class="evolution-chart" id="evo-chart"></div>
 
     <!-- ゲームステージ -->
     <div class="game-stage" id="stage">
@@ -448,7 +448,7 @@
     }
     document.getElementById('best-score-val').textContent = getBestScore();
 
-    // 進化チャートの自動生成
+    // 進化チャートの拡大描画
     function buildEvolutionChart() {
       const chartEl = document.getElementById('evo-chart');
       chartEl.innerHTML = '';
@@ -457,8 +457,8 @@
         const item = document.createElement('div');
         item.className = 'evo-item';
 
-        // プレビューサイズ（Lv.1の16pxからLv.8の32pxまで段階的に拡大）
-        const previewSize = 15 + (i * 2.3);
+        // プレビューサイズ（20px〜38pxまで拡大）
+        const previewSize = 20 + (i * 2.6);
 
         const bubble = document.createElement('div');
         bubble.className = 'evo-bubble';
@@ -492,8 +492,8 @@
 
       engine = Engine.create({ 
         gravity: { x: 0, y: 1.5 },
-        positionIterations: 12,
-        velocityIterations: 12
+        positionIterations: 14,
+        velocityIterations: 14
       });
 
       const wallThickness = 120;
@@ -507,6 +507,7 @@
       runner = Runner.create();
       Runner.run(runner, engine);
 
+      // DOM要素との完全同期ループ
       Events.on(engine, 'afterUpdate', () => {
         const bodies = Composite.allBodies(engine.world);
 
@@ -522,14 +523,14 @@
         });
       });
 
-      // 衝突合体判定
+      // 衝突合体判定（多重合体バグ防止ロック）
       Events.on(engine, 'collisionStart', (e) => {
         e.pairs.forEach(pair => {
           const { bodyA, bodyB } = pair;
           if (bodyA.fruitLevel !== undefined && bodyB.fruitLevel !== undefined) {
-            if (bodyA.fruitLevel === bodyB.fruitLevel && !bodyA.isMerged && !bodyB.isMerged) {
-              bodyA.isMerged = true;
-              bodyB.isMerged = true;
+            if (bodyA.fruitLevel === bodyB.fruitLevel && !bodyA._merged && !bodyB._merged) {
+              bodyA._merged = true;
+              bodyB._merged = true;
               mergeFruits(bodyA, bodyB);
             }
           }
@@ -546,7 +547,8 @@
       const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
       const dropX = Math.max(minX, Math.min(maxX, x));
 
-      createFruitBody(dropX, 25, currentFruitIndex, false);
+      // 危険ラインより上の安全な位置（y: 35）から投下
+      createFruitBody(dropX, 35, currentFruitIndex, false);
 
       guideEl.style.display = 'none';
 
@@ -585,6 +587,7 @@
 
       body.domElement = dom;
       body.domImg = img;
+      body._merged = false;
 
       Composite.add(engine.world, body);
       return body;
@@ -595,8 +598,13 @@
       const newX = (bodyA.position.x + bodyB.position.x) / 2;
       const newY = (bodyA.position.y + bodyB.position.y) / 2;
 
-      if (bodyA.domElement && bodyA.domElement.parentNode) bodyA.domElement.parentNode.removeChild(bodyA.domElement);
-      if (bodyB.domElement && bodyB.domElement.parentNode) bodyB.domElement.parentNode.removeChild(bodyB.domElement);
+      // DOM要素を即座に確実に消去（取り残し防止）
+      if (bodyA.domElement && bodyA.domElement.parentNode) {
+        bodyA.domElement.parentNode.removeChild(bodyA.domElement);
+      }
+      if (bodyB.domElement && bodyB.domElement.parentNode) {
+        bodyB.domElement.parentNode.removeChild(bodyB.domElement);
+      }
 
       Composite.remove(engine.world, [bodyA, bodyB]);
 
@@ -607,7 +615,7 @@
 
       if (nextLevel < FRUITS.length) {
         const newBody = createFruitBody(newX, newY, nextLevel, true);
-        Body.setVelocity(newBody, { x: 0, y: 0.3 });
+        Body.setVelocity(newBody, { x: 0, y: 0.2 });
 
         if (nextLevel === 3) voiceEl.textContent = quotes.merge3;
         if (nextLevel === 6) voiceEl.textContent = quotes.merge6;
@@ -651,12 +659,12 @@
     controlPanel.addEventListener('pointermove', (e) => handleAim(e.clientX));
     controlPanel.addEventListener('pointerup', (e) => handleDrop(e.clientX));
 
-    // 溢れ判定
+    // 溢れ判定（危険ライン 75px より上に安定停止した場合）
     setInterval(() => {
       if (isGameOver) return;
       const bodies = Composite.allBodies(engine.world);
       for (let b of bodies) {
-        if (b.fruitLevel !== undefined && b.position.y < 45 && Math.abs(b.velocity.y) < 0.15 && Math.abs(b.velocity.x) < 0.15) {
+        if (b.fruitLevel !== undefined && b.position.y < 75 && Math.abs(b.velocity.y) < 0.15 && Math.abs(b.velocity.x) < 0.15) {
           triggerGameOver();
           break;
         }
