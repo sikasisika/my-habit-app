@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>マージパズル | すいか風合体ゲーム</title>
+
+  <!-- 物理演算エンジン Matter.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: #1e293b;
+      background-image: linear-gradient(rgba(30, 41, 59, 0.85), rgba(30, 41, 59, 0.85)), url("images/kibana.png");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 14px;
+      padding-top: calc(8px + env(safe-area-inset-top));
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 360px; /* ボックスに合わせて全体幅をスリムに調整 */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* ヘッダー */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .back-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* スコア＆ネクスト表示ボード */
+    .score-board {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+    .score-item { text-align: center; }
+    .score-item span { display: block; font-size: 9px; color: #cbd5e1; }
+    .score-item strong { font-size: 16px; color: #f59e0b; }
+
+    .next-preview {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .next-preview span { font-size: 10px; color: #94a3b8; font-weight: bold; }
+    .next-bubble-box {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+    .next-img { width: 22px; height: 22px; object-fit: contain; }
+
+    /* セリフエリア */
+    .voice-bubble {
+      background: rgba(15, 23, 42, 0.75);
+      border-left: 4px solid #ff8800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #f8fafc;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* ゲームコンテナ（薄いオレンジ背景） */
+    .game-stage {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: linear-gradient(180deg, rgba(255, 237, 213, 0.82) 0%, rgba(254, 215, 170, 0.88) 100%);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: inset 0 0 15px rgba(234, 88, 12, 0.15), 0 4px 12px rgba(0,0,0,0.2);
+      touch-action: none;
+    }
+
+    /* 危険ライン */
+    .danger-line {
+      position: absolute;
+      top: 65px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, #ef4444, #ef4444 8px, transparent 8px, transparent 16px);
+      z-index: 5;
+      opacity: 0.75;
+    }
+
+    /* ドロップガイド */
+    .drop-guide {
+      position: absolute;
+      top: 15px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 60%, rgba(56,189,248,0.4) 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .drop-guide img { width: 75%; height: 75%; object-fit: contain; }
+
+    /* 合体パーティクル */
+    .sparkle-particle {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 20;
+      animation: particleFly 0.45s forwards ease-out;
+    }
+    @keyframes particleFly {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+
+    /* リザルト画面 */
+    .overlay-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      text-align: center;
+      z-index: 30;
+    }
+    .overlay-screen h2 { font-size: 20px; color: #f59e0b; }
+    .overlay-screen p { font-size: 11px; color: #cbd5e1; line-height: 1.4; }
+
+    .btn-action {
+      background: linear-gradient(135deg, #ff8800, #ea580c);
+      color: #ffffff;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 24px;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 136, 0, 0.4);
+      margin-top: 4px;
+    }
+    .btn-action:active { transform: scale(0.94); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <a href="index.html" class="back-btn">◀ 戻る</a>
+      <span style="font-size: 10px; color: #cbd5e1;">MERGE PUZZLE</span>
+    </div>
+
+    <div class="score-board">
+      <div class="score-item">
+        <span>🔥 スコア</span>
+        <strong id="score-val">0</strong>
+      </div>
+      <div class="next-preview">
+        <span>NEXT ➔</span>
+        <div class="next-bubble-box">
+          <img id="next-img" class="next-img" src="images/merge1.png" alt="">
+        </div>
+      </div>
+      <div class="score-item">
+        <span>👑 ベスト</span>
+        <strong id="best-score-val">0</strong>
+      </div>
+    </div>
+
+    <div class="voice-bubble" id="voice-msg">
+      「シャボン玉同士をぶつけて、でっかく進化させろよ！」
+    </div>
+
+    <div class="game-stage" id="stage">
+      <div class="danger-line"></div>
+      
+      <div class="drop-guide" id="drop-guide">
+        <img id="guide-img" src="images/merge1.png" alt="">
+      </div>
+
+      <canvas id="matter-canvas" style="width: 100%; height: 100%; display: block; image-rendering: -webkit-optimize-contrast;"></canvas>
+
+      <div class="overlay-screen" id="overlay" style="display: none;">
+        <h2 id="overlay-title">ゲームオーバー</h2>
+        <p id="overlay-desc">箱から溢れちまったな！<br>もう一回挑戦するか？</p>
+        <button class="btn-action" onclick="restartGame()">もう一度遊ぶ</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const FRUITS = [
+      { level: 0, bubbleRadius: 20, score: 2,   bubbleColor: 'rgba(56, 189, 248, 0.45)', img: 'images/merge1.png' },
+      { level: 1, bubbleRadius: 26, score: 4,   bubbleColor: 'rgba(168, 85, 247, 0.45)', img: 'images/merge2.png' },
+      { level: 2, bubbleRadius: 33, score: 8,   bubbleColor: 'rgba(236, 72, 153, 0.45)', img: 'images/merge3.png' },
+      { level: 3, bubbleRadius: 41, score: 16,  bubbleColor: 'rgba(245, 158, 11, 0.45)', img: 'images/merge4.png' },
+      { level: 4, bubbleRadius: 50, score: 32,  bubbleColor: 'rgba(34, 197, 94, 0.45)',  img: 'images/merge5.png' },
+      { level: 5, bubbleRadius: 59, score: 64,  bubbleColor: 'rgba(239, 68, 68, 0.45)',  img: 'images/merge6.png' },
+      { level: 6, bubbleRadius: 69, score: 128, bubbleColor: 'rgba(14, 165, 233, 0.45)', img: 'images/merge7.png' },
+      { level: 7, bubbleRadius: 80, score: 256, bubbleColor: 'rgba(234, 179, 8, 0.55)',  img: 'images/merge8.png' }
+    ];
+
+    const loadedImages = {};
+    FRUITS.forEach(f => {
+      const img = new Image();
+      img.src = f.img;
+      loadedImages[f.level] = img;
+    });
+
+    let score = 0;
+    let currentFruitIndex = 0;
+    let nextFruitIndex = 0;
+    let canDrop = true;
+    let isGameOver = false;
+
+    const stageEl = document.getElementById('stage');
+    const canvas = document.getElementById('matter-canvas');
+    const guideEl = document.getElementById('drop-guide');
+    const guideImg = document.getElementById('guide-img');
+    const nextImg = document.getElementById('next-img');
+    const voiceEl = document.getElementById('voice-msg');
+
+    const quotes = {
+      start: "「シャボン玉同士をぶつけて、でっかく進化させろよ！」",
+      merge3: "「いい感じに育ってきたじゃねえか！」",
+      merge6: "「すげえ！あと少しで最大進化だぜ！」",
+      max: "「やったな！！最高ランク達成だぜ、最高だ！」",
+      overLow: "「おっと、溢れちまったか！次はもっといけんだろ？」",
+      overHigh: "「マジかよ！そこまでデカく育てたのすげえな！」"
+    };
+
+    function getBestScore() {
+      return parseInt(localStorage.getItem('my_merge_best') || '0');
+    }
+    document.getElementById('best-score-val').textContent = getBestScore();
+
+    const { Engine, Render, Runner, Bodies, Composite, Events } = Matter;
+    let engine, render, runner;
+
+    function initPhysics() {
+      const width = stageEl.clientWidth;
+      const height = stageEl.clientHeight;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      engine = Engine.create({ 
+        gravity: { x: 0, y: 1.4 },
+        positionIterations: 10,
+        velocityIterations: 10
+      });
+
+      render = Render.create({
+        canvas: canvas,
+        engine: engine,
+        options: {
+          width: width,
+          height: height,
+          wireframes: false,
+          background: 'transparent'
+        }
+      });
+
+      // 壁（摩擦を適度に持たせる）
+      const wallThickness = 100;
+      const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { 
+        isStatic: true, 
+        friction: 0.5,
+        render: { visible: false } 
+      });
+      const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, { 
+        isStatic: true, 
+        friction: 0.2,
+        render: { visible: false } 
+      });
+      const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, { 
+        isStatic: true, 
+        friction: 0.2,
+        render: { visible: false } 
+      });
+
+      Composite.add(engine.world, [ground, leftWall, rightWall]);
+
+      Render.run(render);
+      runner = Runner.create();
+      Runner.run(runner, engine);
+
+      Events.on(render, 'afterRender', () => {
+        const ctx = render.context;
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        const bodies = Composite.allBodies(engine.world);
+
+        bodies.forEach(body => {
+          if (body.fruitLevel !== undefined) {
+            const { x, y } = body.position;
+            const data = FRUITS[body.fruitLevel];
+            const r = body.circleRadius;
+
+            ctx.save();
+            ctx.translate(x, y);
+
+            // 1. シャボン玉背景
+            const bubbleGrad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.1, 0, 0, r);
+            bubbleGrad.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
+            bubbleGrad.addColorStop(0.6, data.bubbleColor);
+            bubbleGrad.addColorStop(1, 'rgba(255, 255, 255, 0.65)');
+
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fillStyle = bubbleGrad;
+            ctx.fill();
+
+            // 2. シャボン玉フチ
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // 3. キャライラスト
+            ctx.save();
+            ctx.rotate(body.angle);
+            const imgR = r * 0.85;
+            const img = loadedImages[body.fruitLevel];
+            if (img && img.complete) {
+              ctx.drawImage(img, -imgR, -imgR, imgR * 2, imgR * 2);
+            }
+            ctx.restore();
+
+            // 4. ハイライト
+            ctx.beginPath();
+            ctx.arc(-r * 0.4, -r * 0.4, r * 0.2, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fill();
+
+            ctx.restore();
+          }
+        });
+      });
+
+      // 衝突判定
+      Events.on(engine, 'collisionStart', (e) => {
+        e.pairs.forEach(pair => {
+          const { bodyA, bodyB } = pair;
+          if (bodyA.fruitLevel !== undefined && bodyB.fruitLevel !== undefined) {
+            if (bodyA.fruitLevel === bodyB.fruitLevel && !bodyA.isMerged && !bodyB.isMerged) {
+              bodyA.isMerged = true;
+              bodyB.isMerged = true;
+              mergeFruits(bodyA, bodyB);
+            }
+          }
+        });
+      });
+    }
+
+    function dropFruit(x) {
+      if (!canDrop || isGameOver) return;
+      canDrop = false;
+
+      const fruitData = FRUITS[currentFruitIndex];
+      const minX = fruitData.bubbleRadius + 6;
+      const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
+      const dropX = Math.max(minX, Math.min(maxX, x));
+
+      createFruitBody(dropX, 35, currentFruitIndex);
+
+      guideEl.style.display = 'none';
+
+      setTimeout(() => {
+        prepareNextFruit();
+        guideEl.style.display = 'flex';
+        canDrop = true;
+      }, 550);
+    }
+
+    // 摩擦力をしっかり強化した物理ボディ
+    function createFruitBody(x, y, level) {
+      const data = FRUITS[level];
+      const body = Bodies.circle(x, y, data.bubbleRadius, {
+        restitution: 0.1,       // 跳ね返りを抑えて落ち着かせる
+        friction: 0.4,          // 接触摩擦（しっかり引っかかる）
+        frictionStatic: 0.5,    // 静止摩擦（積み重なりやすくする）
+        frictionAir: 0.015,     // 空気抵抗（転がりすぎを防止）
+        density: 0.002,
+        fruitLevel: level,
+        render: { visible: false }
+      });
+
+      Composite.add(engine.world, body);
+      return body;
+    }
+
+    function mergeFruits(bodyA, bodyB) {
+      const nextLevel = bodyA.fruitLevel + 1;
+      const newX = (bodyA.position.x + bodyB.position.x) / 2;
+      const newY = (bodyA.position.y + bodyB.position.y) / 2;
+
+      Composite.remove(engine.world, [bodyA, bodyB]);
+
+      score += FRUITS[bodyA.fruitLevel].score * 2;
+      document.getElementById('score-val').textContent = score;
+
+      createSparkles(newX, newY);
+
+      if (nextLevel < FRUITS.length) {
+        createFruitBody(newX, newY, nextLevel);
+        if (nextLevel === 3) voiceEl.textContent = quotes.merge3;
+        if (nextLevel === 6) voiceEl.textContent = quotes.merge6;
+        if (nextLevel === 7) voiceEl.textContent = quotes.max;
+      }
+    }
+
+    function prepareNextFruit() {
+      currentFruitIndex = nextFruitIndex;
+      nextFruitIndex = Math.floor(Math.random() * 3);
+
+      const cur = FRUITS[currentFruitIndex];
+      guideImg.src = cur.img;
+      guideEl.style.width = (cur.bubbleRadius * 2) + 'px';
+      guideEl.style.height = (cur.bubbleRadius * 2) + 'px';
+
+      nextImg.src = FRUITS[nextFruitIndex].img;
+    }
+
+    stageEl.addEventListener('pointermove', (e) => {
+      if (!canDrop || isGameOver) return;
+      const rect = stageEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      guideEl.style.left = x + 'px';
+    });
+
+    stageEl.addEventListener('pointerup', (e) => {
+      if (!canDrop || isGameOver) return;
+      const rect = stageEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      dropFruit(x);
+    });
+
+    // 溢れ判定（停止したときに判定）
+    setInterval(() => {
+      if (isGameOver) return;
+      const bodies = Composite.allBodies(engine.world);
+      for (let b of bodies) {
+        if (b.fruitLevel !== undefined && b.position.y < 65 && Math.abs(b.velocity.y) < 0.2 && Math.abs(b.velocity.x) < 0.2) {
+          triggerGameOver();
+          break;
+        }
+      }
+    }, 1000);
+
+    function triggerGameOver() {
+      isGameOver = true;
+      let best = getBestScore();
+      if (score > best) {
+        best = score;
+        localStorage.setItem('my_merge_best', best);
+        document.getElementById('best-score-val').textContent = best;
+      }
+
+      document.getElementById('overlay-desc').innerHTML = `スコア: <strong style="font-size:22px; color:#f59e0b;">${score}</strong> 点！<br>${score >= 500 ? quotes.overHigh : quotes.overLow}`;
+      document.getElementById('overlay').style.display = 'flex';
+    }
+
+    function restartGame() {
+      document.getElementById('overlay').style.display = 'none';
+      Composite.clear(engine.world, false, true);
+      score = 0;
+      document.getElementById('score-val').textContent = 0;
+      isGameOver = false;
+      canDrop = true;
+      voiceEl.textContent = quotes.start;
+      prepareNextFruit();
+      guideEl.style.display = 'flex';
+    }
+
+    function createSparkles(x, y) {
+      const colors = ['#f59e0b', '#ec4899', '#38bdf8', '#a855f7', '#fbbf24', '#ffffff'];
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'sparkle-particle';
+        const size = Math.floor(Math.random() * 8) + 6;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        const angle = (Math.PI * 2 / 8) * i + (Math.random() - 0.5);
+        const distance = Math.floor(Math.random() * 40) + 20;
+        p.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        p.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+        p.style.left = (x - size / 2) + 'px';
+        p.style.top = (y - size / 2) + 'px';
+        stageEl.appendChild(p);
+        setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, 450);
+      }
+    }
+
+    window.onload = () => {
+      initPhysics();
+      currentFruitIndex = Math.floor(Math.random() * 2);
+      nextFruitIndex = Math.floor(Math.random() * 3);
+      
+      const cur = FRUITS[currentFruitIndex];
+      guideImg.src = cur.img;
+      guideEl.style.width = (cur.bubbleRadius * 2) + 'px';
+      guideEl.style.height = (cur.bubbleRadius * 2) + 'px';
+
+      nextImg.src = FRUITS[nextFruitIndex].img;
+      guideEl.style.left = (stageEl.clientWidth / 2) + 'px';
+    };
+  </script>
+</body>
+</html>
