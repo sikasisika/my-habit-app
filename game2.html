@@ -24,6 +24,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      touch-action: none;
     }
 
     body {
@@ -124,7 +125,7 @@
       flex-shrink: 0;
     }
 
-    /* 進化順サークルチャート（拡大版） */
+    /* 進化順サークルチャート */
     .evolution-chart {
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(6px);
@@ -179,9 +180,10 @@
       box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), 0 4px 14px rgba(0, 0, 0, 0.3);
       touch-action: none;
       flex-shrink: 0;
+      cursor: pointer;
     }
 
-    /* 危険ライン（ゆとりを持たせて配置） */
+    /* 危険ライン */
     .danger-line {
       position: absolute;
       top: 75px;
@@ -194,7 +196,7 @@
       pointer-events: none;
     }
 
-    /* ドロップガイド（待機エリア） */
+    /* ドロップガイド */
     .drop-guide {
       position: absolute;
       top: 15px;
@@ -376,10 +378,8 @@
       「シャボン玉同士をぶつけて、でっかく進化させろよ！」
     </div>
 
-    <!-- 進化順サークルチャート -->
     <div class="evolution-chart" id="evo-chart"></div>
 
-    <!-- ゲームステージ -->
     <div class="game-stage" id="stage">
       <div class="danger-line"></div>
       
@@ -397,7 +397,6 @@
 
     </div>
 
-    <!-- 下部専用操作パネル -->
     <div class="control-panel" id="control-panel">
       <span class="control-guide-txt">◀ スライドして狙いを定めて離す ▶</span>
       <div class="control-track">
@@ -424,6 +423,7 @@
     let nextFruitIndex = 0;
     let canDrop = true;
     let isGameOver = false;
+    let currentAimX = null;
 
     const stageEl = document.getElementById('stage');
     const bubbleContainer = document.getElementById('bubble-container');
@@ -448,7 +448,6 @@
     }
     document.getElementById('best-score-val').textContent = getBestScore();
 
-    // 進化チャートの拡大描画
     function buildEvolutionChart() {
       const chartEl = document.getElementById('evo-chart');
       chartEl.innerHTML = '';
@@ -457,7 +456,6 @@
         const item = document.createElement('div');
         item.className = 'evo-item';
 
-        // プレビューサイズ（20px〜38pxまで拡大）
         const previewSize = 20 + (i * 2.6);
 
         const bubble = document.createElement('div');
@@ -507,7 +505,6 @@
       runner = Runner.create();
       Runner.run(runner, engine);
 
-      // DOM要素との完全同期ループ
       Events.on(engine, 'afterUpdate', () => {
         const bodies = Composite.allBodies(engine.world);
 
@@ -523,7 +520,6 @@
         });
       });
 
-      // 衝突合体判定（多重合体バグ防止ロック）
       Events.on(engine, 'collisionStart', (e) => {
         e.pairs.forEach(pair => {
           const { bodyA, bodyB } = pair;
@@ -547,11 +543,11 @@
       const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
       const dropX = Math.max(minX, Math.min(maxX, x));
 
-      // 危険ラインより上の安全な位置（y: 35）から投下
       createFruitBody(dropX, 35, currentFruitIndex, false);
 
       guideEl.style.display = 'none';
 
+      // 安定解除タイマー（操作不能ロック防止）
       setTimeout(() => {
         prepareNextFruit();
         guideEl.style.display = 'flex';
@@ -598,7 +594,6 @@
       const newX = (bodyA.position.x + bodyB.position.x) / 2;
       const newY = (bodyA.position.y + bodyB.position.y) / 2;
 
-      // DOM要素を即座に確実に消去（取り残し防止）
       if (bodyA.domElement && bodyA.domElement.parentNode) {
         bodyA.domElement.parentNode.removeChild(bodyA.domElement);
       }
@@ -635,31 +630,51 @@
       nextImg.src = FRUITS[nextFruitIndex].img;
     }
 
-    function handleAim(clientX) {
-      if (!canDrop || isGameOver) return;
+    // タッチ＆ポインター共通の操作処理
+    function updateAimPosition(clientX) {
       const rect = stageEl.getBoundingClientRect();
       let x = clientX - rect.left;
       x = Math.max(20, Math.min(rect.width - 20, x));
+      currentAimX = x;
       guideEl.style.left = x + 'px';
 
       const ratio = (x / rect.width) * 100;
       controlKnob.style.left = ratio + '%';
     }
 
-    function handleDrop(clientX) {
+    function triggerDropAction() {
       if (!canDrop || isGameOver) return;
-      const rect = stageEl.getBoundingClientRect();
-      const x = clientX - rect.left;
-      dropFruit(x);
+      const targetX = (currentAimX !== null) ? currentAimX : (stageEl.clientWidth / 2);
+      dropFruit(targetX);
     }
 
-    stageEl.addEventListener('pointermove', (e) => handleAim(e.clientX));
-    stageEl.addEventListener('pointerup', (e) => handleDrop(e.clientX));
+    // イベント登録（マウス・タッチ完全両対応）
+    ['pointerdown', 'pointermove'].forEach(type => {
+      stageEl.addEventListener(type, (e) => updateAimPosition(e.clientX), { passive: true });
+      controlPanel.addEventListener(type, (e) => updateAimPosition(e.clientX), { passive: true });
+    });
 
-    controlPanel.addEventListener('pointermove', (e) => handleAim(e.clientX));
-    controlPanel.addEventListener('pointerup', (e) => handleDrop(e.clientX));
+    ['pointerup', 'pointercancel'].forEach(type => {
+      stageEl.addEventListener(type, triggerDropAction);
+      controlPanel.addEventListener(type, triggerDropAction);
+    });
 
-    // 溢れ判定（危険ライン 75px より上に安定停止した場合）
+    // スマホタッチバックアップ
+    ['touchstart', 'touchmove'].forEach(type => {
+      stageEl.addEventListener(type, (e) => {
+        if (e.touches && e.touches[0]) updateAimPosition(e.touches[0].clientX);
+      }, { passive: true });
+      controlPanel.addEventListener(type, (e) => {
+        if (e.touches && e.touches[0]) updateAimPosition(e.touches[0].clientX);
+      }, { passive: true });
+    });
+
+    ['touchend', 'touchcancel'].forEach(type => {
+      stageEl.addEventListener(type, triggerDropAction);
+      controlPanel.addEventListener(type, triggerDropAction);
+    });
+
+    // 溢れ判定
     setInterval(() => {
       if (isGameOver) return;
       const bodies = Composite.allBodies(engine.world);
