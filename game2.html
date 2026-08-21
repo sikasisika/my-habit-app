@@ -36,9 +36,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 8px 14px;
-      padding-top: calc(6px + env(safe-area-inset-top));
-      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+      padding: 6px 12px;
+      padding-top: calc(4px + env(safe-area-inset-top));
+      padding-bottom: calc(4px + env(safe-area-inset-bottom));
     }
 
     .container {
@@ -47,7 +47,7 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
       justify-content: flex-start;
     }
 
@@ -61,10 +61,10 @@
     .back-btn {
       color: #ffffff;
       text-decoration: none;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       background: rgba(0, 0, 0, 0.4);
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -74,8 +74,8 @@
     .score-board {
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(8px);
-      border-radius: 12px;
-      padding: 4px 10px;
+      border-radius: 10px;
+      padding: 3px 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -83,59 +83,100 @@
       flex-shrink: 0;
     }
     .score-item { text-align: center; }
-    .score-item span { display: block; font-size: 9px; color: #cbd5e1; }
-    .score-item strong { font-size: 15px; color: #f59e0b; }
+    .score-item span { display: block; font-size: 8px; color: #cbd5e1; }
+    .score-item strong { font-size: 14px; color: #f59e0b; }
 
     .next-preview {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       background: rgba(0, 0, 0, 0.3);
-      padding: 2px 8px;
+      padding: 2px 6px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
-    .next-preview span { font-size: 9px; color: #94a3b8; font-weight: bold; }
+    .next-preview span { font-size: 8px; color: #94a3b8; font-weight: bold; }
     .next-bubble-box {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.2);
-      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      border: 1.2px solid rgba(255, 255, 255, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
     }
-    .next-img { width: 20px; height: 20px; object-fit: contain; }
+    .next-img { width: 16px; height: 16px; object-fit: contain; }
 
     /* セリフエリア */
     .voice-bubble {
       background: rgba(15, 23, 42, 0.75);
-      border-left: 4px solid #FFA500;
-      padding: 3px 8px;
-      border-radius: 8px;
-      font-size: 11px;
+      border-left: 3px solid #FFA500;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10px;
       font-weight: bold;
       color: #f8fafc;
-      min-height: 24px;
+      min-height: 20px;
       display: flex;
       align-items: center;
       flex-shrink: 0;
     }
 
+    /* シャボン玉の進化順サンプルバー */
+    .evolution-chart {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(6px);
+      border-radius: 10px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .evolution-chart::-webkit-scrollbar { display: none; }
+
+    .evo-item {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .evo-bubble {
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+    }
+    .evo-bubble img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+    .evo-arrow {
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: bold;
+    }
+
     /* ゲームコンテナ */
     .game-stage {
-      height: 60vh;
-      height: 60dvh;
-      max-height: 480px;
+      height: 56vh;
+      height: 56dvh;
+      max-height: 440px;
       background-color: #FFA500;
       background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(0, 0, 0, 0.1) 100%);
-      border-radius: 16px;
+      border-radius: 14px;
       position: relative;
       overflow: hidden;
       border: 2px solid rgba(255, 255, 255, 0.6);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), 0 6px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), 0 4px 14px rgba(0, 0, 0, 0.3);
       touch-action: none;
       flex-shrink: 0;
     }
@@ -143,7 +184,7 @@
     /* 危険ライン */
     .danger-line {
       position: absolute;
-      top: 50px;
+      top: 45px;
       left: 0;
       right: 0;
       height: 2px;
@@ -156,9 +197,9 @@
     /* ドロップガイド */
     .drop-guide {
       position: absolute;
-      top: 8px;
-      width: 36px;
-      height: 36px;
+      top: 6px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 60%, rgba(255,165,0,0.5) 100%);
       border: 1.5px solid rgba(255, 255, 255, 0.95);
@@ -185,8 +226,6 @@
       box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(0, 0, 0, 0.15);
       will-change: transform;
     }
-
-    /* 合体時のポヨンッと弾むかわいいアニメーション */
     .bubble-pop-anim {
       animation: bubblePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
@@ -195,7 +234,6 @@
       50% { transform: scale(1.18); }
       100% { transform: scale(1); }
     }
-
     .bubble-dom::after {
       content: "";
       position: absolute;
@@ -219,14 +257,14 @@
     .control-panel {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(8px);
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 10px 14px;
+      padding: 8px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 3px;
       touch-action: none;
       cursor: grab;
     }
@@ -235,28 +273,28 @@
       background: rgba(255, 255, 255, 0.22);
     }
     .control-guide-txt {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       color: #cbd5e1;
       letter-spacing: 0.5px;
     }
     .control-track {
       width: 100%;
-      height: 6px;
+      height: 5px;
       background: rgba(0, 0, 0, 0.3);
       border-radius: 3px;
       position: relative;
     }
     .control-knob {
-      width: 24px;
-      height: 12px;
+      width: 20px;
+      height: 10px;
       background: #FFA500;
-      border-radius: 6px;
+      border-radius: 5px;
       position: absolute;
-      top: -3px;
+      top: -2.5px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 0 6px rgba(255, 165, 0, 0.8);
+      box-shadow: 0 0 5px rgba(255, 165, 0, 0.8);
       border: 1px solid #fff;
     }
 
@@ -295,9 +333,9 @@
       background: linear-gradient(135deg, #FFA500, #ea580c);
       color: #ffffff;
       border: none;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
-      padding: 8px 24px;
+      padding: 6px 20px;
       border-radius: 20px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
@@ -336,6 +374,11 @@
       「シャボン玉同士をぶつけて、でっかく進化させろよ！」
     </div>
 
+    <!-- 進化順（サイズ順）サンプルバー -->
+    <div class="evolution-chart" id="evo-chart">
+      <!-- JavaScriptでLv.1〜8のシャボン玉を自動配置 -->
+    </div>
+
     <!-- ゲームステージ -->
     <div class="game-stage" id="stage">
       <div class="danger-line"></div>
@@ -365,7 +408,6 @@
   </div>
 
   <script>
-    // ひと回り大きく調整したサイズ（18px 〜 105px）
     const FRUITS = [
       { level: 0, bubbleRadius: 18, score: 2,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.5) 60%, rgba(2,132,199,0.7) 100%)', img: 'images/merge1.png' },
       { level: 1, bubbleRadius: 25, score: 4,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(168,85,247,0.5) 60%, rgba(126,34,206,0.7) 100%)', img: 'images/merge2.png' },
@@ -405,6 +447,41 @@
       return parseInt(localStorage.getItem('my_merge_best') || '0');
     }
     document.getElementById('best-score-val').textContent = getBestScore();
+
+    // 進化チャートの自動生成
+    function buildEvolutionChart() {
+      const chartEl = document.getElementById('evo-chart');
+      chartEl.innerHTML = '';
+
+      FRUITS.forEach((f, i) => {
+        const item = document.createElement('div');
+        item.className = 'evo-item';
+
+        // プレビューサイズ（Lv.1の16pxからLv.8の32pxまで段階的に拡大）
+        const previewSize = 15 + (i * 2.3);
+
+        const bubble = document.createElement('div');
+        bubble.className = 'evo-bubble';
+        bubble.style.width = previewSize + 'px';
+        bubble.style.height = previewSize + 'px';
+        bubble.style.background = f.bubbleColor;
+
+        const img = document.createElement('img');
+        img.src = f.img;
+        bubble.appendChild(img);
+
+        item.appendChild(bubble);
+
+        if (i < FRUITS.length - 1) {
+          const arrow = document.createElement('span');
+          arrow.className = 'evo-arrow';
+          arrow.textContent = '›';
+          item.appendChild(arrow);
+        }
+
+        chartEl.appendChild(item);
+      });
+    }
 
     const { Engine, Runner, Bodies, Composite, Events, Body } = Matter;
     let engine, runner;
@@ -469,7 +546,7 @@
       const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
       const dropX = Math.max(minX, Math.min(maxX, x));
 
-      createFruitBody(dropX, 30, currentFruitIndex, false);
+      createFruitBody(dropX, 25, currentFruitIndex, false);
 
       guideEl.style.display = 'none';
 
@@ -480,7 +557,6 @@
       }, 500);
     }
 
-    // 滑らかに滑り落ちる物理設定＋ポップアニメーション対応
     function createFruitBody(x, y, level, isMerged = false) {
       const data = FRUITS[level];
       const r = data.bubbleRadius;
@@ -498,12 +574,11 @@
 
       bubbleContainer.appendChild(dom);
 
-      // スルリと隙間に滑り込む滑らかな物理パラメータ
       const body = Bodies.circle(x, y, r, {
-        restitution: 0.12,     // ほどよいポヨン感
-        friction: 0.02,        // 接触摩擦を大幅に低減（気持ちよく滑る）
+        restitution: 0.12,
+        friction: 0.02,
         frictionStatic: 0.05,
-        frictionAir: 0.003,    // 転がりやすさ
+        frictionAir: 0.003,
         density: 0.002,
         fruitLevel: level
       });
@@ -581,7 +656,7 @@
       if (isGameOver) return;
       const bodies = Composite.allBodies(engine.world);
       for (let b of bodies) {
-        if (b.fruitLevel !== undefined && b.position.y < 50 && Math.abs(b.velocity.y) < 0.15 && Math.abs(b.velocity.x) < 0.15) {
+        if (b.fruitLevel !== undefined && b.position.y < 45 && Math.abs(b.velocity.y) < 0.15 && Math.abs(b.velocity.x) < 0.15) {
           triggerGameOver();
           break;
         }
@@ -647,6 +722,7 @@
     }
 
     window.onload = () => {
+      buildEvolutionChart();
       initPhysics();
       currentFruitIndex = Math.floor(Math.random() * 2);
       nextFruitIndex = Math.floor(Math.random() * 3);
