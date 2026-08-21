@@ -215,7 +215,7 @@
     }
     .drop-guide img { width: 80%; height: 80%; object-fit: contain; }
 
-    /* DOMシャボン玉要素 */
+    /* DOMシャボン玉要素（超高画質描画） */
     .bubble-dom {
       position: absolute;
       top: 0;
@@ -229,6 +229,7 @@
       border: 2px solid rgba(255, 255, 255, 0.95);
       box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(0, 0, 0, 0.15);
       will-change: transform;
+      transform-origin: center center;
     }
     .bubble-pop-anim {
       animation: bubblePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -505,6 +506,7 @@
       runner = Runner.create();
       Runner.run(runner, engine);
 
+      // DOM位置同期ループ
       Events.on(engine, 'afterUpdate', () => {
         const bodies = Composite.allBodies(engine.world);
 
@@ -520,6 +522,7 @@
         });
       });
 
+      // 衝突合体判定（多重発火防止）
       Events.on(engine, 'collisionStart', (e) => {
         e.pairs.forEach(pair => {
           const { bodyA, bodyB } = pair;
@@ -547,7 +550,6 @@
 
       guideEl.style.display = 'none';
 
-      // 安定解除タイマー（操作不能ロック防止）
       setTimeout(() => {
         prepareNextFruit();
         guideEl.style.display = 'flex';
@@ -555,6 +557,7 @@
       }, 500);
     }
 
+    // 生成と同時に初期位置を即時反映（左上スタック防止）
     function createFruitBody(x, y, level, isMerged = false) {
       const data = FRUITS[level];
       const r = data.bubbleRadius;
@@ -564,6 +567,7 @@
       dom.style.width = (r * 2) + 'px';
       dom.style.height = (r * 2) + 'px';
       dom.style.background = data.bubbleColor;
+      dom.style.transform = `translate3d(${x - r}px, ${y - r}px, 0)`; // 生成直後に位置を確定
 
       const img = document.createElement('img');
       img.className = 'bubble-img';
@@ -594,6 +598,7 @@
       const newX = (bodyA.position.x + bodyB.position.x) / 2;
       const newY = (bodyA.position.y + bodyB.position.y) / 2;
 
+      // 古いDOM要素を完全消去
       if (bodyA.domElement && bodyA.domElement.parentNode) {
         bodyA.domElement.parentNode.removeChild(bodyA.domElement);
       }
@@ -630,7 +635,6 @@
       nextImg.src = FRUITS[nextFruitIndex].img;
     }
 
-    // タッチ＆ポインター共通の操作処理
     function updateAimPosition(clientX) {
       const rect = stageEl.getBoundingClientRect();
       let x = clientX - rect.left;
@@ -648,33 +652,20 @@
       dropFruit(targetX);
     }
 
-    // イベント登録（マウス・タッチ完全両対応）
-    ['pointerdown', 'pointermove'].forEach(type => {
-      stageEl.addEventListener(type, (e) => updateAimPosition(e.clientX), { passive: true });
-      controlPanel.addEventListener(type, (e) => updateAimPosition(e.clientX), { passive: true });
+    // どこを操作しても即時反応するイベント設定
+    stageEl.addEventListener('pointermove', (e) => updateAimPosition(e.clientX));
+    stageEl.addEventListener('pointerup', (e) => {
+      updateAimPosition(e.clientX);
+      triggerDropAction();
     });
 
-    ['pointerup', 'pointercancel'].forEach(type => {
-      stageEl.addEventListener(type, triggerDropAction);
-      controlPanel.addEventListener(type, triggerDropAction);
+    controlPanel.addEventListener('pointermove', (e) => updateAimPosition(e.clientX));
+    controlPanel.addEventListener('pointerup', (e) => {
+      updateAimPosition(e.clientX);
+      triggerDropAction();
     });
 
-    // スマホタッチバックアップ
-    ['touchstart', 'touchmove'].forEach(type => {
-      stageEl.addEventListener(type, (e) => {
-        if (e.touches && e.touches[0]) updateAimPosition(e.touches[0].clientX);
-      }, { passive: true });
-      controlPanel.addEventListener(type, (e) => {
-        if (e.touches && e.touches[0]) updateAimPosition(e.touches[0].clientX);
-      }, { passive: true });
-    });
-
-    ['touchend', 'touchcancel'].forEach(type => {
-      stageEl.addEventListener(type, triggerDropAction);
-      controlPanel.addEventListener(type, triggerDropAction);
-    });
-
-    // 溢れ判定
+    // 溢れ判定（危険ライン 75px より上で静止した場合）
     setInterval(() => {
       if (isGameOver) return;
       const bodies = Composite.allBodies(engine.world);
@@ -708,6 +699,7 @@
       document.getElementById('score-val').textContent = 0;
       isGameOver = false;
       canDrop = true;
+      currentAimX = stageEl.clientWidth / 2;
       voiceEl.textContent = quotes.start;
       prepareNextFruit();
       guideEl.style.display = 'flex';
@@ -756,7 +748,8 @@
       guideEl.style.height = (cur.bubbleRadius * 2) + 'px';
 
       nextImg.src = FRUITS[nextFruitIndex].img;
-      guideEl.style.left = (stageEl.clientWidth / 2) + 'px';
+      currentAimX = stageEl.clientWidth / 2;
+      guideEl.style.left = currentAimX + 'px';
     };
   </script>
 </body>
