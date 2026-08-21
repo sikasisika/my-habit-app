@@ -156,9 +156,9 @@
     /* ドロップガイド */
     .drop-guide {
       position: absolute;
-      top: 10px;
-      width: 32px;
-      height: 32px;
+      top: 8px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 60%, rgba(255,165,0,0.5) 100%);
       border: 1.5px solid rgba(255, 255, 255, 0.95);
@@ -172,7 +172,7 @@
     }
     .drop-guide img { width: 80%; height: 80%; object-fit: contain; }
 
-    /* DOMシャボン玉要素（最高画質レンダリング） */
+    /* DOMシャボン玉要素 */
     .bubble-dom {
       position: absolute;
       border-radius: 50%;
@@ -182,9 +182,20 @@
       pointer-events: none;
       z-index: 6;
       border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(0, 0, 0, 0.15);
       will-change: transform;
     }
+
+    /* 合体時のポヨンッと弾むかわいいアニメーション */
+    .bubble-pop-anim {
+      animation: bubblePop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes bubblePop {
+      0% { transform: scale(0.65); }
+      50% { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
     .bubble-dom::after {
       content: "";
       position: absolute;
@@ -197,14 +208,14 @@
       pointer-events: none;
     }
     .bubble-img {
-      width: 82%;
-      height: 82%;
+      width: 84%;
+      height: 84%;
       object-fit: contain;
       pointer-events: none;
       transform-origin: center center;
     }
 
-    /* 下部専用操作パネル */
+    /* 下部操作パネル */
     .control-panel {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(8px);
@@ -249,7 +260,7 @@
       border: 1px solid #fff;
     }
 
-    /* 合体パーティクル */
+    /* パーティクル */
     .sparkle-particle {
       position: absolute;
       pointer-events: none;
@@ -333,7 +344,6 @@
         <img id="guide-img" src="images/merge1.png" alt="">
       </div>
 
-      <!-- DOM要素を生成するコンテナ -->
       <div id="bubble-container" style="position: absolute; inset: 0; pointer-events: none;"></div>
 
       <div class="overlay-screen" id="overlay" style="display: none;">
@@ -355,15 +365,16 @@
   </div>
 
   <script>
+    // ひと回り大きく調整したサイズ（18px 〜 105px）
     const FRUITS = [
-      { level: 0, bubbleRadius: 15, score: 2,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.5) 60%, rgba(2,132,199,0.7) 100%)', img: 'images/merge1.png' },
-      { level: 1, bubbleRadius: 21, score: 4,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(168,85,247,0.5) 60%, rgba(126,34,206,0.7) 100%)', img: 'images/merge2.png' },
-      { level: 2, bubbleRadius: 28, score: 8,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(236,72,153,0.5) 60%, rgba(190,24,93,0.7) 100%)',  img: 'images/merge3.png' },
-      { level: 3, bubbleRadius: 37, score: 16,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(245,158,11,0.5) 60%, rgba(180,83,9,0.7) 100%)',   img: 'images/merge4.png' },
-      { level: 4, bubbleRadius: 47, score: 32,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(34,197,94,0.5) 60%, rgba(21,128,61,0.7) 100%)',   img: 'images/merge5.png' },
-      { level: 5, bubbleRadius: 59, score: 64,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(239,68,68,0.5) 60%, rgba(185,28,28,0.7) 100%)',   img: 'images/merge6.png' },
-      { level: 6, bubbleRadius: 73, score: 128, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(14,165,233,0.5) 60%, rgba(3,105,161,0.7) 100%)', img: 'images/merge7.png' },
-      { level: 7, bubbleRadius: 90, score: 256, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8) 0%, rgba(234,179,8,0.6) 60%, rgba(161,98,7,0.8) 100%)',   img: 'images/merge8.png' }
+      { level: 0, bubbleRadius: 18, score: 2,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(56,189,248,0.5) 60%, rgba(2,132,199,0.7) 100%)', img: 'images/merge1.png' },
+      { level: 1, bubbleRadius: 25, score: 4,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(168,85,247,0.5) 60%, rgba(126,34,206,0.7) 100%)', img: 'images/merge2.png' },
+      { level: 2, bubbleRadius: 33, score: 8,   bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(236,72,153,0.5) 60%, rgba(190,24,93,0.7) 100%)',  img: 'images/merge3.png' },
+      { level: 3, bubbleRadius: 44, score: 16,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(245,158,11,0.5) 60%, rgba(180,83,9,0.7) 100%)',   img: 'images/merge4.png' },
+      { level: 4, bubbleRadius: 56, score: 32,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(34,197,94,0.5) 60%, rgba(21,128,61,0.7) 100%)',   img: 'images/merge5.png' },
+      { level: 5, bubbleRadius: 70, score: 64,  bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(239,68,68,0.5) 60%, rgba(185,28,28,0.7) 100%)',   img: 'images/merge6.png' },
+      { level: 6, bubbleRadius: 86, score: 128, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7) 0%, rgba(14,165,233,0.5) 60%, rgba(3,105,161,0.7) 100%)', img: 'images/merge7.png' },
+      { level: 7, bubbleRadius: 105, score: 256, bubbleColor: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8) 0%, rgba(234,179,8,0.6) 60%, rgba(161,98,7,0.8) 100%)',  img: 'images/merge8.png' }
     ];
 
     let score = 0;
@@ -403,24 +414,22 @@
       const height = stageEl.clientHeight;
 
       engine = Engine.create({ 
-        gravity: { x: 0, y: 1.4 },
+        gravity: { x: 0, y: 1.5 },
         positionIterations: 12,
         velocityIterations: 12
       });
 
-      // 4方向すべての壁（天井も追加してすり抜け・吹っ飛び防止）
       const wallThickness = 120;
-      const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { isStatic: true, friction: 0.6 });
+      const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { isStatic: true, friction: 0.15 });
       const ceiling = Bodies.rectangle(width / 2, -wallThickness / 2, width * 2, wallThickness, { isStatic: true });
-      const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.2 });
-      const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.2 });
+      const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.05 });
+      const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.05 });
 
       Composite.add(engine.world, [ground, ceiling, leftWall, rightWall]);
 
       runner = Runner.create();
       Runner.run(runner, engine);
 
-      // DOM要素と物理演算の位置同期ループ
       Events.on(engine, 'afterUpdate', () => {
         const bodies = Composite.allBodies(engine.world);
 
@@ -460,7 +469,7 @@
       const maxX = stageEl.clientWidth - fruitData.bubbleRadius - 6;
       const dropX = Math.max(minX, Math.min(maxX, x));
 
-      createFruitBody(dropX, 30, currentFruitIndex);
+      createFruitBody(dropX, 30, currentFruitIndex, false);
 
       guideEl.style.display = 'none';
 
@@ -471,13 +480,13 @@
       }, 500);
     }
 
-    function createFruitBody(x, y, level) {
+    // 滑らかに滑り落ちる物理設定＋ポップアニメーション対応
+    function createFruitBody(x, y, level, isMerged = false) {
       const data = FRUITS[level];
       const r = data.bubbleRadius;
 
-      // 1. DOM要素を作成（超高画質表示）
       const dom = document.createElement('div');
-      dom.className = 'bubble-dom';
+      dom.className = 'bubble-dom' + (isMerged ? ' bubble-pop-anim' : '');
       dom.style.width = (r * 2) + 'px';
       dom.style.height = (r * 2) + 'px';
       dom.style.background = data.bubbleColor;
@@ -489,13 +498,13 @@
 
       bubbleContainer.appendChild(dom);
 
-      // 2. 物理演算ボディの作成
+      // スルリと隙間に滑り込む滑らかな物理パラメータ
       const body = Bodies.circle(x, y, r, {
-        restitution: 0.05,     // 反発を抑えて跳ね飛ばないように設定
-        friction: 0.35,
-        frictionStatic: 0.4,
-        frictionAir: 0.012,
-        density: 0.0025,
+        restitution: 0.12,     // ほどよいポヨン感
+        friction: 0.02,        // 接触摩擦を大幅に低減（気持ちよく滑る）
+        frictionStatic: 0.05,
+        frictionAir: 0.003,    // 転がりやすさ
+        density: 0.002,
         fruitLevel: level
       });
 
@@ -511,7 +520,6 @@
       const newX = (bodyA.position.x + bodyB.position.x) / 2;
       const newY = (bodyA.position.y + bodyB.position.y) / 2;
 
-      // DOM要素を削除
       if (bodyA.domElement && bodyA.domElement.parentNode) bodyA.domElement.parentNode.removeChild(bodyA.domElement);
       if (bodyB.domElement && bodyB.domElement.parentNode) bodyB.domElement.parentNode.removeChild(bodyB.domElement);
 
@@ -523,9 +531,8 @@
       createSparkles(newX, newY);
 
       if (nextLevel < FRUITS.length) {
-        const newBody = createFruitBody(newX, newY, nextLevel);
-        // 合体時の吹っ飛び防止：速度をゼロにしてその場で安定化
-        Body.setVelocity(newBody, { x: 0, y: 0.5 });
+        const newBody = createFruitBody(newX, newY, nextLevel, true);
+        Body.setVelocity(newBody, { x: 0, y: 0.3 });
 
         if (nextLevel === 3) voiceEl.textContent = quotes.merge3;
         if (nextLevel === 6) voiceEl.textContent = quotes.merge6;
@@ -612,10 +619,10 @@
       const width = stageEl.clientWidth;
       const height = stageEl.clientHeight;
       const wallThickness = 120;
-      const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { isStatic: true, friction: 0.6 });
+      const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { isStatic: true, friction: 0.15 });
       const ceiling = Bodies.rectangle(width / 2, -wallThickness / 2, width * 2, wallThickness, { isStatic: true });
-      const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.2 });
-      const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.2 });
+      const leftWall = Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.05 });
+      const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, { isStatic: true, friction: 0.05 });
       Composite.add(engine.world, [ground, ceiling, leftWall, rightWall]);
     }
 
