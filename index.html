@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="ichigo.jpg">
+  <link rel="apple-touch-icon" href="images/ichigo.jpg">
 
   <style>
     * {
@@ -37,13 +37,13 @@
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     /* ヘッダー */
     .portal-header {
       text-align: center;
-      padding: 12px 0 6px;
+      padding: 10px 0 4px;
     }
     .portal-header h1 {
       font-size: 22px;
@@ -73,14 +73,14 @@
     .app-grid {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .app-card {
       background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(12px);
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -89,18 +89,18 @@
     }
 
     .app-icon-box {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
+      font-size: 24px;
       flex-shrink: 0;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
-    /* 各アプリのアイコン背景グラデーション */
+    /* アイコン背景色 */
     .icon-money {
       background: linear-gradient(135deg, #34d399, #059669);
       color: #fff;
@@ -113,8 +113,12 @@
       background: linear-gradient(135deg, #f87171, #dc2626);
       color: #fff;
     }
-    .icon-game {
+    .icon-game1 {
       background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+    }
+    .icon-game2 {
+      background: linear-gradient(135deg, #ec4899, #be185d);
       color: #fff;
     }
 
@@ -122,10 +126,10 @@
       flex: 1;
     }
     .app-info h2 {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: #1e293b;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .app-info p {
       font-size: 12px;
@@ -150,21 +154,36 @@
       justify-content: space-around;
       align-items: center;
       border: 1px solid rgba(255, 255, 255, 0.4);
-      margin-top: 4px;
+      margin-top: 2px;
+      cursor: pointer;
     }
     .status-item {
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .status-item span {
       display: block;
       font-size: 11px;
       color: #64748b;
     }
-    .status-item strong {
+
+    /* 金額のぼかしスタイル */
+    .blur-value {
       font-size: 15px;
       color: #1e293b;
       margin-top: 2px;
       display: block;
+      filter: blur(6px); /* 初期状態でぼかし */
+      transition: filter 0.2s ease, opacity 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* タップしてぼかし解除された状態 */
+    .blur-value.revealed {
+      filter: blur(0px);
     }
   </style>
 </head>
@@ -177,15 +196,15 @@
       <p>日常の管理・記録をひとつに集約</p>
     </header>
 
-    <!-- クイックサマリー表示（localStorageから自動取得） -->
-    <div class="status-panel">
+    <!-- クイックサマリー表示（タップでぼかし切り替え） -->
+    <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
       <div class="status-item">
-        <span>💰 総資産</span>
-        <strong id="dash-total-assets">--- 円</strong>
+        <span>💰 総資産 <small style="font-size:9px; color:#94a3b8;">(タップ)</small></span>
+        <strong id="dash-total-assets" class="blur-value">--- 円</strong>
       </div>
       <div class="status-item">
-        <span>🐧 Suica</span>
-        <strong id="dash-suica-assets">--- 円</strong>
+        <span>🐧 Suica <small style="font-size:9px; color:#94a3b8;">(タップ)</small></span>
+        <strong id="dash-suica-assets" class="blur-value">--- 円</strong>
       </div>
     </div>
 
@@ -222,12 +241,22 @@
         <div class="arrow-icon">❯</div>
       </a>
 
-      <!-- 4. ミニゲーム -->
+      <!-- 4. ミニゲーム 第1弾（反射神経タップ） -->
       <a href="game1.html" class="app-card press-effect">
-        <div class="app-icon-box icon-game">🎮</div>
+        <div class="app-icon-box icon-game1">🎮</div>
         <div class="app-info">
-          <h2>ミニゲーム</h2>
+          <h2>スピードタップ</h2>
           <p>30秒の反射神経スピードタップ勝負</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+      <!-- 5. ミニゲーム 第2弾（マージパズル） -->
+      <a href="game2.html" class="app-card press-effect">
+        <div class="app-icon-box icon-game2">🍉</div>
+        <div class="app-info">
+          <h2>マージパズル</h2>
+          <p>シャボン玉を合体させて大きく進化！</p>
         </div>
         <div class="arrow-icon">❯</div>
       </a>
@@ -246,6 +275,15 @@
       const total = cash + bank + suica;
       document.getElementById('dash-total-assets').textContent = total.toLocaleString() + ' 円';
       document.getElementById('dash-suica-assets').textContent = suica.toLocaleString() + ' 円';
+    }
+
+    // タップでぼかしのオン/オフ切り替え
+    function toggleBlur() {
+      const totalEl = document.getElementById('dash-total-assets');
+      const suicaEl = document.getElementById('dash-suica-assets');
+
+      totalEl.classList.toggle('revealed');
+      suicaEl.classList.toggle('revealed');
     }
 
     window.addEventListener('DOMContentLoaded', loadQuickData);
