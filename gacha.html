@@ -118,12 +118,12 @@
       backdrop-filter: blur(10px);
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 12px;
+      padding: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
     .gacha-banner {
@@ -136,13 +136,13 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 14px;
+      padding: 10px;
       border: 2px solid rgba(255, 255, 255, 0.4);
       box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
       position: relative;
     }
     .gacha-banner h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       color: #fff;
       text-shadow: 0 0 12px rgba(0,0,0,0.6);
@@ -150,15 +150,15 @@
     .gacha-banner p {
       font-size: 11px;
       color: #fef08a;
-      margin-top: 6px;
+      margin-top: 4px;
       font-weight: bold;
     }
 
     .rates-box {
       width: 100%;
       background: rgba(0, 0, 0, 0.35);
-      border-radius: 10px;
-      padding: 8px;
+      border-radius: 8px;
+      padding: 6px;
       text-align: center;
       font-size: 10px;
       color: #cbd5e1;
@@ -166,16 +166,17 @@
     }
     .rates-box span { font-weight: bold; }
 
+    /* コンパクトなガチャボタン */
     .gacha-btn-group {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
     }
     .gacha-btn {
       flex: 1;
-      padding: 12px;
-      border-radius: 14px;
-      font-size: 13px;
+      padding: 8px 4px;
+      border-radius: 10px;
+      font-size: 12px;
       font-weight: 900;
       color: #fff;
       border: none;
@@ -183,58 +184,116 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
       transition: transform 0.1s ease;
     }
-    .gacha-btn:active { transform: scale(0.96); }
-    .gacha-single { background: linear-gradient(135deg, #0284c7, #0369a1); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); }
-    .gacha-multi  { background: linear-gradient(135deg, #db2777, #be185d); box-shadow: 0 4px 12px rgba(219, 39, 119, 0.4); }
+    .gacha-btn:active { transform: scale(0.95); }
+    .gacha-btn small { font-size: 9px; opacity: 0.85; }
+    .gacha-single { background: linear-gradient(135deg, #0284c7, #0369a1); box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3); }
+    .gacha-multi  { background: linear-gradient(135deg, #db2777, #be185d); box-shadow: 0 3px 8px rgba(219, 39, 119, 0.3); }
 
     /* ガチャ結果モーダル */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(16px);
       z-index: 50;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 16px;
-      gap: 12px;
+      justify-content: space-between;
+      padding: 12px;
+      gap: 8px;
       animation: modalFade 0.25s ease;
     }
     @keyframes modalFade {
       0% { opacity: 0; transform: scale(0.95); }
       100% { opacity: 1; transform: scale(1); }
     }
+
+    /* 結果グリッド（単発・10連で自動拡大） */
     .result-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      max-height: 320px;
-      overflow-y: auto;
+      gap: 8px;
       width: 100%;
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px;
     }
+    /* 10連表示 */
+    .result-grid.grid-multi {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    /* 単発表示（特大） */
+    .result-grid.grid-single {
+      grid-template-columns: 1fr;
+      place-items: center;
+    }
+
     .result-card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 6px 2px;
+      border-radius: 12px;
+      padding: 8px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      gap: 4px;
+      position: relative;
       animation: cardPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes cardPop {
-      0% { transform: scale(0.4); opacity: 0; }
+      0% { transform: scale(0.3); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
-    .result-card img { width: 46px; height: 46px; object-fit: contain; }
 
-    .dex-rarity { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 4px; }
+    .result-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+    .grid-single .result-card img {
+      width: 140px;
+      height: 140px;
+    }
+
+    /* レアリティ別・後光エフェクト */
+    /* N: 通常枠 */
+    .halo-N {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    /* R: シルバーの後光 */
+    .halo-R {
+      background: radial-gradient(circle, rgba(226, 232, 240, 0.25) 0%, rgba(15, 23, 42, 0.6) 80%);
+      border: 2px solid #cbd5e1;
+      box-shadow: 0 0 16px rgba(226, 232, 240, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.4);
+    }
+    /* SR: ゴールドの後光 */
+    .halo-SR {
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, rgba(15, 23, 42, 0.6) 80%);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.85), inset 0 0 14px rgba(254, 240, 138, 0.5);
+    }
+    /* SSR: パープルオーラ */
+    .halo-SSR {
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, rgba(15, 23, 42, 0.6) 80%);
+      border: 2px solid #c084fc;
+      box-shadow: 0 0 24px rgba(168, 85, 247, 0.9), inset 0 0 16px rgba(233, 213, 255, 0.6);
+    }
+    /* UR: 虹色（レインボー）激熱後光 */
+    .halo-UR {
+      background: radial-gradient(circle, rgba(244, 63, 94, 0.3) 0%, rgba(56, 189, 248, 0.3) 50%, rgba(15, 23, 42, 0.7) 100%);
+      border: 2px solid #f43f5e;
+      box-shadow: 0 0 30px rgba(244, 63, 94, 0.9), 0 0 45px rgba(56, 189, 248, 0.8), inset 0 0 20px #fff;
+      animation: rainbowGlow 2s infinite linear;
+    }
+    @keyframes rainbowGlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .dex-rarity { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; }
     .badge-UR  { background: linear-gradient(90deg, #f59e0b, #ef4444); color: #fff; }
     .badge-SSR { background: #ec4899; color: #fff; }
     .badge-SR  { background: #a855f7; color: #fff; }
@@ -248,7 +307,7 @@
     
     <div class="top-bar">
       <a href="index.html" class="top-btn">◀ ポータル</a>
-      <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">GACHA ROOM</span>
+      <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">POKÉMON GACHA</span>
       <span style="width: 50px;"></span>
     </div>
 
@@ -274,7 +333,7 @@
       </div>
 
       <div class="rates-box">
-        【提供割合】 <span style="color:#f59e0b;">UR: 3%</span> / <span style="color:#ec4899;">SSR: 10%</span> / <span style="color:#a855f7;">SR: 22%</span> / <span style="color:#38bdf8;">R: 35%</span> / <span style="color:#94a3b8;">N: 30%</span>
+        【提供割合】 <span style="color:#f43f5e;">UR: 3%</span> / <span style="color:#c084fc;">SSR: 10%</span> / <span style="color:#fbbf24;">SR: 22%</span> / <span style="color:#38bdf8;">R: 35%</span> / <span style="color:#94a3b8;">N: 30%</span>
       </div>
 
       <div class="gacha-btn-group">
@@ -293,37 +352,37 @@
     <div class="modal-overlay" id="gacha-modal" style="display: none;">
       <h2 style="font-size: 18px; color: #f59e0b;" id="modal-title">🎉 ガチャ結果</h2>
       <div class="result-grid" id="result-grid"></div>
-      <button class="gacha-btn gacha-multi" onclick="closeModal()" style="width:100%; margin-top:8px;">OK (図鑑に記録)</button>
+      <button class="gacha-btn gacha-multi" onclick="closeModal()" style="width:100%; padding:10px;">OK (図鑑に記録)</button>
     </div>
 
   </div>
 
   <script>
-    // images/gacha/ フォルダ内のポケモン画像マッピング（追加・拡張自由！）
+    // 全角スペースとカンマ抜けをすべて修正した完全版リスト
     const GACHA_POOL = [
-      { id: 'p0001', name: 'フシギダネ', rarity: 'N',  img: 'images/gacha/p0001.png', rate: 30 }
-      { id: 'p0002', name: 'フシギソウ', rarity: 'R',  img: 'images/gacha/p0002.png', rate: 20 }
-    　{ id: 'p0003', name: 'フシギバナ', rarity: 'SR',  img: 'images/gacha/p0003.png', rate: 12 }
-    　{ id: 'p0003-3', name: 'メガフシギバナ', rarity: 'SSR',  img: 'images/gacha/p000-3.png', rate: 7 }
-      { id: 'p0003-33', name: 'キョダイマックスフシギバナ', rarity: 'UR',  img: 'images/gacha/p0003-33.png', rate: 3 }
-      { id: 'p0004', name: 'ヒトカゲ', rarity: 'N',  img: 'images/gacha/p0004.png', rate: 30 }
-      { id: 'p0005', name: 'リザード', rarity: 'R',  img: 'images/gacha/p0005.png', rate: 20 }
-    　{ id: 'p0006', name: 'リザードン', rarity: 'SR',  img: 'images/gacha/p0006.png', rate: 12 }
-    　{ id: 'p0006-6x', name: 'メガリザードンX', rarity: 'SSR',  img: 'images/gacha/p0006x.png', rate: 7 }
-    　{ id: 'p0006-6y', name: 'メガリザードンY', rarity: 'SSR',  img: 'images/gacha/p0006-6y.png', rate: 7 }
-    　{ id: 'p0006-66', name: 'キョダイマックスリザードン', rarity: 'UR',  img: 'images/gacha/p0006-66.png', rate: 3 }
-    　{ id: 'p0007', name: 'ゼニガメ', rarity: 'N',  img: 'images/gacha/p0007.png', rate: 30 }
-    　{ id: 'p0008', name: 'カメール', rarity: 'R',  img: 'images/gacha/p0008.png', rate: 20 }
-    　{ id: 'p0009', name: 'カメックス', rarity: 'SR',  img: 'images/gacha/p0009.png', rate: 12 }
-    　{ id: 'p0009-9', name: 'メガカメックス', rarity: 'SSR',  img: 'images/gacha/p0009-9.png', rate: 7 }
-    　{ id: 'p0009-99', name: 'キョダイマックスカメックス', rarity: 'UR',  img: 'images/gacha/p0009-99.png', rate: 3 }
-　    { id: 'p0015', name: 'スピアー',   rarity: 'SR',   img: 'images/gacha/p0015.png', rate: 12 },
-    　{ id: 'p0018', name: 'ピジョット', rarity: 'SR',   img: 'images/gacha/p0018.png', rate: 12 },
-    　{ id: 'p0038', name: 'キュウコン', rarity: 'SR',  img: 'images/gacha/p0038.png', rate: 12 },
-      { id: 'p0059', name: 'ウィンディ', rarity: 'SR',   img: 'images/gacha/p0059.png', rate: 12 },
-      { id: 'p0094', name: 'ゲンガー',   rarity: 'SR',   img: 'images/gacha/p0094.png', rate: 12 },
-      { id: 'p0445', name: 'ガブリアス', rarity: 'SR',  img: 'images/gacha/p0445.png', rate: 12 },
-      { id: 'p0448', name: 'ルカリオ',   rarity: 'SR', img: 'images/gacha/p0448.png', rate: 12 },
+      { id: 'p0001', name: 'フシギダネ', rarity: 'N', img: 'images/gacha/p0001.png', rate: 30 },
+      { id: 'p0002', name: 'フシギソウ', rarity: 'R', img: 'images/gacha/p0002.png', rate: 20 },
+      { id: 'p0003', name: 'フシギバナ', rarity: 'SR', img: 'images/gacha/p0003.png', rate: 12 },
+      { id: 'p0003-3', name: 'メガフシギバナ', rarity: 'SSR', img: 'images/gacha/p000-3.png', rate: 7 },
+      { id: 'p0003-33', name: 'キョダイフシギバナ', rarity: 'UR', img: 'images/gacha/p0003-33.png', rate: 3 },
+      { id: 'p0004', name: 'ヒトカゲ', rarity: 'N', img: 'images/gacha/p0004.png', rate: 30 },
+      { id: 'p0005', name: 'リザード', rarity: 'R', img: 'images/gacha/p0005.png', rate: 20 },
+      { id: 'p0006', name: 'リザードン', rarity: 'SR', img: 'images/gacha/p0006.png', rate: 12 },
+      { id: 'p0006-6x', name: 'メガリザードンX', rarity: 'SSR', img: 'images/gacha/p0006x.png', rate: 7 },
+      { id: 'p0006-6y', name: 'メガリザードンY', rarity: 'SSR', img: 'images/gacha/p0006-6y.png', rate: 7 },
+      { id: 'p0006-66', name: 'キョダイリザードン', rarity: 'UR', img: 'images/gacha/p0006-66.png', rate: 3 },
+      { id: 'p0007', name: 'ゼニガメ', rarity: 'N', img: 'images/gacha/p0007.png', rate: 30 },
+      { id: 'p0008', name: 'カメール', rarity: 'R', img: 'images/gacha/p0008.png', rate: 20 },
+      { id: 'p0009', name: 'カメックス', rarity: 'SR', img: 'images/gacha/p0009.png', rate: 12 },
+      { id: 'p0009-9', name: 'メガカメックス', rarity: 'SSR', img: 'images/gacha/p0009-9.png', rate: 7 },
+      { id: 'p0009-99', name: 'キョダイカメックス', rarity: 'UR', img: 'images/gacha/p0009-99.png', rate: 3 },
+      { id: 'p0015', name: 'スピアー', rarity: 'SR', img: 'images/gacha/p0015.png', rate: 12 },
+      { id: 'p0018', name: 'ピジョット', rarity: 'SR', img: 'images/gacha/p0018.png', rate: 12 },
+      { id: 'p0038', name: 'キュウコン', rarity: 'SR', img: 'images/gacha/p0038.png', rate: 12 },
+      { id: 'p0059', name: 'ウィンディ', rarity: 'SR', img: 'images/gacha/p0059.png', rate: 12 },
+      { id: 'p0094', name: 'ゲンガー', rarity: 'SR', img: 'images/gacha/p0094.png', rate: 12 },
+      { id: 'p0445', name: 'ガブリアス', rarity: 'SR', img: 'images/gacha/p0445.png', rate: 12 },
+      { id: 'p0448', name: 'ルカリオ', rarity: 'SR', img: 'images/gacha/p0448.png', rate: 12 }
     ];
 
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
@@ -355,7 +414,7 @@
         results.push(pickRandom(times === 10 && i === 9));
       }
 
-      showResults(results);
+      showResults(results, times);
     }
 
     function pickRandom(guaranteeSR = false) {
@@ -366,9 +425,13 @@
         const high = GACHA_POOL.filter(c => ['SR', 'SSR', 'UR'].includes(c.rarity));
         target = high[Math.floor(Math.random() * high.length)];
       } else {
-        if (rand < 3) target = GACHA_POOL.find(c => c.rarity === 'UR') || GACHA_POOL[GACHA_POOL.length - 1];
-        else if (rand < 13) target = GACHA_POOL.find(c => c.rarity === 'SSR') || GACHA_POOL[GACHA_POOL.length - 2];
-        else if (rand < 35) {
+        if (rand < 3) {
+          const urs = GACHA_POOL.filter(c => c.rarity === 'UR');
+          target = urs[Math.floor(Math.random() * urs.length)] || GACHA_POOL[0];
+        } else if (rand < 13) {
+          const ssrs = GACHA_POOL.filter(c => c.rarity === 'SSR');
+          target = ssrs[Math.floor(Math.random() * ssrs.length)] || GACHA_POOL[0];
+        } else if (rand < 35) {
           const srs = GACHA_POOL.filter(c => c.rarity === 'SR');
           target = srs[Math.floor(Math.random() * srs.length)] || GACHA_POOL[0];
         } else if (rand < 70) {
@@ -385,17 +448,18 @@
       return target;
     }
 
-    function showResults(results) {
+    function showResults(results, times) {
       const grid = document.getElementById('result-grid');
       grid.innerHTML = '';
+      grid.className = 'result-grid ' + (times === 1 ? 'grid-single' : 'grid-multi');
 
       results.forEach(card => {
         const el = document.createElement('div');
-        el.className = 'result-card';
+        el.className = `result-card halo-${card.rarity}`;
         el.innerHTML = `
           <span class="dex-rarity badge-${card.rarity}">${card.rarity}</span>
           <img src="${card.img}" alt="" onerror="this.src='images/slot1.png'">
-          <span style="font-size:9px; font-weight:bold;">${card.name}</span>
+          <span style="font-size:11px; font-weight:900; text-align:center;">${card.name}</span>
         `;
         grid.appendChild(el);
       });
