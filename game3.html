@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>目押しパチスロ | スロットホール</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    body {
+      background-image: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 70%, #020617 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      padding-top: calc(6px + env(safe-area-inset-top));
+      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    /* ヘッダー */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .top-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .top-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+    .top-btn:active { transform: scale(0.95); }
+
+    /* ナビゲーションリンク（別ページ連携） */
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.15s ease;
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border-color: #fbbf24;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+    .nav-btn:active { transform: scale(0.96); }
+
+    /* コイン・ステータスバー */
+    .status-bar {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+    .coin-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .coin-val {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+
+    /* メインスロットカード */
+    .slot-card {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      position: relative;
+    }
+
+    .payline-info {
+      font-size: 10px;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .slot-machine {
+      width: 100%;
+      background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+      border: 3px solid #f59e0b;
+      border-radius: 16px;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.3), inset 0 0 15px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .slot-reel-col {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .slot-cell {
+      height: 64px;
+      background: #020617;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .slot-cell.win-highlight {
+      border-color: #fbbf24;
+      background: rgba(245, 158, 11, 0.25);
+      box-shadow: 0 0 12px rgba(251, 191, 36, 0.8), inset 0 0 8px #fbbf24;
+      transform: scale(1.04);
+      z-index: 2;
+    }
+
+    .cell-img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    /* 個別目押しストップボタン */
+    .stop-btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .stop-btn {
+      padding: 10px 0;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
+      transition: transform 0.08s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+    }
+    .stop-btn:active { transform: scale(0.92); }
+    .stop-btn:disabled {
+      background: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .stop-btn span { font-size: 8px; font-weight: normal; opacity: 0.8; }
+
+    .slot-msg {
+      font-size: 12px;
+      font-weight: bold;
+      color: #38bdf8;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    .slot-spin-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      letter-spacing: 1px;
+    }
+    .slot-spin-btn:active { transform: scale(0.96); }
+    .slot-spin-btn:disabled {
+      background: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* 設定モーダル */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+      border-radius: 16px;
+    }
+    .modal-overlay h2 { font-size: 16px; color: #f59e0b; }
+
+    .setting-box {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .setting-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: bold;
+      color: #cbd5e1;
+    }
+    .setting-presets {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-preset {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-preset.active {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      border-color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ヘッダー -->
+    <div class="top-bar">
+      <a href="index.html" class="top-btn">◀ ポータル</a>
+      <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">EYE-STOP SLOT</span>
+      <div class="top-btn-group">
+        <button class="top-btn" id="bgm-toggle-btn" onclick="toggleBgm()">🎵 ON</button>
+        <button class="top-btn" onclick="openSettings()">⚙️ 設定</button>
+      </div>
+    </div>
+
+    <!-- ページ間ナビゲーション -->
+    <div class="nav-links">
+      <a href="game3.html" class="nav-btn active">🎰 スロット</a>
+      <a href="gacha.html" class="nav-btn">✨ ガチャ</a>
+      <a href="dex.html" class="nav-btn">📖 図鑑</a>
+    </div>
+
+    <!-- コインスタッツ -->
+    <div class="status-bar">
+      <div class="coin-box">
+        <span>🪙 コイン:</span>
+        <span class="coin-val" id="coin-display">1,000</span>
+      </div>
+      <button class="top-btn" onclick="addDailyBonus()">🎁 ボーナス</button>
+    </div>
+
+    <!-- スロットメインカード -->
+    <div class="slot-card">
+      <div class="payline-info">🎯 当たり判定: 横3列 ＋ 斜め2列 (全5ライン)</div>
+
+      <!-- 3×3 マシーン -->
+      <div class="slot-machine">
+        <div class="slot-reel-col" id="col-0">
+          <div class="slot-cell" id="cell-0-0"><img id="img-0-0" class="cell-img" src="images/slot1.png" alt=""></div>
+          <div class="slot-cell" id="cell-0-1"><img id="img-0-1" class="cell-img" src="images/slot2.png" alt=""></div>
+          <div class="slot-cell" id="cell-0-2"><img id="img-0-2" class="cell-img" src="images/slot3.png" alt=""></div>
+        </div>
+        <div class="slot-reel-col" id="col-1">
+          <div class="slot-cell" id="cell-1-0"><img id="img-1-0" class="cell-img" src="images/slot4.png" alt=""></div>
+          <div class="slot-cell" id="cell-1-1"><img id="img-1-1" class="cell-img" src="images/slot5.png" alt=""></div>
+          <div class="slot-cell" id="cell-1-2"><img id="img-1-2" class="cell-img" src="images/slot6.png" alt=""></div>
+        </div>
+        <div class="slot-reel-col" id="col-2">
+          <div class="slot-cell" id="cell-2-0"><img id="img-2-0" class="cell-img" src="images/slot7.png" alt=""></div>
+          <div class="slot-cell" id="cell-2-1"><img id="img-2-1" class="cell-img" src="images/slot8.png" alt=""></div>
+          <div class="slot-cell" id="cell-2-2"><img id="img-2-2" class="cell-img" src="images/slot10.png" alt=""></div>
+        </div>
+      </div>
+
+      <!-- 個別目押しストップボタン -->
+      <div class="stop-btn-group">
+        <button class="stop-btn" id="stop-btn-0" onclick="stopReel(0)" disabled>
+          STOP 1
+          <span>[ Z / 1 ]</span>
+        </button>
+        <button class="stop-btn" id="stop-btn-1" onclick="stopReel(1)" disabled>
+          STOP 2
+          <span>[ X / 2 ]</span>
+        </button>
+        <button class="stop-btn" id="stop-btn-2" onclick="stopReel(2)" disabled>
+          STOP 3
+          <span>[ C / 3 ]</span>
+        </button>
+      </div>
+
+      <div class="slot-msg" id="slot-msg">レバーを押してスロットスタート！</div>
+
+      <button class="slot-spin-btn" id="btn-spin" onclick="startSpin()">🎰 レバーオン！ (100 コイン)</button>
+    </div>
+
+    <!-- 設定モーダル -->
+    <div class="modal-overlay" id="settings-modal" style="display: none;">
+      <h2>⚙️ スロット速度＆システム設定</h2>
+
+      <div class="setting-box">
+        <div class="setting-label">
+          <span>⚡ リール回転速度</span>
+          <span id="speed-display" style="color:#fbbf24;">標準 (75ms)</span>
+        </div>
+        <div class="setting-presets">
+          <button class="btn-preset" id="preset-slow" onclick="setSpeedPreset(120, 'ゆったり')">ゆったり (120ms)</button>
+          <button class="btn-preset active" id="preset-mid" onclick="setSpeedPreset(75, '標準')">標準 (75ms)</button>
+          <button class="btn-preset" id="preset-fast" onclick="setSpeedPreset(45, '超高速')">超高速 (45ms)</button>
+        </div>
+      </div>
+
+      <div class="setting-box">
+        <div class="setting-label">
+          <span>🎵 BGM音量 (Pixel_1.mp3)</span>
+        </div>
+        <div class="setting-presets">
+          <button class="btn-preset" onclick="toggleBgm()">BGM 再生 / 停止</button>
+        </div>
+      </div>
+
+      <button class="slot-spin-btn" onclick="closeSettings()" style="margin-top:auto;">保存して閉じる</button>
+    </div>
+
+  </div>
+
+  <!-- 自作BGM音源（Pixel_1.mp3） -->
+  <audio id="bgm-audio" src="audio/Pixel_1.mp3" preload="auto" loop></audio>
+
+  <script>
+    // 10種類のスロットリール絵柄データ（slot1.png 〜 slot10.png）
+    const CARDS = [
+      { id: 0, name: 'リプレイ',   rarity: 'N',   img: 'images/slot1.png',  win: 100 },
+      { id: 1, name: 'ベル',       rarity: 'N',   img: 'images/slot2.png',  win: 200 },
+      { id: 2, name: 'チェリー',   rarity: 'R',   img: 'images/slot3.png',  win: 400 },
+      { id: 3, name: '通常図柄1',  rarity: 'N',   img: 'images/slot4.png',  win: 300 },
+      { id: 4, name: '通常図柄2',  rarity: 'N',   img: 'images/slot5.png',  win: 500 },
+      { id: 5, name: '確変図柄1',  rarity: 'R',   img: 'images/slot6.png',  win: 800 },
+      { id: 6, name: '確変図柄2',  rarity: 'SR',  img: 'images/slot7.png',  win: 1500 },
+      { id: 7, name: '強キャラ',   rarity: 'SR',  img: 'images/slot8.png',  win: 2500 },
+      { id: 8, name: 'BAR',        rarity: 'SSR', img: 'images/slot9.png',  win: 5000 },
+      { id: 9, name: '7 エース',   rarity: 'UR',  img: 'images/slot10.png', win: 15000 }
+    ];
+
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let reelSpeed = parseInt(localStorage.getItem('my_slot_speed') || '75');
+
+    let reelSpinning = [false, false, false];
+    let reelTimers = [null, null, null];
+    let reelPositions = [0, 3, 6];
+
+    const bgm = document.getElementById('bgm-audio');
+    bgm.addEventListener('error', () => {
+      if (!bgm.src.endsWith('/Pixel_1.mp3')) bgm.src = 'Pixel_1.mp3';
+    });
+
+    window.addEventListener('click', () => {
+      if (bgm.paused) bgm.play().catch(() => {});
+    }, { once: true });
+
+    function updateCoinDisplay() {
+      document.getElementById('coin-display').textContent = coins.toLocaleString();
+      localStorage.setItem('my_casino_coins', coins);
+    }
+
+    function toggleBgm() {
+      const btn = document.getElementById('bgm-toggle-btn');
+      if (bgm.paused) {
+        bgm.play();
+        btn.textContent = '🎵 ON';
+      } else {
+        bgm.pause();
+        btn.textContent = '🔇 OFF';
+      }
+    }
+
+    function addDailyBonus() {
+      coins += 500;
+      updateCoinDisplay();
+      alert('🎁 ボーナスコイン 500枚 ゲット！');
+    }
+
+    // スロット回転開始
+    function startSpin() {
+      if (reelSpinning.some(s => s)) return;
+      if (coins < 100) {
+        alert('コインが足りないぜ！ボーナスを受け取ろう！');
+        return;
+      }
+
+      coins -= 100;
+      updateCoinDisplay();
+      document.getElementById('btn-spin').disabled = true;
+      document.getElementById('slot-msg').textContent = '目押しで狙いを定めてストップ！';
+
+      document.querySelectorAll('.slot-cell').forEach(c => c.classList.remove('win-highlight'));
+
+      for (let i = 0; i < 3; i++) {
+        reelSpinning[i] = true;
+        document.getElementById(`stop-btn-${i}`).disabled = false;
+        startReelRoll(i);
+      }
+    }
+
+    function startReelRoll(reelIndex) {
+      reelTimers[reelIndex] = setInterval(() => {
+        reelPositions[reelIndex] = (reelPositions[reelIndex] + 1) % CARDS.length;
+        renderReelCol(reelIndex, reelPositions[reelIndex]);
+      }, reelSpeed);
+    }
+
+    function renderReelCol(colIndex, centerIndex) {
+      const topIdx = (centerIndex - 1 + CARDS.length) % CARDS.length;
+      const midIdx = centerIndex;
+      const btmIdx = (centerIndex + 1) % CARDS.length;
+
+      document.getElementById(`img-${colIndex}-0`).src = CARDS[topIdx].img;
+      document.getElementById(`img-${colIndex}-1`).src = CARDS[midIdx].img;
+      document.getElementById(`img-${colIndex}-2`).src = CARDS[btmIdx].img;
+    }
+
+    function stopReel(reelIndex) {
+      if (!reelSpinning[reelIndex]) return;
+
+      clearInterval(reelTimers[reelIndex]);
+      reelSpinning[reelIndex] = false;
+      document.getElementById(`stop-btn-${reelIndex}`).disabled = true;
+
+      renderReelCol(reelIndex, reelPositions[reelIndex]);
+
+      if (reelSpinning.every(s => !s)) {
+        document.getElementById('btn-spin').disabled = false;
+        checkEyeStopWin();
+      }
+    }
+
+    function checkEyeStopWin() {
+      const msgEl = document.getElementById('slot-msg');
+
+      const grid = [
+        [ (reelPositions[0] - 1 + CARDS.length) % CARDS.length, reelPositions[0], (reelPositions[0] + 1) % CARDS.length ],
+        [ (reelPositions[1] - 1 + CARDS.length) % CARDS.length, reelPositions[1], (reelPositions[1] + 1) % CARDS.length ],
+        [ (reelPositions[2] - 1 + CARDS.length) % CARDS.length, reelPositions[2], (reelPositions[2] + 1) % CARDS.length ]
+      ];
+
+      const lines = [
+        { name: '上段横', cells: [[0,0], [1,0], [2,0]] },
+        { name: '中段横', cells: [[0,1], [1,1], [2,1]] },
+        { name: '下段横', cells: [[0,2], [1,2], [2,2]] },
+        { name: '左上斜め', cells: [[0,0], [1,1], [2,2]] },
+        { name: '左下斜め', cells: [[0,2], [1,1], [2,0]] }
+      ];
+
+      let totalWin = 0;
+      let winningLines = [];
+
+      lines.forEach(line => {
+        const c0 = grid[line.cells[0][0]][line.cells[0][1]];
+        const c1 = grid[line.cells[1][0]][line.cells[1][1]];
+        const c2 = grid[line.cells[2][0]][line.cells[2][1]];
+
+        if (c0 === c1 && c1 === c2) {
+          const card = CARDS[c0];
+          totalWin += card.win;
+          winningLines.push(`${line.name}(${card.name})`);
+
+          line.cells.forEach(([c, r]) => {
+            document.getElementById(`cell-${c}-${r}`).classList.add('win-highlight');
+          });
+        }
+      });
+
+      if (totalWin > 0) {
+        coins += totalWin;
+        msgEl.innerHTML = `🎉 <strong style="color:#fbbf24;">目押し成功！ ${winningLines.join(' + ')} 成立！ +${totalWin.toLocaleString()} コイン！</strong>`;
+      } else {
+        msgEl.textContent = '惜しい……！タイミングを見極めて目押ししよう！';
+      }
+
+      updateCoinDisplay();
+    }
+
+    // 設定メニュー
+    function openSettings() {
+      document.getElementById('settings-modal').style.display = 'flex';
+      updateSpeedUI();
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    function setSpeedPreset(ms, label) {
+      reelSpeed = ms;
+      localStorage.setItem('my_slot_speed', ms);
+      updateSpeedUI();
+    }
+
+    function updateSpeedUI() {
+      const label = reelSpeed >= 100 ? 'ゆったり' : (reelSpeed <= 50 ? '超高速' : '標準');
+      document.getElementById('speed-display').textContent = `${label} (${reelSpeed}ms)`;
+      
+      document.getElementById('preset-slow').classList.toggle('active', reelSpeed === 120);
+      document.getElementById('preset-mid').classList.toggle('active', reelSpeed === 75);
+      document.getElementById('preset-fast').classList.toggle('active', reelSpeed === 45);
+    }
+
+    // キーボードショートカット
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && !reelSpinning.some(s => s)) {
+        e.preventDefault();
+        startSpin();
+      }
+      if (e.key === 'z' || e.key === 'Z' || e.key === '1') stopReel(0);
+      if (e.key === 'x' || e.key === 'X' || e.key === '2') stopReel(1);
+      if (e.key === 'c' || e.key === 'C' || e.key === '3') stopReel(2);
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCoinDisplay();
+      renderReelCol(0, 0);
+      renderReelCol(1, 1);
+      renderReelCol(2, 2);
+    });
+  </script>
+</body>
+</html>
