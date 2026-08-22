@@ -165,8 +165,9 @@
     }
     .game-icon-grid {
       display: flex;
-      gap: 18px;
+      gap: 16px;
       align-items: center;
+      overflow-x: auto;
     }
 
     .game-icon-item {
@@ -175,23 +176,25 @@
       align-items: center;
       gap: 6px;
       text-decoration: none;
+      flex-shrink: 0;
     }
     .game-circle-icon {
-      width: 54px;
-      height: 54px;
+      width: 52px;
+      height: 52px;
       border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
+      font-size: 24px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
     .icon-game1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
     .icon-game2 { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
+    .icon-game3 { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
 
     .game-icon-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       color: #1e293b;
       text-align: center;
@@ -254,7 +257,7 @@
 
     </div>
 
-    <!-- ミニゲーム（アイコン表示） -->
+    <!-- ミニゲーム（3つ並び） -->
     <div class="game-section">
       <div class="game-section-title">🎮 MINI GAMES</div>
       <div class="game-icon-grid">
@@ -267,6 +270,11 @@
         <a href="game2.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-game2">🍉</div>
           <span class="game-icon-label">マージパズル</span>
+        </a>
+
+        <a href="game3.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game3">🎰</div>
+          <span class="game-icon-label">目押しスロット</span>
         </a>
 
       </div>
