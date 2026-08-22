@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>お小遣い＆資産管理</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #f7f9fa;
       margin: 0;
       padding: 16px;
@@ -179,7 +179,7 @@
       gap: 6px;
     }
     .btn-quick {
-      padding: 6px 4px;
+      padding: 8px 4px;
       font-size: 12px;
       font-weight: bold;
       color: #fff;
@@ -401,36 +401,42 @@
   </div>
 
   <script>
-    let cashBalance = Number(localStorage.getItem('myCashBalance')) || 0;
-    let bankBalance = Number(localStorage.getItem('myBankBalance')) || 0;
-    let mainLogs = JSON.parse(localStorage.getItem('myMainLogs')) || [];
+    // 安全にLocalStorageから値を取得するヘルパー
+    function getStoredNumber(key) {
+      const val = localStorage.getItem(key);
+      return (val !== null && val !== '') ? Number(val) : 0;
+    }
 
-    let suicaBalance = Number(localStorage.getItem('mySuicaBalance')) || 0;
-    let suicaLogs = JSON.parse(localStorage.getItem('mySuicaLogs')) || [];
-
-    let fares = JSON.parse(localStorage.getItem('myCommuteFares')) || {
-      aGo: 220,
-      aBack: 220,
-      bGo: 350,
-      bBack: 350
-    };
-    let currentRoute = localStorage.getItem('myCurrentRoute') || 'A';
-
-    // 確認通知のON/OFF設定（デフォルトはON）
-    let isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+    function getStoredJSON(key, defaultVal) {
+      try {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : defaultVal;
+      } catch(e) {
+        return defaultVal;
+      }
+    }
 
     function updateDisplay() {
+      // 画面表示のたびにLocalStorageから最新値を取得
+      const cash = getStoredNumber('myCashBalance');
+      const bank = getStoredNumber('myBankBalance');
+      const suica = getStoredNumber('mySuicaBalance');
+      const mainLogs = getStoredJSON('myMainLogs', []);
+      const suicaLogs = getStoredJSON('mySuicaLogs', []);
+      const isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+
       // 確認トグルの状態反映
       document.getElementById('confirm-toggle').checked = isConfirmEnabled;
 
       // メイン ＆ 総資産
-      document.getElementById('cash-balance').textContent = cashBalance.toLocaleString();
-      document.getElementById('bank-balance').textContent = bankBalance.toLocaleString();
-      document.getElementById('top-suica-balance').textContent = suicaBalance.toLocaleString();
+      document.getElementById('cash-balance').textContent = cash.toLocaleString();
+      document.getElementById('bank-balance').textContent = bank.toLocaleString();
+      document.getElementById('top-suica-balance').textContent = suica.toLocaleString();
       
-      const total = cashBalance + bankBalance + suicaBalance;
+      const total = cash + bank + suica;
       document.getElementById('total-assets').textContent = total.toLocaleString();
 
+      // 現金・銀行履歴
       const mainList = document.getElementById('main-log-list');
       mainList.innerHTML = '';
       if (mainLogs.length === 0) {
@@ -461,7 +467,7 @@
       }
 
       // Suica専用カード側
-      document.getElementById('suica-balance').textContent = suicaBalance.toLocaleString();
+      document.getElementById('suica-balance').textContent = suica.toLocaleString();
       const suicaList = document.getElementById('suica-log-list');
       suicaList.innerHTML = '';
       if (suicaLogs.length === 0) {
@@ -492,11 +498,14 @@
     }
 
     function toggleConfirmSetting() {
-      isConfirmEnabled = document.getElementById('confirm-toggle').checked;
-      localStorage.setItem('myConfirmSetting', isConfirmEnabled);
+      const isChecked = document.getElementById('confirm-toggle').checked;
+      localStorage.setItem('myConfirmSetting', isChecked);
     }
 
     function updateCommuteButtonLabels() {
+      const fares = getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 });
+      const currentRoute = localStorage.getItem('myCurrentRoute') || 'A';
+
       document.getElementById('route-select').value = currentRoute;
       const goFare = currentRoute === 'A' ? fares.aGo : fares.bGo;
       const backFare = currentRoute === 'A' ? fares.aBack : fares.bBack;
@@ -506,7 +515,7 @@
     }
 
     function switchRoute() {
-      currentRoute = document.getElementById('route-select').value;
+      const currentRoute = document.getElementById('route-select').value;
       localStorage.setItem('myCurrentRoute', currentRoute);
       updateCommuteButtonLabels();
     }
@@ -517,6 +526,7 @@
       panel.style.display = isOpen ? 'none' : 'block';
 
       if (!isOpen) {
+        const fares = getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 });
         document.getElementById('fare-a-go').value = fares.aGo;
         document.getElementById('fare-a-back').value = fares.aBack;
         document.getElementById('fare-b-go').value = fares.bGo;
@@ -525,10 +535,12 @@
     }
 
     function saveFares() {
-      fares.aGo = Number(document.getElementById('fare-a-go').value) || 0;
-      fares.aBack = Number(document.getElementById('fare-a-back').value) || 0;
-      fares.bGo = Number(document.getElementById('fare-b-go').value) || 0;
-      fares.bBack = Number(document.getElementById('fare-b-back').value) || 0;
+      const fares = {
+        aGo: Number(document.getElementById('fare-a-go').value) || 0,
+        aBack: Number(document.getElementById('fare-a-back').value) || 0,
+        bGo: Number(document.getElementById('fare-b-go').value) || 0,
+        bBack: Number(document.getElementById('fare-b-back').value) || 0
+      };
 
       localStorage.setItem('myCommuteFares', JSON.stringify(fares));
       document.getElementById('commute-settings-panel').style.display = 'none';
@@ -538,19 +550,21 @@
 
     // 通勤ワンタップ
     function quickCommute(type) {
-      let amount = 0;
-      if (currentRoute === 'A') {
-        amount = type === '行き' ? fares.aGo : fares.aBack;
-      } else {
-        amount = type === '行き' ? fares.bGo : fares.bBack;
-      }
+      const fares = getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 });
+      const currentRoute = localStorage.getItem('myCurrentRoute') || 'A';
+      let suicaBalance = getStoredNumber('mySuicaBalance');
+      const suicaLogs = getStoredJSON('mySuicaLogs', []);
+      const isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+
+      let amount = (currentRoute === 'A') 
+        ? (type === '行き' ? fares.aGo : fares.aBack)
+        : (type === '行き' ? fares.bGo : fares.bBack);
 
       if (amount <= 0) {
         alert('運賃が0円になってるぜ！設定から金額を入れてくれ！');
         return;
       }
 
-      // ワンクッション確認
       if (isConfirmEnabled) {
         const ok = confirm(`【通勤（${type}）】\nSuicaから ${amount}円 を差し引きますか？`);
         if (!ok) return;
@@ -575,6 +589,11 @@
       const account = document.getElementById('main-account').value;
       const amountInput = document.getElementById('main-amount');
       const memoInput = document.getElementById('main-memo');
+      const isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+
+      let cashBalance = getStoredNumber('myCashBalance');
+      let bankBalance = getStoredNumber('myBankBalance');
+      const mainLogs = getStoredJSON('myMainLogs', []);
 
       const amount = Number(amountInput.value.trim());
       const memo = memoInput.value.trim() || (direction === 'income' ? '入金' : '支出');
@@ -584,7 +603,6 @@
         return;
       }
 
-      // ワンクッション確認
       if (isConfirmEnabled) {
         const actionText = direction === 'income' ? '増やし' : '減らし';
         const accountText = account === 'cash' ? '手持ち現金' : '銀行・通帳';
@@ -616,6 +634,10 @@
       const direction = document.getElementById('suica-direction').value;
       const amountInput = document.getElementById('suica-amount');
       const memoInput = document.getElementById('suica-memo');
+      const isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
+
+      let suicaBalance = getStoredNumber('mySuicaBalance');
+      const suicaLogs = getStoredJSON('mySuicaLogs', []);
 
       const amount = Number(amountInput.value.trim());
       const memo = memoInput.value.trim() || (direction === 'income' ? 'チャージ' : '利用');
@@ -625,7 +647,6 @@
         return;
       }
 
-      // ワンクッション確認
       if (isConfirmEnabled) {
         const actionText = direction === 'income' ? 'チャージ' : '支払い';
         const ok = confirm(`【Suica】\n${memo}：${amount.toLocaleString()}円 を${actionText}しますか？`);
@@ -648,6 +669,10 @@
 
     function deleteMainLog(index) {
       if (confirm('この記録を削除して残高を元に戻しますか？')) {
+        let cashBalance = getStoredNumber('myCashBalance');
+        let bankBalance = getStoredNumber('myBankBalance');
+        const mainLogs = getStoredJSON('myMainLogs', []);
+
         const item = mainLogs[index];
         const isIncome = item.direction === 'income';
         if (item.account === 'cash') {
@@ -665,6 +690,9 @@
 
     function deleteSuicaLog(index) {
       if (confirm('このSuica記録を削除して残高を元に戻しますか？')) {
+        let suicaBalance = getStoredNumber('mySuicaBalance');
+        const suicaLogs = getStoredJSON('mySuicaLogs', []);
+
         const item = suicaLogs[index];
         const isIncome = item.direction === 'income';
         suicaBalance = isIncome ? suicaBalance - item.amount : suicaBalance + item.amount;
@@ -675,9 +703,7 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      updateDisplay();
-    });
+    window.addEventListener('DOMContentLoaded', updateDisplay);
   </script>
 
 </body>
