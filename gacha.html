@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>プレミアムガチャ | ポケモンスタジオ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    body {
+      background-image: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 70%, #020617 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      padding-top: calc(6px + env(safe-area-inset-top));
+      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    /* ヘッダー */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .top-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* ナビゲーションリンク */
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.15s ease;
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      border-color: #f472b6;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+    }
+    .nav-btn:active { transform: scale(0.96); }
+
+    /* コインバー */
+    .status-bar {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+    .coin-val {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+    }
+
+    /* ガチャメインカード */
+    .gacha-card {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .gacha-banner {
+      width: 100%;
+      flex: 1;
+      background: linear-gradient(135deg, #4f46e5 0%, #ec4899 50%, #f59e0b 100%);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
+      position: relative;
+    }
+    .gacha-banner h1 {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(0,0,0,0.6);
+    }
+    .gacha-banner p {
+      font-size: 11px;
+      color: #fef08a;
+      margin-top: 6px;
+      font-weight: bold;
+    }
+
+    .rates-box {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+      font-size: 10px;
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .rates-box span { font-weight: bold; }
+
+    .gacha-btn-group {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .gacha-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: transform 0.1s ease;
+    }
+    .gacha-btn:active { transform: scale(0.96); }
+    .gacha-single { background: linear-gradient(135deg, #0284c7, #0369a1); box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4); }
+    .gacha-multi  { background: linear-gradient(135deg, #db2777, #be185d); box-shadow: 0 4px 12px rgba(219, 39, 119, 0.4); }
+
+    /* ガチャ結果モーダル */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(14px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      gap: 12px;
+      animation: modalFade 0.25s ease;
+    }
+    @keyframes modalFade {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 320px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    .result-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 6px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      animation: cardPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes cardPop {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .result-card img { width: 46px; height: 46px; object-fit: contain; }
+
+    .dex-rarity { font-size: 8px; font-weight: 900; padding: 1px 4px; border-radius: 4px; }
+    .badge-UR  { background: linear-gradient(90deg, #f59e0b, #ef4444); color: #fff; }
+    .badge-SSR { background: #ec4899; color: #fff; }
+    .badge-SR  { background: #a855f7; color: #fff; }
+    .badge-R   { background: #38bdf8; color: #fff; }
+    .badge-N   { background: #64748b; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <a href="index.html" class="top-btn">◀ ポータル</a>
+      <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">GACHA ROOM</span>
+      <span style="width: 50px;"></span>
+    </div>
+
+    <!-- ページ間ナビゲーション -->
+    <div class="nav-links">
+      <a href="game3.html" class="nav-btn">🎰 スロット</a>
+      <a href="gacha.html" class="nav-btn active">✨ ガチャ</a>
+      <a href="dex.html" class="nav-btn">📖 図鑑</a>
+    </div>
+
+    <div class="status-bar">
+      <div>
+        <span style="font-size:11px; color:#cbd5e1;">🪙 コイン: </span>
+        <span class="coin-val" id="coin-display">1,000</span>
+      </div>
+      <button class="top-btn" onclick="addBonus()">🎁 ボーナス</button>
+    </div>
+
+    <div class="gacha-card">
+      <div class="gacha-banner">
+        <h1>🌟 POKÉMON GACHA 🌟</h1>
+        <p>✨ UR & SSR 相棒ポケモンたちを召喚せよ！ ✨</p>
+      </div>
+
+      <div class="rates-box">
+        【提供割合】 <span style="color:#f59e0b;">UR: 3%</span> / <span style="color:#ec4899;">SSR: 10%</span> / <span style="color:#a855f7;">SR: 22%</span> / <span style="color:#38bdf8;">R: 35%</span> / <span style="color:#94a3b8;">N: 30%</span>
+      </div>
+
+      <div class="gacha-btn-group">
+        <button class="gacha-btn gacha-single" onclick="drawGacha(1)">
+          <span>1回引く</span>
+          <small>300 コイン</small>
+        </button>
+        <button class="gacha-btn gacha-multi" onclick="drawGacha(10)">
+          <span>10連ガチャ！</span>
+          <small>3,000 コイン (SR以上確定)</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- 結果モーダル -->
+    <div class="modal-overlay" id="gacha-modal" style="display: none;">
+      <h2 style="font-size: 18px; color: #f59e0b;" id="modal-title">🎉 ガチャ結果</h2>
+      <div class="result-grid" id="result-grid"></div>
+      <button class="gacha-btn gacha-multi" onclick="closeModal()" style="width:100%; margin-top:8px;">OK (図鑑に記録)</button>
+    </div>
+
+  </div>
+
+  <script>
+    // images/gacha/ フォルダ内のポケモン画像マッピング（追加・拡張自由！）
+    const GACHA_POOL = [
+      { id: 'p1', name: 'ピジョット', rarity: 'N',   img: 'images/gacha/p1.png', rate: 30 },
+      { id: 'p2', name: 'スピアー',   rarity: 'N',   img: 'images/gacha/p2.png', rate: 30 },
+      { id: 'p3', name: 'ゲンガー',   rarity: 'R',   img: 'images/gacha/p3.png', rate: 20 },
+      { id: 'p4', name: 'ウィンディ', rarity: 'R',   img: 'images/gacha/p4.png', rate: 15 },
+      { id: 'p5', name: 'キュウコン', rarity: 'SR',  img: 'images/gacha/p5.png', rate: 12 },
+      { id: 'p6', name: 'ガブリアス', rarity: 'SR',  img: 'images/gacha/p6.png', rate: 10 },
+      { id: 'p7', name: 'ルカリオ',   rarity: 'SSR', img: 'images/gacha/p7.png', rate: 7 },
+      { id: 'p8', name: 'リザードン', rarity: 'UR',  img: 'images/gacha/p8.png', rate: 3 }
+    ];
+
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{}');
+
+    function updateCoinDisplay() {
+      document.getElementById('coin-display').textContent = coins.toLocaleString();
+      localStorage.setItem('my_casino_coins', coins);
+    }
+
+    function addBonus() {
+      coins += 500;
+      updateCoinDisplay();
+      alert('🎁 500 コイン獲得！');
+    }
+
+    function drawGacha(times) {
+      const cost = times === 1 ? 300 : 3000;
+      if (coins < cost) {
+        alert('コインが足りないぜ！スロットでコインを増やしてこよう！');
+        return;
+      }
+
+      coins -= cost;
+      updateCoinDisplay();
+
+      const results = [];
+      for (let i = 0; i < times; i++) {
+        results.push(pickRandom(times === 10 && i === 9));
+      }
+
+      showResults(results);
+    }
+
+    function pickRandom(guaranteeSR = false) {
+      const rand = Math.random() * 100;
+      let target;
+
+      if (guaranteeSR) {
+        const high = GACHA_POOL.filter(c => ['SR', 'SSR', 'UR'].includes(c.rarity));
+        target = high[Math.floor(Math.random() * high.length)];
+      } else {
+        if (rand < 3) target = GACHA_POOL.find(c => c.rarity === 'UR') || GACHA_POOL[GACHA_POOL.length - 1];
+        else if (rand < 13) target = GACHA_POOL.find(c => c.rarity === 'SSR') || GACHA_POOL[GACHA_POOL.length - 2];
+        else if (rand < 35) {
+          const srs = GACHA_POOL.filter(c => c.rarity === 'SR');
+          target = srs[Math.floor(Math.random() * srs.length)] || GACHA_POOL[0];
+        } else if (rand < 70) {
+          const rs = GACHA_POOL.filter(c => c.rarity === 'R');
+          target = rs[Math.floor(Math.random() * rs.length)] || GACHA_POOL[0];
+        } else {
+          const ns = GACHA_POOL.filter(c => c.rarity === 'N');
+          target = ns[Math.floor(Math.random() * ns.length)] || GACHA_POOL[0];
+        }
+      }
+
+      inventory[target.id] = (inventory[target.id] || 0) + 1;
+      localStorage.setItem('my_gacha_inventory', JSON.stringify(inventory));
+      return target;
+    }
+
+    function showResults(results) {
+      const grid = document.getElementById('result-grid');
+      grid.innerHTML = '';
+
+      results.forEach(card => {
+        const el = document.createElement('div');
+        el.className = 'result-card';
+        el.innerHTML = `
+          <span class="dex-rarity badge-${card.rarity}">${card.rarity}</span>
+          <img src="${card.img}" alt="" onerror="this.src='images/slot1.png'">
+          <span style="font-size:9px; font-weight:bold;">${card.name}</span>
+        `;
+        grid.appendChild(el);
+      });
+
+      document.getElementById('gacha-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('gacha-modal').style.display = 'none';
+    }
+
+    window.addEventListener('DOMContentLoaded', updateCoinDisplay);
+  </script>
+</body>
+</html>
