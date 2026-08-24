@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ポケモンジム＆センター | 育成スタジオ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0f172a;
+    }
+
+    body {
+      background-image: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f172a 70%, #020617 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      padding-top: calc(6px + env(safe-area-inset-top));
+      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .top-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      flex: 1;
+      padding: 6px 0;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.15s ease;
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: #34d399;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+    .nav-btn:active { transform: scale(0.96); }
+
+    .status-bar {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 6px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+      font-size: 11px;
+    }
+
+    .train-card-container {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .poke-row {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .poke-row.fainted {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .poke-img-box {
+      width: 54px;
+      height: 54px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .poke-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .poke-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .action-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .act-btn {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 900;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-lv { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .btn-evo { background: linear-gradient(135deg, #10b981, #047857); }
+    .btn-heal { background: linear-gradient(135deg, #ec4899, #be185d); }
+    .act-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <div class="top-bar">
+      <a href="index.html" class="top-btn">◀ ポータル</a>
+      <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">TRAINING GYM</span>
+      <span style="width: 50px;"></span>
+    </div>
+
+    <div class="nav-links">
+      <a href="battle.html" class="nav-btn">⚔️ バトル</a>
+      <a href="train.html" class="nav-btn active">🌱 育成・回復</a>
+      <a href="dex.html" class="nav-btn">📖 図鑑</a>
+      <a href="gacha.html" class="nav-btn">✨ ガチャ</a>
+    </div>
+
+    <div class="status-bar">
+      <div>🪙 コイン: <b id="coin-disp" style="color:#fbbf24;">1,000</b></div>
+      <div>🌱 タネ: <b id="seed-disp" style="color:#4ade80;">1</b></div>
+      <div>💊 かけら: <b id="item-disp" style="color:#f472b6;">2</b></div>
+    </div>
+
+    <div class="train-card-container" id="party-list">
+      <!-- 手持ち6体の一覧 -->
+    </div>
+
+  </div>
+
+  <script src="pokemonData.js"></script>
+
+  <script>
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let seeds = parseInt(localStorage.getItem('my_evolve_seeds') || '1');
+    let revives = parseInt(localStorage.getItem('my_revive_items') || '2');
+    let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{"p0004":1}');
+    let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+    let forms = JSON.parse(localStorage.getItem('my_pokemon_forms') || '{}');
+    let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+    let fainted = JSON.parse(localStorage.getItem('my_fainted_pokemon') || '{}');
+
+    // 進化ツリー
+    const EVOLUTION_CHAINS = {
+      'p0001': { base: 'p0001', mid: 'p0002', final: 'p0003' },
+      'p0004': { base: 'p0004', mid: 'p0005', final: 'p0006' },
+      'p0007': { base: 'p0007', mid: 'p0008', final: 'p0009' },
+      'p0010': { base: 'p0010', mid: 'p0011', final: 'p0012' },
+      'p0013': { base: 'p0013', mid: 'p0014', final: 'p0015' },
+      'p0016': { base: 'p0016', mid: 'p0017', final: 'p0018' },
+      'p0019': { base: 'p0019', final: 'p0020' },
+      'p0023': { base: 'p0023', final: 'p0024' },
+      'p0025': { base: 'p0025', final: 'p0026' },
+      'p0027': { base: 'p0027', final: 'p0028' },
+      'p0092': { base: 'p0092', mid: 'p0093', final: 'p0094' },
+      'p0129': { base: 'p0129', final: 'p0130' },
+      'p0133': { base: 'p0133', final: 'p0134' },
+      'p0147': { base: 'p0147', mid: 'p0148', final: 'p0149' }
+    };
+
+    function getPoke(id) {
+      if (typeof POKEMON_DATA !== 'undefined') {
+        const found = POKEMON_DATA.find(p => p.id === id);
+        if (found) return found;
+      }
+      return { id, name: 'ポケモン', img: 'images/gacha/' + id + '.png' };
+    }
+
+    function renderGym() {
+      document.getElementById('coin-disp').textContent = coins.toLocaleString();
+      document.getElementById('seed-disp').textContent = seeds;
+      document.getElementById('item-disp').textContent = revives;
+
+      const list = document.getElementById('party-list');
+      list.innerHTML = '';
+
+      if (party.length === 0) {
+        list.innerHTML = '<div style="text-align:center; padding:20px; font-size:11px; color:#94a3b8;">手持ちポケモンがいません。<br>【図鑑】から手持ち（最大6体）を選んでくれ！</div>';
+        return;
+      }
+
+      party.forEach(baseId => {
+        const currentFormId = forms[baseId] || baseId;
+        const poke = getPoke(currentFormId);
+        const lv = levels[baseId] || 1;
+        const isFainted = !!fainted[baseId];
+
+        const hp = (100 + lv * 20);
+        const atk = (22 + lv * 6);
+
+        const chain = EVOLUTION_CHAINS[baseId];
+        let nextTargetId = null;
+        if (chain) {
+          if (currentFormId === chain.base && chain.mid) nextTargetId = chain.mid;
+          else if ((currentFormId === chain.base || currentFormId === chain.mid) && chain.final) nextTargetId = chain.final;
+        }
+        const hasGachaNext = nextTargetId && inventory[nextTargetId] > 0;
+
+        const row = document.createElement('div');
+        row.className = `poke-row ${isFainted ? 'fainted' : ''}`;
+        row.innerHTML = `
+          <div class="poke-img-box">
+            <img src="${poke.img}" alt="" onerror="this.src='images/slot1.png'">
+          </div>
+          <div class="poke-info">
+            <div style="font-size:11px; font-weight:900;">
+              ${poke.name} <span style="color:#fbbf24;">Lv.${lv}</span>
+            </div>
+            <div style="font-size:9px; color:#cbd5e1;">HP: ${hp} / ATK: ${atk}</div>
+            <div style="font-size:8px; color:${isFainted ? '#ef4444' : '#22c55e'}; font-weight:bold;">
+              ${isFainted ? '💀 ひんし (本日出撃不可)' : '💚 げんき'}
+            </div>
+          </div>
+          <div class="action-btn-group">
+            ${isFainted ? `
+              <button class="act-btn btn-heal" onclick="revivePoke('${baseId}')">💊 回復 (x1)</button>
+            ` : `
+              <button class="act-btn btn-lv" onclick="levelUp('${baseId}')">強化 (80G)</button>
+              ${nextTargetId ? `<button class="act-btn btn-evo" ${(!hasGachaNext || seeds < 1) ? 'disabled' : ''} onclick="evolvePoke('${baseId}', '${nextTargetId}')">🌱 進化</button>` : '<span style="font-size:8px; color:#facc15;">最終進化</span>'}
+            `}
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function levelUp(baseId) {
+      if (coins < 80) { alert('コインが足りないぜ！'); return; }
+      coins -= 80;
+      levels[baseId] = (levels[baseId] || 1) + 1;
+      localStorage.setItem('my_partner_levels', JSON.stringify(levels));
+      localStorage.setItem('my_casino_coins', coins);
+      renderGym();
+    }
+
+    function evolvePoke(baseId, nextId) {
+      if (seeds < 1 || !inventory[nextId]) return;
+      seeds--;
+      forms[baseId] = nextId;
+      localStorage.setItem('my_evolve_seeds', seeds);
+      localStorage.setItem('my_pokemon_forms', JSON.stringify(forms));
+      alert(`🎉 おめでとう！【${getPoke(nextId).name}】に進化したぞ！`);
+      renderGym();
+    }
+
+    function revivePoke(baseId) {
+      if (revives < 1) { alert('かいふくアイテムが足りないぜ！'); return; }
+      revives--;
+      delete fainted[baseId];
+      localStorage.setItem('my_revive_items', revives);
+      localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
+      renderGym();
+    }
+
+    window.addEventListener('DOMContentLoaded', renderGym);
+  </script>
+</body>
+</html>
