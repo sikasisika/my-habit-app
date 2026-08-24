@@ -58,6 +58,7 @@
       align-items: center;
       flex-shrink: 0;
       padding: 0 4px;
+      height: 24px;
     }
     .top-btn {
       color: #ffffff;
@@ -70,7 +71,7 @@
       cursor: pointer;
     }
 
-    /* DS筐体 */
+    /* DS筐体（上下2画面を均等に配置） */
     .ds-body {
       flex: 1 1 0%;
       min-height: 0;
@@ -87,8 +88,8 @@
     /* 📺 上画面：バトルフィールド */
     /* ------------------------------------ */
     .ds-top-screen {
-      height: 250px;
-      flex-shrink: 0;
+      flex: 1.1;
+      min-height: 0;
       background: linear-gradient(180deg, #38bdf8 0%, #6366f1 45%, #1e1b4b 85%, #0f172a 100%);
       border-radius: 8px;
       border: 2px solid #0f172a;
@@ -104,12 +105,12 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #f87171;
       border-radius: 6px;
-      padding: 3px 6px;
+      padding: 4px 6px;
       width: 145px;
       z-index: 10;
     }
 
-    /* 相手ポケモンの枠（右上・中央寄り） */
+    /* 相手スプライト（右上・中央寄り） */
     .enemy-sprite-box {
       position: absolute;
       top: 25px;
@@ -121,7 +122,7 @@
       z-index: 5;
     }
 
-    /* 相棒ポケモンの枠（左下・中央寄り） */
+    /* 相棒スプライト（左下・中央寄り） */
     .player-sprite-box {
       position: absolute;
       bottom: 25px;
@@ -141,7 +142,7 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #38bdf8;
       border-radius: 6px;
-      padding: 3px 6px;
+      padding: 4px 6px;
       width: 155px;
       z-index: 10;
     }
@@ -161,7 +162,7 @@
     }
     .hp-gauge-bg {
       width: 100%;
-      height: 5px;
+      height: 6px;
       background: #111827;
       border-radius: 3px;
       overflow: hidden;
@@ -175,18 +176,17 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ★ 影 */
+    /* ★ 影（密着度を改善） */
     .sprite-shadow {
-      width: 70px;
-      height: 12px;
-      background: rgba(0, 0, 0, 0.45);
+      width: 68px;
+      height: 10px;
+      background: rgba(0, 0, 0, 0.5);
       border-radius: 50%;
-      filter: blur(2px);
-      margin-top: -6px;
+      filter: blur(1.5px);
+      margin-top: -12px; /* ★足元にしっかり密着 */
       z-index: 1;
     }
 
-    /* ポケモン画像本体 */
     .poke-sprite {
       object-fit: contain;
       position: relative;
@@ -195,21 +195,19 @@
       transition: transform 0.1s ease;
     }
 
-    /* 💥 攻撃＆被弾アニメーション */
+    /* 💥 攻撃＆被弾アニメ */
     .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
     @keyframes pAtkAnim {
       0% { transform: translate(0, 0) scale(1); }
       50% { transform: translate(45px, -30px) scale(1.1); }
       100% { transform: translate(0, 0) scale(1); }
     }
-
     .anim-atk-enemy { animation: eAtkAnim 0.35s ease forwards; }
     @keyframes eAtkAnim {
       0% { transform: translate(0, 0) scale(1); }
       50% { transform: translate(-45px, 30px) scale(1.1); }
       100% { transform: translate(0, 0) scale(1); }
     }
-
     .anim-hit { animation: hitShake 0.4s ease forwards; }
     @keyframes hitShake {
       0% { transform: translate(0, 0); filter: brightness(1) drop-shadow(0 0 10px #ef4444); }
@@ -220,7 +218,6 @@
       100% { transform: translate(0, 0); filter: brightness(1); }
     }
 
-    /* ダメージポップ */
     .dmg-indicator {
       position: absolute;
       top: -10px;
@@ -240,19 +237,19 @@
     }
 
     /* ------------------------------------ */
-    /* 📱 下画面：コマンド（手描きイラスト完全準拠） */
+    /* 📱 下画面：コマンド（余白完全消滅＆ボタン大型化） */
     /* ------------------------------------ */
     .ds-bottom-screen {
       flex: 1;
-      min-height: 140px;
+      min-height: 0;
       background: #0f172a;
       border-radius: 8px;
       border: 2px solid #0f172a;
-      padding: 6px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px; /* ★程よい間隔 */
       position: relative;
     }
 
@@ -261,18 +258,18 @@
       flex-direction: column;
       height: 100%;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
     }
 
-    /* ログ枠 */
+    /* ログ枠（縦幅ゆったり） */
     .msg-window-box {
+      flex: 0 0 44px;
       background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 10px;
-      line-height: 1.35;
-      height: 34px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      line-height: 1.4;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -280,70 +277,73 @@
       cursor: pointer;
     }
     .pixel-arrow {
-      font-size: 12px;
+      font-size: 13px;
       color: #38bdf8;
       animation: arrowBounce 0.8s infinite alternate ease-in-out;
       flex-shrink: 0;
-      margin-left: 4px;
+      margin-left: 6px;
     }
     @keyframes arrowBounce {
       0% { transform: translateY(0); }
       100% { transform: translateY(3px); }
     }
 
-    /* 上段：こうげき / ぼうぎょ（横長＆薄型） */
+    /* 上段：こうげき / ぼうぎょ（手描き通りのどっしり縦幅） */
     .cmd-row-top {
+      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
     }
     .btn-main-act {
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
       color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 7px 0;
+      font-size: 14px;
+      font-weight: 900;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.4);
+      gap: 6px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
-    .btn-main-act:active { transform: translateY(1px); }
+    .btn-main-act:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-main-act:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-atk { background: linear-gradient(135deg, #f87171, #dc2626); }
     .btn-def { background: linear-gradient(135deg, #60a5fa, #2563eb); }
 
-    /* 下段：こうたい / かくせい / Auto */
+    /* 下段：こうたい / かくせい / Auto（手描き通りの比率＆大型化） */
     .cmd-row-bottom {
+      flex: 1;
       display: flex;
-      gap: 4px;
-      align-items: center;
+      gap: 6px;
+      align-items: stretch;
     }
     .btn-sub-small {
-      width: 54px;
-      padding: 6px 0;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      width: 64px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
       color: #fff;
-      font-size: 9px;
-      font-weight: bold;
+      font-size: 11px;
+      font-weight: 900;
       cursor: pointer;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
+    .btn-sub-small:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-switch { background: #475569; }
     .btn-auto { background: #059669; }
     .btn-auto.active { background: #d97706; }
 
     .btn-awaken-box {
       flex: 1;
-      padding: 3px 0;
-      border-radius: 6px;
-      border: 1.5px solid #fbbf24;
+      border-radius: 8px;
+      border: 2px solid #fbbf24;
       background: rgba(251, 191, 36, 0.15);
       color: #fff;
       display: flex;
@@ -351,7 +351,9 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
+    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-awaken-box:disabled { opacity: 0.35; cursor: not-allowed; border-color: #64748b; }
     .btn-awaken-box.ready {
       background: linear-gradient(135deg, #ec4899, #be185d);
@@ -366,8 +368,8 @@
     .seed-track {
       display: flex;
       gap: 4px;
-      font-size: 9px;
-      margin-top: 1px;
+      font-size: 11px;
+      margin-top: 2px;
     }
     .seed-icon { opacity: 0.25; filter: grayscale(1); }
     .seed-icon.active { opacity: 1; filter: grayscale(0); text-shadow: 0 0 6px #4ade80; }
@@ -393,10 +395,10 @@
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 6px;
-      padding: 2px 4px;
+      padding: 4px 6px;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
     }
     .party-slot-card.empty {
@@ -417,20 +419,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 8px;
+      gap: 10px;
+      padding: 10px;
       z-index: 30;
     }
     .slot-drum-box {
-      width: 140px;
-      height: 42px;
+      width: 160px;
+      height: 48px;
       background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
       border: 2px solid #fbbf24;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
       color: #fbbf24;
     }
@@ -438,9 +440,9 @@
       background: linear-gradient(135deg, #f59e0b, #d97706);
       border: 2px solid #fff;
       color: #000;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 900;
-      padding: 5px 16px;
+      padding: 6px 20px;
       border-radius: 20px;
       cursor: pointer;
     }
@@ -531,7 +533,7 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド -->
+      <!-- 📱 下画面：コマンド（余白なし・大型ボタン） -->
       <!-- ========================================================= -->
       <div class="ds-bottom-screen">
         
@@ -553,7 +555,7 @@
             <button class="btn-sub-small btn-switch" onclick="openSwitchView()">こうたい</button>
             
             <button class="btn-awaken-box" id="btn-awaken" onclick="playerAction('awaken')" disabled>
-              <span style="font-size:10px; font-weight:bold;">かくせい</span>
+              <span style="font-size:11px; font-weight:900;">かくせい</span>
               <div class="seed-track">
                 <span class="seed-icon" id="seed-1">🌱</span>
                 <span class="seed-icon" id="seed-2">🌱</span>
@@ -568,7 +570,7 @@
 
         <!-- 🔄 交代選択ビュー -->
         <div class="switch-view-container" id="switch-view" style="display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:9px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px;">
             <span style="color:#fbbf24;">👥 手持ちポケモン（タップで交代）</span>
             <button class="top-btn" onclick="closeSwitchView()">◀ もどる</button>
           </div>
@@ -577,7 +579,7 @@
 
         <!-- 🎰 スロットオーバーレイ -->
         <div class="slot-view-overlay" id="slot-modal" style="display: none;">
-          <span style="font-size:10px; color:#fbbf24;">🎰 スロット援護ルーレット！</span>
+          <span style="font-size:11px; color:#fbbf24;">🎰 スロット援護ルーレット！</span>
           <div class="slot-drum-box" id="slot-drum-text">🌱 進化の種</div>
           <button class="btn-slot-push" id="btn-slot-push" onclick="stopSlot()">プッシュ！</button>
         </div>
@@ -633,11 +635,10 @@
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
-    // サイズをpx値にマッピング
     function getSizePx(size) {
-      if (size === 'G') return 140; // キョダイ
-      if (size === 'L') return 110; // 大型
-      if (size === 'M') return 90;  // 中型
+      if (size === 'G') return 135; // キョダイ
+      if (size === 'L') return 105; // 大型
+      if (size === 'M') return 88;  // 中型
       return 75;                    // 小型
     }
 
