@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ポケモンタワーバトル | DSスタイル</title>
 
+  <!-- レトロドットフォント -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
@@ -15,6 +16,8 @@
       margin: 0;
       padding: 0;
       font-family: 'DotGothic16', sans-serif !important;
+      user-select: none;
+      -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
       outline: none;
     }
@@ -32,7 +35,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 6px;
+      padding: 6px 8px;
       padding-top: calc(6px + env(safe-area-inset-top));
       padding-bottom: calc(6px + env(safe-area-inset-bottom));
     }
@@ -44,45 +47,36 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      justify-content: space-between;
       position: relative;
     }
 
-    /* 最上部ヘッダー（前面配置・ポータル確実タップ） */
+    /* 最上部ヘッダー */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
       padding: 0 4px;
-      height: 32px;
-      position: relative;
-      z-index: 1000;
+      height: 24px;
     }
     .top-btn {
-      color: #ffffff !important;
-      text-decoration: none !important;
+      color: #ffffff;
+      text-decoration: none;
       font-size: 11px;
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.25);
-      padding: 6px 14px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 3px 8px;
       border-radius: 6px;
-      border: 1.5px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .top-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.4);
     }
 
-    /* DS筐体 */
+    /* DS筐体（上下2画面を均等に配置） */
     .ds-body {
       flex: 1 1 0%;
       min-height: 0;
       background: #1e293b;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 6px;
       border: 2px solid #334155;
       display: flex;
@@ -94,8 +88,8 @@
     /* 📺 上画面：バトルフィールド */
     /* ------------------------------------ */
     .ds-top-screen {
-      height: 230px;
-      flex-shrink: 0;
+      flex: 1.1;
+      min-height: 0;
       background: linear-gradient(180deg, #38bdf8 0%, #6366f1 45%, #1e1b4b 85%, #0f172a 100%);
       border-radius: 8px;
       border: 2px solid #0f172a;
@@ -103,54 +97,52 @@
       overflow: hidden;
     }
 
-    /* 相手プレート */
+    /* 相手情報プレート（左上） */
     .enemy-plate {
       position: absolute;
-      top: 10px;
+      top: 12px;
       left: 10px;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #f87171;
       border-radius: 6px;
-      padding: 4px 8px;
+      padding: 4px 6px;
       width: 145px;
       z-index: 10;
     }
 
-    /* 相手スプライト */
+    /* 相手スプライト（右上・中央寄り） */
     .enemy-sprite-box {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 120px;
-      height: 120px;
+      top: 25px;
+      right: 35px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 5;
     }
 
-    /* 相棒スプライト */
+    /* 相棒スプライト（左下・中央寄り） */
     .player-sprite-box {
       position: absolute;
-      bottom: 20px;
-      left: 25px;
-      width: 120px;
-      height: 120px;
+      bottom: 25px;
+      left: 40px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 5;
     }
 
-    /* 相棒プレート */
+    /* 相棒情報プレート（右下） */
     .player-plate {
       position: absolute;
-      bottom: 10px;
+      bottom: 12px;
       right: 10px;
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #38bdf8;
       border-radius: 6px;
-      padding: 4px 8px;
+      padding: 4px 6px;
       width: 155px;
       z-index: 10;
     }
@@ -161,26 +153,13 @@
       font-size: 10px;
       margin-bottom: 2px;
     }
-
-    /* タイプバッジ */
     .type-badge {
       font-size: 8px;
-      font-weight: 900;
-      padding: 1px 5px;
-      border-radius: 4px;
+      padding: 0 3px;
+      border-radius: 3px;
+      background: #475569;
       color: #fff;
     }
-    .type-ほのお   { background: linear-gradient(135deg, #ef4444, #ea580c); }
-    .type-みず     { background: linear-gradient(135deg, #3b82f6, #0284c7); }
-    .type-くさ     { background: linear-gradient(135deg, #22c55e, #16a34a); }
-    .type-でんき   { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000 !important; }
-    .type-ノーマル { background: linear-gradient(135deg, #94a3b8, #64748b); }
-    .type-ゴースト { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-    .type-むし     { background: linear-gradient(135deg, #84cc16, #65a30d); }
-    .type-ひこう   { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
-    .type-こおり   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-    .type-エスパー { background: linear-gradient(135deg, #ec4899, #db2777); }
-
     .hp-gauge-bg {
       width: 100%;
       height: 6px;
@@ -197,16 +176,26 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ポケモン画像サイズ制限 */
+    /* ★ 影（密着度を改善） */
+    .sprite-shadow {
+      width: 68px;
+      height: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      filter: blur(1.5px);
+      margin-top: -12px; /* ★足元にしっかり密着 */
+      z-index: 1;
+    }
+
     .poke-sprite {
-      max-width: 95px !important;
-      max-height: 95px !important;
-      object-fit: contain !important;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
       transition: transform 0.1s ease;
     }
 
-    /* アクションアニメ */
+    /* 💥 攻撃＆被弾アニメ */
     .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
     @keyframes pAtkAnim {
       0% { transform: translate(0, 0) scale(1); }
@@ -232,7 +221,7 @@
     .dmg-indicator {
       position: absolute;
       top: -10px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 900;
       color: #ff3344;
       text-shadow: 0 0 4px #000, 0 0 8px #000;
@@ -248,17 +237,19 @@
     }
 
     /* ------------------------------------ */
-    /* 📱 下画面：コマンド（余白なし・縦幅いっぱい） */
+    /* 📱 下画面：コマンド（余白完全消滅＆ボタン大型化） */
     /* ------------------------------------ */
     .ds-bottom-screen {
-      flex: 1 1 0%;
+      flex: 1;
       min-height: 0;
       background: #0f172a;
       border-radius: 8px;
       border: 2px solid #0f172a;
-      padding: 6px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      gap: 8px; /* ★程よい間隔 */
       position: relative;
     }
 
@@ -267,17 +258,16 @@
       flex-direction: column;
       height: 100%;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
     }
 
-    /* ログ枠 */
+    /* ログ枠（縦幅ゆったり） */
     .msg-window-box {
-      height: 42px;
-      flex-shrink: 0;
-      background: rgba(0, 0, 0, 0.65);
+      flex: 0 0 44px;
+      background: rgba(0, 0, 0, 0.6);
       border: 1.5px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
-      padding: 4px 10px;
+      padding: 6px 10px;
       font-size: 11px;
       line-height: 1.4;
       display: flex;
@@ -298,35 +288,33 @@
       100% { transform: translateY(3px); }
     }
 
-    /* 上段：こうげき / ぼうぎょ（手描きイラスト通りの特大ボタン） */
+    /* 上段：こうげき / ぼうぎょ（手描き通りのどっしり縦幅） */
     .cmd-row-top {
-      flex: 1.6;
+      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
     }
     .btn-main-act {
-      height: 100%;
       border-radius: 8px;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
       color: #fff;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 900;
-      letter-spacing: 1px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+      gap: 6px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
-    .btn-main-act:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-main-act:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-main-act:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-atk { background: linear-gradient(135deg, #f87171, #dc2626); }
     .btn-def { background: linear-gradient(135deg, #60a5fa, #2563eb); }
 
-    /* 下段：こうたい / かくせい / Auto */
+    /* 下段：こうたい / かくせい / Auto（手描き通りの比率＆大型化） */
     .cmd-row-bottom {
       flex: 1;
       display: flex;
@@ -334,28 +322,26 @@
       align-items: stretch;
     }
     .btn-sub-small {
-      width: 68px;
-      height: 100%;
+      width: 64px;
       border-radius: 8px;
       border: 1.5px solid rgba(255, 255, 255, 0.25);
       color: #fff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
-    .btn-sub-small:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-sub-small:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-switch { background: #475569; }
     .btn-auto { background: #059669; }
     .btn-auto.active { background: #d97706; }
 
     .btn-awaken-box {
       flex: 1;
-      height: 100%;
       border-radius: 8px;
       border: 2px solid #fbbf24;
       background: rgba(251, 191, 36, 0.15);
@@ -365,9 +351,9 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.4);
     }
-    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.4); }
     .btn-awaken-box:disabled { opacity: 0.35; cursor: not-allowed; border-color: #64748b; }
     .btn-awaken-box.ready {
       background: linear-gradient(135deg, #ec4899, #be185d);
@@ -381,8 +367,8 @@
 
     .seed-track {
       display: flex;
-      gap: 5px;
-      font-size: 12px;
+      gap: 4px;
+      font-size: 11px;
       margin-top: 2px;
     }
     .seed-icon { opacity: 0.25; filter: grayscale(1); }
@@ -396,32 +382,31 @@
       flex-direction: column;
       height: 100%;
       justify-content: space-between;
-      gap: 6px;
+      gap: 4px;
     }
     .party-grid-6 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: repeat(3, 1fr);
-      gap: 6px;
+      gap: 4px;
       flex: 1;
     }
     .party-slot-card {
-      background: rgba(0, 0, 0, 0.45);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 4px 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 4px 6px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
     }
     .party-slot-card.empty {
-      border: 1.5px dashed rgba(255, 255, 255, 0.2);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
       background: transparent;
       cursor: default;
-      justify-content: center;
     }
-    .party-slot-card.current { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
+    .party-slot-card.current { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); }
     .party-slot-card.fainted { border-color: #ef4444; opacity: 0.45; cursor: not-allowed; }
 
     /* スロット画面 */
@@ -481,7 +466,7 @@
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 6px;
       padding: 6px;
-      font-size: 10px;
+      font-size: 9px;
       line-height: 1.5;
       color: #cbd5e1;
     }
@@ -491,11 +476,10 @@
 
   <div class="container">
     
-    <!-- 最上部バー（ポータルへの確実な遷移） -->
     <div class="top-bar">
-      <a href="index.html" class="top-btn" onclick="window.location.href='index.html'; return false;">◀ ポータル</a>
+      <a href="index.html" class="top-btn">◀ ポータル</a>
       <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
-      <a href="train.html" class="top-btn" style="background:#10b981;" onclick="window.location.href='train.html'; return false;">🌱 育成ジム</a>
+      <a href="train.html" class="top-btn" style="background:#10b981;">🌱 育成ジム</a>
     </div>
 
     <div class="ds-body">
@@ -519,13 +503,15 @@
 
         <!-- 相手スプライト -->
         <div class="enemy-sprite-box" id="enemy-sprite-box">
-          <img id="enemy-img" class="poke-sprite" src="images/gacha/p0019.png" alt="" onerror="this.src='images/slot1.png'">
+          <img id="enemy-img" class="poke-sprite" src="images/gacha/p0019.png" alt="" style="width: 75px; height: 75px;" onerror="this.src='images/slot1.png'">
+          <div class="sprite-shadow"></div>
           <div id="enemy-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
         </div>
 
         <!-- 相棒スプライト -->
         <div class="player-sprite-box" id="player-sprite-box">
-          <img id="player-img" class="poke-sprite" src="images/gacha/p0004.png" alt="" onerror="this.src='images/slot1.png'">
+          <img id="player-img" class="poke-sprite" src="images/gacha/p0004.png" alt="" style="width: 75px; height: 75px;" onerror="this.src='images/slot1.png'">
+          <div class="sprite-shadow"></div>
           <div id="player-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
         </div>
 
@@ -547,7 +533,7 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド（余白完全消滅＆ボタン大型化） -->
+      <!-- 📱 下画面：コマンド（余白なし・大型ボタン） -->
       <!-- ========================================================= -->
       <div class="ds-bottom-screen">
         
@@ -558,7 +544,7 @@
             <span class="pixel-arrow">▾</span>
           </div>
 
-          <!-- 上段：こうげき / ぼうぎょ（文字サイズ特大18px） -->
+          <!-- 上段：こうげき / ぼうぎょ -->
           <div class="cmd-row-top">
             <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
             <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
@@ -569,7 +555,7 @@
             <button class="btn-sub-small btn-switch" onclick="openSwitchView()">こうたい</button>
             
             <button class="btn-awaken-box" id="btn-awaken" onclick="playerAction('awaken')" disabled>
-              <span style="font-size:12px; font-weight:900;">かくせい</span>
+              <span style="font-size:11px; font-weight:900;">かくせい</span>
               <div class="seed-track">
                 <span class="seed-icon" id="seed-1">🌱</span>
                 <span class="seed-icon" id="seed-2">🌱</span>
@@ -584,8 +570,8 @@
 
         <!-- 🔄 交代選択ビュー -->
         <div class="switch-view-container" id="switch-view" style="display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-            <span style="color:#fbbf24; font-weight:900;">👥 手持ちポケモン（タップで交代）</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px;">
+            <span style="color:#fbbf24;">👥 手持ちポケモン（タップで交代）</span>
             <button class="top-btn" onclick="closeSwitchView()">◀ もどる</button>
           </div>
           <div class="party-grid-6" id="switch-party-grid"></div>
@@ -601,7 +587,7 @@
         <!-- 📜 履歴ログモーダル -->
         <div class="history-modal-overlay" id="history-modal" style="display: none;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; color:#38bdf8; font-weight:bold;">📜 戦闘ログ履歴</span>
+            <span style="font-size:10px; color:#38bdf8;">📜 戦闘ログ履歴</span>
             <button class="top-btn" onclick="closeHistoryModal()">とじる</button>
           </div>
           <div class="history-log-list" id="history-log-content"></div>
@@ -649,6 +635,13 @@
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
+    function getSizePx(size) {
+      if (size === 'G') return 135; // キョダイ
+      if (size === 'L') return 105; // 大型
+      if (size === 'M') return 88;  // 中型
+      return 75;                    // 小型
+    }
+
     function getPoke(id) {
       if (typeof POKEMON_DATA !== 'undefined') {
         const found = POKEMON_DATA.find(p => p.id === id);
@@ -687,12 +680,14 @@
       isPlayerAwakened = false;
 
       document.getElementById('player-name').textContent = `${poke.name} Lv.${lv}`;
+      document.getElementById('player-type').textContent = poke.type;
       
-      const pTypeEl = document.getElementById('player-type');
-      pTypeEl.textContent = poke.type;
-      pTypeEl.className = `type-badge type-${poke.type}`;
+      const pImg = document.getElementById('player-img');
+      pImg.src = poke.img;
+      const px = getSizePx(poke.size || 'S');
+      pImg.style.width = px + 'px';
+      pImg.style.height = px + 'px';
 
-      document.getElementById('player-img').src = poke.img;
       document.getElementById('player-atk-val').textContent = playerAtk;
       document.getElementById('player-def-val').textContent = playerDef;
     }
@@ -752,12 +747,13 @@
     function applyEnemyUI() {
       document.getElementById('stage-text').textContent = `${stage}F` + (isEnemyBoss ? ' 👑' : '');
       document.getElementById('enemy-name').textContent = `${enemyPokemon.name} Lv.${stage}`;
-      
-      const eTypeEl = document.getElementById('enemy-type');
-      eTypeEl.textContent = enemyPokemon.type;
-      eTypeEl.className = `type-badge type-${enemyPokemon.type}`;
+      document.getElementById('enemy-type').textContent = enemyPokemon.type;
 
-      document.getElementById('enemy-img').src = enemyPokemon.img;
+      const eImg = document.getElementById('enemy-img');
+      eImg.src = enemyPokemon.img;
+      const px = getSizePx(enemyPokemon.size || 'S');
+      eImg.style.width = px + 'px';
+      eImg.style.height = px + 'px';
     }
 
     function updateUI() {
@@ -1002,6 +998,7 @@
       if (isAuto && !turnInProgress) playerAction('atk');
     }
 
+    // 交代画面
     function openSwitchView() {
       document.getElementById('cmd-view').style.display = 'none';
       document.getElementById('switch-view').style.display = 'flex';
@@ -1014,7 +1011,7 @@
 
         if (!id) {
           card.className = 'party-slot-card empty';
-          card.innerHTML = `<span style="font-size:10px; color:#64748b;">(あき枠)</span>`;
+          card.innerHTML = `<span style="font-size:8px; color:#64748b;">(あき枠)</span>`;
         } else {
           const p = getPoke(id);
           const lv = levels[id] || 1;
@@ -1023,10 +1020,10 @@
 
           card.className = `party-slot-card ${isCur ? 'current' : ''} ${isFaint ? 'fainted' : ''}`;
           card.innerHTML = `
-            <img src="${p.img}" style="width:42px; height:42px; object-fit:contain;" onerror="this.src='images/slot1.png'">
-            <div style="font-size:10px; flex:1;">
-              <b style="font-size:11px;">${p.name}</b> Lv.${lv}<br>
-              <span class="type-badge type-${p.type}">${p.type}</span> ${isFaint ? '<span style="color:#ef4444; font-weight:bold; margin-left:3px;">ひんし</span>' : '<span style="color:#22c55e; font-weight:bold; margin-left:3px;">げんき</span>'}
+            <img src="${p.img}" style="width:26px; height:26px; object-fit:contain;" onerror="this.src='images/slot1.png'">
+            <div style="font-size:8px;">
+              <b>${p.name}</b> Lv.${lv}<br>
+              <span class="type-badge">${p.type}</span> ${isFaint ? '<span style="color:#ef4444;">ひんし</span>' : '<span style="color:#22c55e;">げんき</span>'}
             </div>
           `;
 
