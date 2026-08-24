@@ -304,7 +304,9 @@ const POKEMON_DATA = [
 
   // 128 ケンタロス（パルデア含む）
   { id: 'p0128', name: 'ケンタロス', rarity: 'SR', img: 'images/gacha/p0128.png', rate: 12 },
-  { id: 'p0128-p', name: 'パルデアケンタロス', rarity: 'SR', img: 'images/gacha/p0128-p.png', rate: 12 },
+  { id: 'p0128-pk', name: 'パルデアケンタロス(コンバットしゅ)', rarity: 'SR', img: 'images/gacha/p0128-pk.png', rate: 12 },
+  { id: 'p0128-pb', name: 'パルデアケンタロス(ブレイズしゅ)', rarity: 'SR', img: 'images/gacha/p0128-pb.png', rate: 12 },
+  { id: 'p0128-pw', name: 'パルデアケンタロス(ウォーターしゅ)', rarity: 'SR', img: 'images/gacha/p0128-pw.png', rate: 12 },
 
   // 129 - 130 コイキング系統
   { id: 'p0129', name: 'コイキング', rarity: 'N', img: 'images/gacha/p0129.png', rate: 30 },
