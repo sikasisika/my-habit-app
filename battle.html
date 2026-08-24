@@ -1,1075 +1,1068 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ポケモンタワーバトル | DSスタイル</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ポケモンタワーバトル | DSスタイル</title>
 
-  <!-- レトロドットフォント -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'DotGothic16', sans-serif !important;
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      outline: none;
-    }
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'DotGothic16', sans-serif !important;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #090d16;
-    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #090d16;
+    }
 
-    body {
-      background: #0f172a;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 6px 8px;
-      padding-top: calc(6px + env(safe-area-inset-top));
-      padding-bottom: calc(6px + env(safe-area-inset-bottom));
-    }
+    body {
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px;
+      padding-top: calc(6px + env(safe-area-inset-top));
+      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+    }
 
-    .container {
-      width: 100%;
-      max-width: 420px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      justify-content: space-between;
-      position: relative;
-    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
 
-    /* 最上部ヘッダー */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-      padding: 0 4px;
-      height: 24px;
-    }
-    .top-btn {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.12);
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      cursor: pointer;
-    }
+    /* 最上部ヘッダー（前面配置・ポータル確実タップ） */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 0 4px;
+      height: 32px;
+      position: relative;
+      z-index: 1000;
+    }
+    .top-btn {
+      color: #ffffff !important;
+      text-decoration: none !important;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.4);
+    }
 
-    /* DS筐体 */
-    .ds-body {
-      flex: 1 1 0%;
-      min-height: 0;
-      background: #1e293b;
-      border-radius: 14px;
-      padding: 6px;
-      border: 2px solid #334155;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    /* DS筐体 */
+    .ds-body {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 6px;
+      border: 2px solid #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-    /* ------------------------------------ */
-    /* 📺 上画面：バトルフィールド */
-    /* ------------------------------------ */
-    .ds-top-screen {
-      flex: 1.1;
-      min-height: 0;
-      background: linear-gradient(180deg, #38bdf8 0%, #6366f1 45%, #1e1b4b 85%, #0f172a 100%);
-      border-radius: 8px;
-      border: 2px solid #0f172a;
-      position: relative;
-      overflow: hidden;
-    }
+    /* ------------------------------------ */
+    /* 📺 上画面：バトルフィールド */
+    /* ------------------------------------ */
+    .ds-top-screen {
+      height: 230px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #38bdf8 0%, #6366f1 45%, #1e1b4b 85%, #0f172a 100%);
+      border-radius: 8px;
+      border: 2px solid #0f172a;
+      position: relative;
+      overflow: hidden;
+    }
 
-    /* 相手情報プレート（左上） */
-    .enemy-plate {
-      position: absolute;
-      top: 12px;
-      left: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1.5px solid #f87171;
-      border-radius: 6px;
-      padding: 4px 6px;
-      width: 145px;
-      z-index: 10;
-    }
+    /* 相手プレート */
+    .enemy-plate {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid #f87171;
+      border-radius: 6px;
+      padding: 4px 8px;
+      width: 145px;
+      z-index: 10;
+    }
 
-    /* 相手スプライト（右上・中央寄り） */
-    .enemy-sprite-box {
-      position: absolute;
-      top: 25px;
-      right: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-    }
+    /* 相手スプライト */
+    .enemy-sprite-box {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
 
-    /* 相棒スプライト（左下・中央寄り） */
-    .player-sprite-box {
-      position: absolute;
-      bottom: 25px;
-      left: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-    }
+    /* 相棒スプライト */
+    .player-sprite-box {
+      position: absolute;
+      bottom: 20px;
+      left: 25px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
 
-    /* 相棒情報プレート（右下） */
-    .player-plate {
-      position: absolute;
-      bottom: 12px;
-      right: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1.5px solid #38bdf8;
-      border-radius: 6px;
-      padding: 4px 6px;
-      width: 155px;
-      z-index: 10;
-    }
+    /* 相棒プレート */
+    .player-plate {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid #38bdf8;
+      border-radius: 6px;
+      padding: 4px 8px;
+      width: 155px;
+      z-index: 10;
+    }
 
-    .plate-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      margin-bottom: 2px;
-    }
+    .plate-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 2px;
+    }
 
-    /* ★ タイプ別カラーバッジ */
-    .type-badge {
-      font-size: 8px;
-      font-weight: 900;
-      padding: 1px 5px;
-      border-radius: 4px;
-      color: #fff;
-    }
-    .type-ほのお   { background: linear-gradient(135deg, #ef4444, #ea580c); }
-    .type-みず     { background: linear-gradient(135deg, #3b82f6, #0284c7); }
-    .type-くさ     { background: linear-gradient(135deg, #22c55e, #16a34a); }
-    .type-でんき   { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000 !important; }
-    .type-ノーマル { background: linear-gradient(135deg, #94a3b8, #64748b); }
-    .type-ゴースト { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-    .type-むし     { background: linear-gradient(135deg, #84cc16, #65a30d); }
-    .type-ひこう   { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
-    .type-こおり   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-    .type-エスパー { background: linear-gradient(135deg, #ec4899, #db2777); }
+    /* タイプバッジ */
+    .type-badge {
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .type-ほのお   { background: linear-gradient(135deg, #ef4444, #ea580c); }
+    .type-みず     { background: linear-gradient(135deg, #3b82f6, #0284c7); }
+    .type-くさ     { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .type-でんき   { background: linear-gradient(135deg, #eab308, #ca8a04); color: #000 !important; }
+    .type-ノーマル { background: linear-gradient(135deg, #94a3b8, #64748b); }
+    .type-ゴースト { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+    .type-むし     { background: linear-gradient(135deg, #84cc16, #65a30d); }
+    .type-ひこう   { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
+    .type-こおり   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+    .type-エスパー { background: linear-gradient(135deg, #ec4899, #db2777); }
 
-    .hp-gauge-bg {
-      width: 100%;
-      height: 6px;
-      background: #111827;
-      border-radius: 3px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    .hp-gauge-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #22c55e, #16a34a);
-      transition: width 0.25s ease;
-    }
-    .hp-gauge-fill.warning { background: #eab308; }
-    .hp-gauge-fill.danger { background: #ef4444; }
+    .hp-gauge-bg {
+      width: 100%;
+      height: 6px;
+      background: #111827;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hp-gauge-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 0.25s ease;
+    }
+    .hp-gauge-fill.warning { background: #eab308; }
+    .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ★ ポケモンの迫力サイズ（影なし・鮮明表示） */
-    .poke-sprite {
-      object-fit: contain;
-      position: relative;
-      z-index: 2;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
-      transition: transform 0.1s ease;
-    }
+    /* ポケモン画像サイズ制限 */
+    .poke-sprite {
+      max-width: 95px !important;
+      max-height: 95px !important;
+      object-fit: contain !important;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.6));
+      transition: transform 0.1s ease;
+    }
 
-    /* 💥 攻撃＆被弾アニメ */
-    .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
-    @keyframes pAtkAnim {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(45px, -30px) scale(1.1); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
-    .anim-atk-enemy { animation: eAtkAnim 0.35s ease forwards; }
-    @keyframes eAtkAnim {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-45px, 30px) scale(1.1); }
-      100% { transform: translate(0, 0) scale(1); }
-    }
-    .anim-hit { animation: hitShake 0.4s ease forwards; }
-    @keyframes hitShake {
-      0% { transform: translate(0, 0); filter: brightness(1) drop-shadow(0 0 10px #ef4444); }
-      20% { transform: translate(-6px, 4px); filter: brightness(2) drop-shadow(0 0 12px #ef4444); }
-      40% { transform: translate(6px, -4px); }
-      60% { transform: translate(-4px, 2px); }
-      80% { transform: translate(4px, -2px); }
-      100% { transform: translate(0, 0); filter: brightness(1); }
-    }
+    /* アクションアニメ */
+    .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
+    @keyframes pAtkAnim {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(45px, -30px) scale(1.1); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    .anim-atk-enemy { animation: eAtkAnim 0.35s ease forwards; }
+    @keyframes eAtkAnim {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-45px, 30px) scale(1.1); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    .anim-hit { animation: hitShake 0.4s ease forwards; }
+    @keyframes hitShake {
+      0% { transform: translate(0, 0); filter: brightness(1) drop-shadow(0 0 10px #ef4444); }
+      20% { transform: translate(-6px, 4px); filter: brightness(2) drop-shadow(0 0 12px #ef4444); }
+      40% { transform: translate(6px, -4px); }
+      60% { transform: translate(-4px, 2px); }
+      80% { transform: translate(4px, -2px); }
+      100% { transform: translate(0, 0); filter: brightness(1); }
+    }
 
-    .dmg-indicator {
-      position: absolute;
-      top: -10px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #ff3344;
-      text-shadow: 0 0 4px #000, 0 0 8px #000;
-      animation: floatDmg 3.5s forwards ease-out;
-      z-index: 20;
-      pointer-events: none;
-    }
-    @keyframes floatDmg {
-      0% { opacity: 0; transform: translateY(4px); }
-      15% { opacity: 1; transform: translateY(0); }
-      80% { opacity: 1; transform: translateY(-3px); }
-      100% { opacity: 0; transform: translateY(-8px); }
-    }
+    .dmg-indicator {
+      position: absolute;
+      top: -10px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #ff3344;
+      text-shadow: 0 0 4px #000, 0 0 8px #000;
+      animation: floatDmg 3.5s forwards ease-out;
+      z-index: 20;
+      pointer-events: none;
+    }
+    @keyframes floatDmg {
+      0% { opacity: 0; transform: translateY(4px); }
+      15% { opacity: 1; transform: translateY(0); }
+      80% { opacity: 1; transform: translateY(-3px); }
+      100% { opacity: 0; transform: translateY(-8px); }
+    }
 
-    /* ------------------------------------ */
-    /* 📱 下画面：コマンド（文字特大化＆どっしり配置） */
-    /* ------------------------------------ */
-    .ds-bottom-screen {
-      flex: 1;
-      min-height: 0;
-      background: #0f172a;
-      border-radius: 8px;
-      border: 2px solid #0f172a;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 8px;
-      position: relative;
-    }
+    /* ------------------------------------ */
+    /* 📱 下画面：コマンド（余白なし・縦幅いっぱい） */
+    /* ------------------------------------ */
+    .ds-bottom-screen {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: #0f172a;
+      border-radius: 8px;
+      border: 2px solid #0f172a;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
 
-    .cmd-view-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      justify-content: space-between;
-      gap: 8px;
-    }
+    .cmd-view-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      gap: 6px;
+    }
 
-    /* ログ枠 */
-    .msg-window-box {
-      flex: 0 0 44px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 11px;
-      line-height: 1.4;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #f1f5f9;
-      cursor: pointer;
-    }
-    .pixel-arrow {
-      font-size: 13px;
-      color: #38bdf8;
-      animation: arrowBounce 0.8s infinite alternate ease-in-out;
-      flex-shrink: 0;
-      margin-left: 6px;
-    }
-    @keyframes arrowBounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(3px); }
-    }
+    /* ログ枠 */
+    .msg-window-box {
+      height: 42px;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #f1f5f9;
+      cursor: pointer;
+    }
+    .pixel-arrow {
+      font-size: 13px;
+      color: #38bdf8;
+      animation: arrowBounce 0.8s infinite alternate ease-in-out;
+      flex-shrink: 0;
+      margin-left: 6px;
+    }
+    @keyframes arrowBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(3px); }
+    }
 
-    /* 上段：こうげき / ぼうぎょ（文字サイズ17px・特大化） */
-    .cmd-row-top {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .btn-main-act {
-      border-radius: 8px;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      color: #fff;
-      font-size: 17px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
-    }
-    .btn-main-act:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
-    .btn-main-act:disabled { opacity: 0.3; cursor: not-allowed; }
+    /* 上段：こうげき / ぼうぎょ（手描きイラスト通りの特大ボタン） */
+    .cmd-row-top {
+      flex: 1.6;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn-main-act {
+      height: 100%;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    }
+    .btn-main-act:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-main-act:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    .btn-atk { background: linear-gradient(135deg, #f87171, #dc2626); }
-    .btn-def { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+    .btn-atk { background: linear-gradient(135deg, #f87171, #dc2626); }
+    .btn-def { background: linear-gradient(135deg, #60a5fa, #2563eb); }
 
-    /* 下段：こうたい / かくせい / Auto */
-    .cmd-row-bottom {
-      flex: 1;
-      display: flex;
-      gap: 6px;
-      align-items: stretch;
-    }
-    .btn-sub-small {
-      width: 68px;
-      border-radius: 8px;
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
-    }
-    .btn-sub-small:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
-    .btn-switch { background: #475569; }
-    .btn-auto { background: #059669; }
-    .btn-auto.active { background: #d97706; }
+    /* 下段：こうたい / かくせい / Auto */
+    .cmd-row-bottom {
+      flex: 1;
+      display: flex;
+      gap: 6px;
+      align-items: stretch;
+    }
+    .btn-sub-small {
+      width: 68px;
+      height: 100%;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    }
+    .btn-sub-small:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-switch { background: #475569; }
+    .btn-auto { background: #059669; }
+    .btn-auto.active { background: #d97706; }
 
-    .btn-awaken-box {
-      flex: 1;
-      border-radius: 8px;
-      border: 2px solid #fbbf24;
-      background: rgba(251, 191, 36, 0.15);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
-    }
-    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
-    .btn-awaken-box:disabled { opacity: 0.35; cursor: not-allowed; border-color: #64748b; }
-    .btn-awaken-box.ready {
-      background: linear-gradient(135deg, #ec4899, #be185d);
-      border-color: #f43f5e;
-      animation: rainbowGlow 2s infinite linear;
-    }
-    @keyframes rainbowGlow {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
+    .btn-awaken-box {
+      flex: 1;
+      height: 100%;
+      border-radius: 8px;
+      border: 2px solid #fbbf24;
+      background: rgba(251, 191, 36, 0.15);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    }
+    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-awaken-box:disabled { opacity: 0.35; cursor: not-allowed; border-color: #64748b; }
+    .btn-awaken-box.ready {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      border-color: #f43f5e;
+      animation: rainbowGlow 2s infinite linear;
+    }
+    @keyframes rainbowGlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
 
-    .seed-track {
-      display: flex;
-      gap: 5px;
-      font-size: 12px;
-      margin-top: 2px;
-    }
-    .seed-icon { opacity: 0.25; filter: grayscale(1); }
-    .seed-icon.active { opacity: 1; filter: grayscale(0); text-shadow: 0 0 6px #4ade80; }
-    .seed-super-icon { opacity: 0.25; filter: grayscale(1); }
-    .seed-super-icon.active { opacity: 1; filter: grayscale(0); animation: rainbowGlow 1.5s infinite linear; }
+    .seed-track {
+      display: flex;
+      gap: 5px;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .seed-icon { opacity: 0.25; filter: grayscale(1); }
+    .seed-icon.active { opacity: 1; filter: grayscale(0); text-shadow: 0 0 6px #4ade80; }
+    .seed-super-icon { opacity: 0.25; filter: grayscale(1); }
+    .seed-super-icon.active { opacity: 1; filter: grayscale(0); animation: rainbowGlow 1.5s infinite linear; }
 
-    /* ------------------------------------ */
-    /* 🔄 交代画面（中身・文字・画像拡大版） */
-    /* ------------------------------------ */
-    .switch-view-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .party-grid-6 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(3, 1fr);
-      gap: 6px;
-      flex: 1;
-    }
-    .party-slot-card {
-      background: rgba(0, 0, 0, 0.45);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 4px 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .party-slot-card.empty {
-      border: 1.5px dashed rgba(255, 255, 255, 0.2);
-      background: transparent;
-      cursor: default;
-      justify-content: center;
-    }
-    .party-slot-card.current { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
-    .party-slot-card.fainted { border-color: #ef4444; opacity: 0.45; cursor: not-allowed; }
+    /* 交代画面 */
+    .switch-view-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .party-grid-6 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 6px;
+      flex: 1;
+    }
+    .party-slot-card {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .party-slot-card.empty {
+      border: 1.5px dashed rgba(255, 255, 255, 0.2);
+      background: transparent;
+      cursor: default;
+      justify-content: center;
+    }
+    .party-slot-card.current { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
+    .party-slot-card.fainted { border-color: #ef4444; opacity: 0.45; cursor: not-allowed; }
 
-    /* スロット画面 */
-    .slot-view-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-      z-index: 30;
-    }
-    .slot-drum-box {
-      width: 160px;
-      height: 48px;
-      background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
-      border: 2px solid #fbbf24;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      font-weight: bold;
-      color: #fbbf24;
-    }
-    .btn-slot-push {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      border: 2px solid #fff;
-      color: #000;
-      font-size: 12px;
-      font-weight: 900;
-      padding: 6px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-    }
+    /* スロット画面 */
+    .slot-view-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      z-index: 30;
+    }
+    .slot-drum-box {
+      width: 160px;
+      height: 48px;
+      background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+      border: 2px solid #fbbf24;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: bold;
+      color: #fbbf24;
+    }
+    .btn-slot-push {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: 2px solid #fff;
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
 
-    /* 履歴ログモーダル */
-    .history-modal-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.95);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      padding: 8px;
-      gap: 6px;
-      z-index: 40;
-    }
-    .history-log-list {
-      flex: 1;
-      overflow-y: auto;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 6px;
-      padding: 6px;
-      font-size: 10px;
-      line-height: 1.5;
-      color: #cbd5e1;
-    }
-  </style>
+    /* 履歴ログモーダル */
+    .history-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.95);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      gap: 6px;
+      z-index: 40;
+    }
+    .history-log-list {
+      flex: 1;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 6px;
+      font-size: 10px;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="container">
-    
-    <div class="top-bar">
-      <a href="index.html" class="top-btn">◀ ポータル</a>
-      <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
-      <a href="train.html" class="top-btn" style="background:#10b981;">🌱 育成ジム</a>
-    </div>
-
-    <div class="ds-body">
-
-      <!-- ========================================================= -->
-      <!-- 📺 上画面：バトルフィールド -->
-      <!-- ========================================================= -->
-      <div class="ds-top-screen">
-        
-        <!-- 相手プレート -->
-        <div class="enemy-plate">
-          <div class="plate-header">
-            <span id="enemy-name" style="color:#fca5a5;">コラッタ</span>
-            <span class="type-badge" id="enemy-type">ノーマル</span>
-          </div>
-          <div class="hp-gauge-bg">
-            <div class="hp-gauge-fill" id="enemy-hp-bar" style="width: 100%;"></div>
-          </div>
-          <div style="font-size:8px; text-align:right; margin-top:1px;" id="enemy-hp-val">100 / 100</div>
-        </div>
-
-        <!-- 相手スプライト -->
-        <div class="enemy-sprite-box" id="enemy-sprite-box">
-          <img id="enemy-img" class="poke-sprite" src="images/gacha/p0019.png" alt="" style="width: 115px; height: 115px;" onerror="this.src='images/slot1.png'">
-          <div id="enemy-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
-        </div>
-
-        <!-- 相棒スプライト -->
-        <div class="player-sprite-box" id="player-sprite-box">
-          <img id="player-img" class="poke-sprite" src="images/gacha/p0004.png" alt="" style="width: 115px; height: 115px;" onerror="this.src='images/slot1.png'">
-          <div id="player-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
-        </div>
-
-        <!-- 相棒プレート -->
-        <div class="player-plate">
-          <div class="plate-header">
-            <span id="player-name" style="color:#93c5fd;">ヒトカゲ</span>
-            <span class="type-badge" id="player-type">ほのお</span>
-          </div>
-          <div class="hp-gauge-bg">
-            <div class="hp-gauge-fill" id="player-hp-bar" style="width: 100%;"></div>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:8px; margin-top:1px;">
-            <span>ATK:<b id="player-atk-val">25</b> DEF:<b id="player-def-val">18</b></span>
-            <span id="player-hp-val">120 / 120</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド（文字特大・どっしりレイアウト） -->
-      <!-- ========================================================= -->
-      <div class="ds-bottom-screen">
-        
-        <!-- 通常コマンドビュー -->
-        <div class="cmd-view-container" id="cmd-view">
-          <div class="msg-window-box" onclick="openHistoryModal()">
-            <span id="msg-text">野生のポケモンが現れた！ コマンドを選ぼう！</span>
-            <span class="pixel-arrow">▾</span>
-          </div>
-
-          <!-- 上段：こうげき / ぼうぎょ（文字サイズ特大） -->
-          <div class="cmd-row-top">
-            <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
-            <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
-          </div>
-
-          <!-- 下段：こうたい / かくせい / Auto -->
-          <div class="cmd-row-bottom">
-            <button class="btn-sub-small btn-switch" onclick="openSwitchView()">こうたい</button>
-            
-            <button class="btn-awaken-box" id="btn-awaken" onclick="playerAction('awaken')" disabled>
-              <span style="font-size:12px; font-weight:900;">かくせい</span>
-              <div class="seed-track">
-                <span class="seed-icon" id="seed-1">🌱</span>
-                <span class="seed-icon" id="seed-2">🌱</span>
-                <span class="seed-icon" id="seed-3">🌱</span>
-                <span class="seed-super-icon" id="seed-super">✨</span>
-              </div>
-            </button>
-
-            <button class="btn-sub-small btn-auto" id="btn-auto" onclick="toggleAuto()">Auto</button>
-          </div>
-        </div>
-
-        <!-- 🔄 交代選択ビュー（拡大版） -->
-        <div class="switch-view-container" id="switch-view" style="display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-            <span style="color:#fbbf24; font-weight:900;">👥 手持ちポケモン（タップで交代）</span>
-            <button class="top-btn" onclick="closeSwitchView()">◀ もどる</button>
-          </div>
-          <div class="party-grid-6" id="switch-party-grid"></div>
-        </div>
-
-        <!-- 🎰 スロットオーバーレイ -->
-        <div class="slot-view-overlay" id="slot-modal" style="display: none;">
-          <span style="font-size:11px; color:#fbbf24;">🎰 スロット援護ルーレット！</span>
-          <div class="slot-drum-box" id="slot-drum-text">🌱 進化の種</div>
-          <button class="btn-slot-push" id="btn-slot-push" onclick="stopSlot()">プッシュ！</button>
-        </div>
-
-        <!-- 📜 履歴ログモーダル -->
-        <div class="history-modal-overlay" id="history-modal" style="display: none;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:11px; color:#38bdf8; font-weight:bold;">📜 戦闘ログ履歴</span>
-            <button class="top-btn" onclick="closeHistoryModal()">とじる</button>
-          </div>
-          <div class="history-log-list" id="history-log-content"></div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <script src="pokemonData.js"></script>
-
-  <script>
-    const TYPE_CHART = {
-      'ほのお':   { weak: ['みず', 'じめん', 'いわ'], resist: ['くさ', 'こおり', 'むし', 'はがね'] },
-      'みず':     { weak: ['でんき', 'くさ'], resist: ['ほのお', 'みず', 'こおり', 'はがね'] },
-      'くさ':     { weak: ['ほのお', 'こおり', 'どく', 'ひこう', 'むし'], resist: ['みず', 'でんき', 'くさ', 'じめん'] },
-      'でんき':   { weak: ['じめん'], resist: ['でんき', 'ひこう', 'はがね'] },
-      'ノーマル': { weak: ['かくとう'], resist: ['ゴースト'] },
-      'ゴースト': { weak: ['ゴースト', 'あく'], resist: ['ノーマル', 'かくとう', 'どく', 'むし'] }
-    };
-
-    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
-    let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
-    let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{"p0004":1}');
-    let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
-    let fainted = JSON.parse(localStorage.getItem('my_fainted_pokemon') || '{}');
-    let stage = parseInt(localStorage.getItem('my_tower_stage') || '1');
-
-    let seedStock = parseInt(localStorage.getItem('my_battle_seeds') || '0');
-    let superSeed = localStorage.getItem('my_super_seed') === 'true';
-
-    let currentPartyIdx = 0;
-    let turnCount = 0;
-    let isAuto = false;
-    let turnInProgress = false;
-    let battleLogs = [];
-
-    let playerMaxHp = 100, playerHp = 100, playerAtk = 20, playerDef = 15;
-    let isDefending = false;
-    let isPlayerAwakened = false;
-
-    let enemyPokemon = null;
-    let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
-    let isEnemyBoss = false;
-
-    // ★ 迫力サイズ（S〜G）
-    function getSizePx(size) {
-      if (size === 'G') return 195; // キョダイマックス特大
-      if (size === 'L') return 165; // 大型
-      if (size === 'M') return 140; // 中型
-      return 115;                   // 小型
-    }
-
-    function getPoke(id) {
-      if (typeof POKEMON_DATA !== 'undefined') {
-        const found = POKEMON_DATA.find(p => p.id === id);
-        if (found) return found;
-      }
-      return { id, name: 'ポケモン', type: 'ノーマル', size: 'S', img: 'images/gacha/' + id + '.png' };
-    }
-
-    function initBattle() {
-      const aliveIdx = party.findIndex(id => !fainted[id]);
-      if (aliveIdx === -1) {
-        alert('手持ちのポケモンが全員ひんしだ！\n育成ジムで回復するか、明日になるのを待とう！');
-        window.location.href = 'train.html';
-        return;
-      }
-
-      currentPartyIdx = aliveIdx;
-      loadPlayerStats();
-      loadOrSpawnEnemy();
-      updateUI();
-    }
-
-    function loadPlayerStats() {
-      const baseId = party[currentPartyIdx];
-      const poke = getPoke(baseId);
-      const lv = levels[baseId] || 1;
-
-      let evoMulti = 1.0;
-      if (seedStock >= 3) evoMulti = 1.6;
-      else if (seedStock >= 1) evoMulti = 1.3;
-
-      playerMaxHp = Math.floor((110 + lv * 18) * evoMulti);
-      playerHp = playerMaxHp;
-      playerAtk = Math.floor((22 + lv * 5) * evoMulti);
-      playerDef = Math.floor((16 + lv * 4) * evoMulti);
-      isPlayerAwakened = false;
-
-      document.getElementById('player-name').textContent = `${poke.name} Lv.${lv}`;
-      
-      const pTypeEl = document.getElementById('player-type');
-      pTypeEl.textContent = poke.type;
-      pTypeEl.className = `type-badge type-${poke.type}`;
-
-      const pImg = document.getElementById('player-img');
-      pImg.src = poke.img;
-      const px = getSizePx(poke.size || 'S');
-      pImg.style.width = px + 'px';
-      pImg.style.height = px + 'px';
-
-      document.getElementById('player-atk-val').textContent = playerAtk;
-      document.getElementById('player-def-val').textContent = playerDef;
-    }
-
-    function loadOrSpawnEnemy() {
-      const savedEnemy = localStorage.getItem('my_current_enemy');
-      if (savedEnemy) {
-        const data = JSON.parse(savedEnemy);
-        if (data.stage === stage) {
-          enemyPokemon = getPoke(data.id);
-          enemyMaxHp = data.maxHp;
-          enemyHp = data.hp;
-          enemyAtk = data.atk;
-          enemyDef = data.def;
-          isEnemyBoss = data.isBoss;
-          applyEnemyUI();
-          return;
-        }
-      }
-      spawnNewEnemy();
-    }
-
-    function spawnNewEnemy() {
-      const pool = (typeof POKEMON_DATA !== 'undefined') ? POKEMON_DATA : [];
-      isEnemyBoss = (stage % 10 === 0);
-
-      if (isEnemyBoss) {
-        const bosses = pool.filter(p => p.isBossOnly || p.rarity === 'UR' || p.rarity === 'SSR');
-        enemyPokemon = bosses.length > 0 ? bosses[Math.floor(Math.random() * bosses.length)] : pool[0];
-      } else {
-        const regulars = pool.filter(p => !p.isBossOnly && !p.isLegend);
-        enemyPokemon = regulars.length > 0 ? regulars[Math.floor(Math.random() * regulars.length)] : pool[0];
-      }
-
-      enemyMaxHp = Math.floor((75 + stage * 22) * (isEnemyBoss ? 2.2 : 1.0));
-      enemyHp = enemyMaxHp;
-      enemyAtk = Math.floor((14 + stage * 4.2) * (isEnemyBoss ? 1.4 : 1.0));
-      enemyDef = Math.floor(10 + stage * 3);
-
-      saveCurrentEnemy();
-      applyEnemyUI();
-      addLog(isEnemyBoss ? `⚠️ 強敵【${enemyPokemon.name}】が立ち塞がった！` : `野生の【${enemyPokemon.name}】が現れた！`);
-    }
-
-    function saveCurrentEnemy() {
-      localStorage.setItem('my_current_enemy', JSON.stringify({
-        stage,
-        id: enemyPokemon.id,
-        maxHp: enemyMaxHp,
-        hp: enemyHp,
-        atk: enemyAtk,
-        def: enemyDef,
-        isBoss: isEnemyBoss
-      }));
-    }
-
-    function applyEnemyUI() {
-      document.getElementById('stage-text').textContent = `${stage}F` + (isEnemyBoss ? ' 👑' : '');
-      document.getElementById('enemy-name').textContent = `${enemyPokemon.name} Lv.${stage}`;
-      
-      const eTypeEl = document.getElementById('enemy-type');
-      eTypeEl.textContent = enemyPokemon.type;
-      eTypeEl.className = `type-badge type-${enemyPokemon.type}`;
-
-      const eImg = document.getElementById('enemy-img');
-      eImg.src = enemyPokemon.img;
-      const px = getSizePx(enemyPokemon.size || 'S');
-      eImg.style.width = px + 'px';
-      eImg.style.height = px + 'px';
-    }
-
-    function updateUI() {
-      const pRate = Math.max(0, (playerHp / playerMaxHp) * 100);
-      const pBar = document.getElementById('player-hp-bar');
-      pBar.style.width = `${pRate}%`;
-      pBar.className = `hp-gauge-fill ${pRate < 25 ? 'danger' : pRate < 50 ? 'warning' : ''}`;
-      document.getElementById('player-hp-val').textContent = `${Math.max(0, playerHp)} / ${playerMaxHp}`;
-
-      const eRate = Math.max(0, (enemyHp / enemyMaxHp) * 100);
-      const eBar = document.getElementById('enemy-hp-bar');
-      eBar.style.width = `${eRate}%`;
-      eBar.className = `hp-gauge-fill ${eRate < 25 ? 'danger' : eRate < 50 ? 'warning' : ''}`;
-      document.getElementById('enemy-hp-val').textContent = `${Math.max(0, enemyHp)} / ${enemyMaxHp}`;
-
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`seed-${i}`).classList.toggle('active', seedStock >= i);
-      }
-      document.getElementById('seed-super').classList.toggle('active', superSeed);
-
-      const awakenBtn = document.getElementById('btn-awaken');
-      const baseId = party[currentPartyIdx];
-      const hasAwakenForm = Object.keys(inventory).some(id => id.startsWith(baseId + '-') && inventory[id] > 0);
-
-      if (superSeed && hasAwakenForm && !isPlayerAwakened) {
-        awakenBtn.disabled = false;
-        awakenBtn.classList.add('ready');
-      } else {
-        awakenBtn.disabled = true;
-        awakenBtn.classList.remove('ready');
-      }
-
-      ['btn-atk', 'btn-def'].forEach(id => document.getElementById(id).disabled = turnInProgress);
-    }
-
-    function addLog(txt) {
-      document.getElementById('msg-text').textContent = txt;
-      battleLogs.unshift(`[${stage}F] ${txt}`);
-    }
-
-    function showDmgPop(target, dmg, isCrit = false) {
-      const popEl = document.getElementById(target === 'enemy' ? 'enemy-dmg-pop' : 'player-dmg-pop');
-      popEl.textContent = (isCrit ? '💥会心! -' : '-') + dmg;
-      popEl.style.display = 'block';
-      popEl.style.animation = 'none';
-      void popEl.offsetWidth;
-      popEl.style.animation = 'floatDmg 3.5s forwards ease-out';
-    }
-
-    function calcTypeMulti(atkType, defType) {
-      if (TYPE_CHART[atkType]) {
-        if (TYPE_CHART[atkType].weak && TYPE_CHART[atkType].weak.includes(defType)) return 0.7;
-        if (TYPE_CHART[atkType].resist && TYPE_CHART[atkType].resist.includes(defType)) return 1.5;
-      }
-      return 1.0;
-    }
-
-    function playerAction(type) {
-      if (turnInProgress) return;
-      turnInProgress = true;
-      isDefending = (type === 'def');
-
-      const pType = document.getElementById('player-type').textContent;
-      const eType = enemyPokemon.type;
-
-      if (type === 'awaken') {
-        isPlayerAwakened = true;
-        superSeed = false;
-        localStorage.setItem('my_super_seed', 'false');
-        playerAtk = Math.floor(playerAtk * 2.0);
-        playerHp = playerMaxHp;
-        addLog('✨ 超進化の種が輝き、真の姿へ覚醒した！');
-        updateUI();
-        setTimeout(() => {
-          turnInProgress = false;
-          if (isAuto) playerAction('atk');
-        }, 800);
-        return;
-      }
-
-      if (type === 'atk') {
-        const pImg = document.getElementById('player-img');
-        pImg.classList.add('anim-atk-player');
-        setTimeout(() => pImg.classList.remove('anim-atk-player'), 350);
-
-        setTimeout(() => {
-          const eImg = document.getElementById('enemy-img');
-          eImg.classList.add('anim-hit');
-          setTimeout(() => eImg.classList.remove('anim-hit'), 400);
-
-          const typeMulti = calcTypeMulti(pType, eType);
-          let baseDmg = Math.max(5, playerAtk - enemyDef * 0.4);
-          let dmg = Math.floor(baseDmg * (Math.random() * 0.3 + 0.85) * typeMulti);
-
-          enemyHp -= dmg;
-          saveCurrentEnemy();
-          showDmgPop('enemy', dmg);
-
-          let comment = typeMulti > 1.0 ? '（ばつぐん！）' : (typeMulti < 1.0 ? '（いまひとつ…）' : '');
-          addLog(`相棒のこうげき！ ${dmg} ダメージ！ ${comment}`);
-
-          updateUI();
-          if (enemyHp <= 0) { setTimeout(winBattle, 600); return; }
-
-          setTimeout(enemyTurn, 700);
-        }, 200);
-      } else if (type === 'def') {
-        addLog('🛡️ 相棒はしっかりと身を守っている！');
-        updateUI();
-        setTimeout(enemyTurn, 700);
-      }
-    }
-
-    function enemyTurn() {
-      const eImg = document.getElementById('enemy-img');
-      eImg.classList.add('anim-atk-enemy');
-      setTimeout(() => eImg.classList.remove('anim-atk-enemy'), 350);
-
-      setTimeout(() => {
-        const pImg = document.getElementById('player-img');
-        pImg.classList.add('anim-hit');
-        setTimeout(() => pImg.classList.remove('anim-hit'), 400);
-
-        const pType = document.getElementById('player-type').textContent;
-        const eType = enemyPokemon.type;
-        const typeMulti = calcTypeMulti(eType, pType);
-
-        const isCrit = Math.random() < 0.15;
-        let baseDmg = Math.max(4, enemyAtk - playerDef * 0.4);
-        let dmg = Math.floor(baseDmg * (Math.random() * 0.3 + 0.85) * typeMulti * (isCrit ? 1.8 : 1.0));
-
-        if (isDefending) dmg = Math.floor(dmg * 0.3);
-
-        playerHp -= dmg;
-        saveCurrentEnemy();
-        showDmgPop('player', dmg, isCrit);
-        addLog(`相手のこうげき！ ${dmg} ダメージ！` + (isCrit ? '（急所に当たった！）' : ''));
-
-        updateUI();
-
-        if (playerHp <= 0) {
-          const baseId = party[currentPartyIdx];
-          fainted[baseId] = true;
-          localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
-          addLog(`💀 相棒は たおれてしまった！`);
-
-          setTimeout(() => {
-            turnInProgress = false;
-            initBattle();
-          }, 1200);
-          return;
-        }
-
-        turnCount++;
-        if (turnCount % 3 === 0) {
-          triggerSlot();
-        } else {
-          turnInProgress = false;
-          updateUI();
-          if (isAuto) setTimeout(() => playerAction('atk'), 500);
-        }
-      }, 200);
-    }
-
-    // スロット
-    let slotTimer;
-    const SLOT_REWARDS = ['🌱 進化の種', '💖 HP回復(小)', '💖 HP回復(中)', '💖 HP回復(大)', '⚔️ 攻撃力UP', '✨ 超進化の種'];
-
-    function triggerSlot() {
-      if (isAuto) {
-        const r = SLOT_REWARDS[Math.floor(Math.random() * SLOT_REWARDS.length)];
-        applySlotReward(r);
-        addLog(`🎰 スロット自動発動: 【${r}】を獲得！`);
-        turnInProgress = false;
-        updateUI();
-        setTimeout(() => playerAction('atk'), 600);
-      } else {
-        document.getElementById('slot-modal').style.display = 'flex';
-        let idx = 0;
-        slotTimer = setInterval(() => {
-          idx = (idx + 1) % SLOT_REWARDS.length;
-          document.getElementById('slot-drum-text').textContent = SLOT_REWARDS[idx];
-        }, 80);
-      }
-    }
-
-    function stopSlot() {
-      clearInterval(slotTimer);
-      const chosen = document.getElementById('slot-drum-text').textContent;
-      applySlotReward(chosen);
-      document.getElementById('btn-slot-push').disabled = true;
-
-      setTimeout(() => {
-        document.getElementById('slot-modal').style.display = 'none';
-        document.getElementById('btn-slot-push').disabled = false;
-        addLog(`🎰 スロット結果: 【${chosen}】を獲得！`);
-        turnInProgress = false;
-        updateUI();
-      }, 700);
-    }
-
-    function applySlotReward(r) {
-      if (r === '🌱 進化の種') {
-        if (seedStock < 3) seedStock++;
-        localStorage.setItem('my_battle_seeds', seedStock);
-      } else if (r === '💖 HP回復(小)') {
-        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.2));
-      } else if (r === '💖 HP回復(中)') {
-        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.4));
-      } else if (r === '💖 HP回復(大)') {
-        playerHp = playerMaxHp;
-      } else if (r === '⚔️ 攻撃力UP') {
-        playerAtk += 8;
-      } else if (r === '✨ 超進化の種') {
-        superSeed = true;
-        localStorage.setItem('my_super_seed', 'true');
-      }
-    }
-
-    function winBattle() {
-      const reward = isEnemyBoss ? 300 : 50;
-      coins += reward;
-      localStorage.setItem('my_casino_coins', coins);
-      localStorage.removeItem('my_current_enemy');
-
-      stage++;
-      localStorage.setItem('my_tower_stage', stage);
-
-      addLog(`🎉 撃破！ STAGE ${stage - 1} クリア！ +${reward}G`);
-      setTimeout(() => {
-        turnInProgress = false;
-        spawnNewEnemy();
-        updateUI();
-        if (isAuto) playerAction('atk');
-      }, 1000);
-    }
-
-    function toggleAuto() {
-      isAuto = !isAuto;
-      document.getElementById('btn-auto').classList.toggle('active', isAuto);
-      document.getElementById('btn-auto').textContent = isAuto ? 'Auto中' : 'Auto';
-      if (isAuto && !turnInProgress) playerAction('atk');
-    }
-
-    // ★ 交代画面（中身・文字・アイコン特大化＆タイプ色分け）
-    function openSwitchView() {
-      document.getElementById('cmd-view').style.display = 'none';
-      document.getElementById('switch-view').style.display = 'flex';
-      const grid = document.getElementById('switch-party-grid');
-      grid.innerHTML = '';
-
-      for (let i = 0; i < 6; i++) {
-        const id = party[i];
-        const card = document.createElement('div');
-
-        if (!id) {
-          card.className = 'party-slot-card empty';
-          card.innerHTML = `<span style="font-size:10px; color:#64748b;">(あき枠)</span>`;
-        } else {
-          const p = getPoke(id);
-          const lv = levels[id] || 1;
-          const isFaint = !!fainted[id];
-          const isCur = (i === currentPartyIdx);
-
-          card.className = `party-slot-card ${isCur ? 'current' : ''} ${isFaint ? 'fainted' : ''}`;
-          card.innerHTML = `
-            <img src="${p.img}" style="width:42px; height:42px; object-fit:contain;" onerror="this.src='images/slot1.png'">
-            <div style="font-size:10px; flex:1;">
-              <b style="font-size:11px;">${p.name}</b> Lv.${lv}<br>
-              <span class="type-badge type-${p.type}">${p.type}</span> ${isFaint ? '<span style="color:#ef4444; font-weight:bold; margin-left:3px;">ひんし</span>' : '<span style="color:#22c55e; font-weight:bold; margin-left:3px;">げんき</span>'}
-            </div>
-          `;
-
-          if (!isFaint && !isCur) {
-            card.onclick = () => {
-              if (confirm(`【${p.name}】に交代するかい？`)) {
-                currentPartyIdx = i;
-                closeSwitchView();
-                loadPlayerStats();
-                addLog(`行けっ！ 【${p.name}】！`);
-                updateUI();
-                setTimeout(enemyTurn, 600);
-              }
-            };
-          }
-        }
-        grid.appendChild(card);
-      }
-    }
-
-    function closeSwitchView() {
-      document.getElementById('switch-view').style.display = 'none';
-      document.getElementById('cmd-view').style.display = 'flex';
-    }
-
-    function openHistoryModal() {
-      document.getElementById('history-modal').style.display = 'flex';
-      const container = document.getElementById('history-log-content');
-      container.innerHTML = battleLogs.length > 0 ? battleLogs.map(l => `<div>• ${l}</div>`).join('') : 'まだログはありません。';
-    }
-
-    function closeHistoryModal() {
-      document.getElementById('history-modal').style.display = 'none';
-    }
-
-    window.addEventListener('DOMContentLoaded', initBattle);
-  </script>
+  <div class="container">
+    
+    <!-- 最上部バー（ポータルへの確実な遷移） -->
+    <div class="top-bar">
+      <a href="index.html" class="top-btn" onclick="window.location.href='index.html'; return false;">◀ ポータル</a>
+      <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
+      <a href="train.html" class="top-btn" style="background:#10b981;" onclick="window.location.href='train.html'; return false;">🌱 育成ジム</a>
+    </div>
+
+    <div class="ds-body">
+
+      <!-- ========================================================= -->
+      <!-- 📺 上画面：バトルフィールド -->
+      <!-- ========================================================= -->
+      <div class="ds-top-screen">
+        
+        <!-- 相手プレート -->
+        <div class="enemy-plate">
+          <div class="plate-header">
+            <span id="enemy-name" style="color:#fca5a5;">コラッタ</span>
+            <span class="type-badge" id="enemy-type">ノーマル</span>
+          </div>
+          <div class="hp-gauge-bg">
+            <div class="hp-gauge-fill" id="enemy-hp-bar" style="width: 100%;"></div>
+          </div>
+          <div style="font-size:8px; text-align:right; margin-top:1px;" id="enemy-hp-val">100 / 100</div>
+        </div>
+
+        <!-- 相手スプライト -->
+        <div class="enemy-sprite-box" id="enemy-sprite-box">
+          <img id="enemy-img" class="poke-sprite" src="images/gacha/p0019.png" alt="" onerror="this.src='images/slot1.png'">
+          <div id="enemy-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
+        </div>
+
+        <!-- 相棒スプライト -->
+        <div class="player-sprite-box" id="player-sprite-box">
+          <img id="player-img" class="poke-sprite" src="images/gacha/p0004.png" alt="" onerror="this.src='images/slot1.png'">
+          <div id="player-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
+        </div>
+
+        <!-- 相棒プレート -->
+        <div class="player-plate">
+          <div class="plate-header">
+            <span id="player-name" style="color:#93c5fd;">ヒトカゲ</span>
+            <span class="type-badge" id="player-type">ほのお</span>
+          </div>
+          <div class="hp-gauge-bg">
+            <div class="hp-gauge-fill" id="player-hp-bar" style="width: 100%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:8px; margin-top:1px;">
+            <span>ATK:<b id="player-atk-val">25</b> DEF:<b id="player-def-val">18</b></span>
+            <span id="player-hp-val">120 / 120</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- 📱 下画面：コマンド（余白完全消滅＆ボタン大型化） -->
+      <!-- ========================================================= -->
+      <div class="ds-bottom-screen">
+        
+        <!-- 通常コマンドビュー -->
+        <div class="cmd-view-container" id="cmd-view">
+          <div class="msg-window-box" onclick="openHistoryModal()">
+            <span id="msg-text">野生のポケモンが現れた！ コマンドを選ぼう！</span>
+            <span class="pixel-arrow">▾</span>
+          </div>
+
+          <!-- 上段：こうげき / ぼうぎょ（文字サイズ特大18px） -->
+          <div class="cmd-row-top">
+            <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
+            <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
+          </div>
+
+          <!-- 下段：こうたい / かくせい / Auto -->
+          <div class="cmd-row-bottom">
+            <button class="btn-sub-small btn-switch" onclick="openSwitchView()">こうたい</button>
+            
+            <button class="btn-awaken-box" id="btn-awaken" onclick="playerAction('awaken')" disabled>
+              <span style="font-size:12px; font-weight:900;">かくせい</span>
+              <div class="seed-track">
+                <span class="seed-icon" id="seed-1">🌱</span>
+                <span class="seed-icon" id="seed-2">🌱</span>
+                <span class="seed-icon" id="seed-3">🌱</span>
+                <span class="seed-super-icon" id="seed-super">✨</span>
+              </div>
+            </button>
+
+            <button class="btn-sub-small btn-auto" id="btn-auto" onclick="toggleAuto()">Auto</button>
+          </div>
+        </div>
+
+        <!-- 🔄 交代選択ビュー -->
+        <div class="switch-view-container" id="switch-view" style="display: none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+            <span style="color:#fbbf24; font-weight:900;">👥 手持ちポケモン（タップで交代）</span>
+            <button class="top-btn" onclick="closeSwitchView()">◀ もどる</button>
+          </div>
+          <div class="party-grid-6" id="switch-party-grid"></div>
+        </div>
+
+        <!-- 🎰 スロットオーバーレイ -->
+        <div class="slot-view-overlay" id="slot-modal" style="display: none;">
+          <span style="font-size:11px; color:#fbbf24;">🎰 スロット援護ルーレット！</span>
+          <div class="slot-drum-box" id="slot-drum-text">🌱 進化の種</div>
+          <button class="btn-slot-push" id="btn-slot-push" onclick="stopSlot()">プッシュ！</button>
+        </div>
+
+        <!-- 📜 履歴ログモーダル -->
+        <div class="history-modal-overlay" id="history-modal" style="display: none;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; color:#38bdf8; font-weight:bold;">📜 戦闘ログ履歴</span>
+            <button class="top-btn" onclick="closeHistoryModal()">とじる</button>
+          </div>
+          <div class="history-log-list" id="history-log-content"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="pokemonData.js"></script>
+
+  <script>
+    const TYPE_CHART = {
+      'ほのお':   { weak: ['みず', 'じめん', 'いわ'], resist: ['くさ', 'こおり', 'むし', 'はがね'] },
+      'みず':     { weak: ['でんき', 'くさ'], resist: ['ほのお', 'みず', 'こおり', 'はがね'] },
+      'くさ':     { weak: ['ほのお', 'こおり', 'どく', 'ひこう', 'むし'], resist: ['みず', 'でんき', 'くさ', 'じめん'] },
+      'でんき':   { weak: ['じめん'], resist: ['でんき', 'ひこう', 'はがね'] },
+      'ノーマル': { weak: ['かくとう'], resist: ['ゴースト'] },
+      'ゴースト': { weak: ['ゴースト', 'あく'], resist: ['ノーマル', 'かくとう', 'どく', 'むし'] }
+    };
+
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+    let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{"p0004":1}');
+    let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+    let fainted = JSON.parse(localStorage.getItem('my_fainted_pokemon') || '{}');
+    let stage = parseInt(localStorage.getItem('my_tower_stage') || '1');
+
+    let seedStock = parseInt(localStorage.getItem('my_battle_seeds') || '0');
+    let superSeed = localStorage.getItem('my_super_seed') === 'true';
+
+    let currentPartyIdx = 0;
+    let turnCount = 0;
+    let isAuto = false;
+    let turnInProgress = false;
+    let battleLogs = [];
+
+    let playerMaxHp = 100, playerHp = 100, playerAtk = 20, playerDef = 15;
+    let isDefending = false;
+    let isPlayerAwakened = false;
+
+    let enemyPokemon = null;
+    let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
+    let isEnemyBoss = false;
+
+    function getPoke(id) {
+      if (typeof POKEMON_DATA !== 'undefined') {
+        const found = POKEMON_DATA.find(p => p.id === id);
+        if (found) return found;
+      }
+      return { id, name: 'ポケモン', type: 'ノーマル', size: 'S', img: 'images/gacha/' + id + '.png' };
+    }
+
+    function initBattle() {
+      const aliveIdx = party.findIndex(id => !fainted[id]);
+      if (aliveIdx === -1) {
+        alert('手持ちのポケモンが全員ひんしだ！\n育成ジムで回復するか、明日になるのを待とう！');
+        window.location.href = 'train.html';
+        return;
+      }
+
+      currentPartyIdx = aliveIdx;
+      loadPlayerStats();
+      loadOrSpawnEnemy();
+      updateUI();
+    }
+
+    function loadPlayerStats() {
+      const baseId = party[currentPartyIdx];
+      const poke = getPoke(baseId);
+      const lv = levels[baseId] || 1;
+
+      let evoMulti = 1.0;
+      if (seedStock >= 3) evoMulti = 1.6;
+      else if (seedStock >= 1) evoMulti = 1.3;
+
+      playerMaxHp = Math.floor((110 + lv * 18) * evoMulti);
+      playerHp = playerMaxHp;
+      playerAtk = Math.floor((22 + lv * 5) * evoMulti);
+      playerDef = Math.floor((16 + lv * 4) * evoMulti);
+      isPlayerAwakened = false;
+
+      document.getElementById('player-name').textContent = `${poke.name} Lv.${lv}`;
+      
+      const pTypeEl = document.getElementById('player-type');
+      pTypeEl.textContent = poke.type;
+      pTypeEl.className = `type-badge type-${poke.type}`;
+
+      document.getElementById('player-img').src = poke.img;
+      document.getElementById('player-atk-val').textContent = playerAtk;
+      document.getElementById('player-def-val').textContent = playerDef;
+    }
+
+    function loadOrSpawnEnemy() {
+      const savedEnemy = localStorage.getItem('my_current_enemy');
+      if (savedEnemy) {
+        const data = JSON.parse(savedEnemy);
+        if (data.stage === stage) {
+          enemyPokemon = getPoke(data.id);
+          enemyMaxHp = data.maxHp;
+          enemyHp = data.hp;
+          enemyAtk = data.atk;
+          enemyDef = data.def;
+          isEnemyBoss = data.isBoss;
+          applyEnemyUI();
+          return;
+        }
+      }
+      spawnNewEnemy();
+    }
+
+    function spawnNewEnemy() {
+      const pool = (typeof POKEMON_DATA !== 'undefined') ? POKEMON_DATA : [];
+      isEnemyBoss = (stage % 10 === 0);
+
+      if (isEnemyBoss) {
+        const bosses = pool.filter(p => p.isBossOnly || p.rarity === 'UR' || p.rarity === 'SSR');
+        enemyPokemon = bosses.length > 0 ? bosses[Math.floor(Math.random() * bosses.length)] : pool[0];
+      } else {
+        const regulars = pool.filter(p => !p.isBossOnly && !p.isLegend);
+        enemyPokemon = regulars.length > 0 ? regulars[Math.floor(Math.random() * regulars.length)] : pool[0];
+      }
+
+      enemyMaxHp = Math.floor((75 + stage * 22) * (isEnemyBoss ? 2.2 : 1.0));
+      enemyHp = enemyMaxHp;
+      enemyAtk = Math.floor((14 + stage * 4.2) * (isEnemyBoss ? 1.4 : 1.0));
+      enemyDef = Math.floor(10 + stage * 3);
+
+      saveCurrentEnemy();
+      applyEnemyUI();
+      addLog(isEnemyBoss ? `⚠️ 強敵【${enemyPokemon.name}】が立ち塞がった！` : `野生の【${enemyPokemon.name}】が現れた！`);
+    }
+
+    function saveCurrentEnemy() {
+      localStorage.setItem('my_current_enemy', JSON.stringify({
+        stage,
+        id: enemyPokemon.id,
+        maxHp: enemyMaxHp,
+        hp: enemyHp,
+        atk: enemyAtk,
+        def: enemyDef,
+        isBoss: isEnemyBoss
+      }));
+    }
+
+    function applyEnemyUI() {
+      document.getElementById('stage-text').textContent = `${stage}F` + (isEnemyBoss ? ' 👑' : '');
+      document.getElementById('enemy-name').textContent = `${enemyPokemon.name} Lv.${stage}`;
+      
+      const eTypeEl = document.getElementById('enemy-type');
+      eTypeEl.textContent = enemyPokemon.type;
+      eTypeEl.className = `type-badge type-${enemyPokemon.type}`;
+
+      document.getElementById('enemy-img').src = enemyPokemon.img;
+    }
+
+    function updateUI() {
+      const pRate = Math.max(0, (playerHp / playerMaxHp) * 100);
+      const pBar = document.getElementById('player-hp-bar');
+      pBar.style.width = `${pRate}%`;
+      pBar.className = `hp-gauge-fill ${pRate < 25 ? 'danger' : pRate < 50 ? 'warning' : ''}`;
+      document.getElementById('player-hp-val').textContent = `${Math.max(0, playerHp)} / ${playerMaxHp}`;
+
+      const eRate = Math.max(0, (enemyHp / enemyMaxHp) * 100);
+      const eBar = document.getElementById('enemy-hp-bar');
+      eBar.style.width = `${eRate}%`;
+      eBar.className = `hp-gauge-fill ${eRate < 25 ? 'danger' : eRate < 50 ? 'warning' : ''}`;
+      document.getElementById('enemy-hp-val').textContent = `${Math.max(0, enemyHp)} / ${enemyMaxHp}`;
+
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`seed-${i}`).classList.toggle('active', seedStock >= i);
+      }
+      document.getElementById('seed-super').classList.toggle('active', superSeed);
+
+      const awakenBtn = document.getElementById('btn-awaken');
+      const baseId = party[currentPartyIdx];
+      const hasAwakenForm = Object.keys(inventory).some(id => id.startsWith(baseId + '-') && inventory[id] > 0);
+
+      if (superSeed && hasAwakenForm && !isPlayerAwakened) {
+        awakenBtn.disabled = false;
+        awakenBtn.classList.add('ready');
+      } else {
+        awakenBtn.disabled = true;
+        awakenBtn.classList.remove('ready');
+      }
+
+      ['btn-atk', 'btn-def'].forEach(id => document.getElementById(id).disabled = turnInProgress);
+    }
+
+    function addLog(txt) {
+      document.getElementById('msg-text').textContent = txt;
+      battleLogs.unshift(`[${stage}F] ${txt}`);
+    }
+
+    function showDmgPop(target, dmg, isCrit = false) {
+      const popEl = document.getElementById(target === 'enemy' ? 'enemy-dmg-pop' : 'player-dmg-pop');
+      popEl.textContent = (isCrit ? '💥会心! -' : '-') + dmg;
+      popEl.style.display = 'block';
+      popEl.style.animation = 'none';
+      void popEl.offsetWidth;
+      popEl.style.animation = 'floatDmg 3.5s forwards ease-out';
+    }
+
+    function calcTypeMulti(atkType, defType) {
+      if (TYPE_CHART[atkType]) {
+        if (TYPE_CHART[atkType].weak && TYPE_CHART[atkType].weak.includes(defType)) return 0.7;
+        if (TYPE_CHART[atkType].resist && TYPE_CHART[atkType].resist.includes(defType)) return 1.5;
+      }
+      return 1.0;
+    }
+
+    function playerAction(type) {
+      if (turnInProgress) return;
+      turnInProgress = true;
+      isDefending = (type === 'def');
+
+      const pType = document.getElementById('player-type').textContent;
+      const eType = enemyPokemon.type;
+
+      if (type === 'awaken') {
+        isPlayerAwakened = true;
+        superSeed = false;
+        localStorage.setItem('my_super_seed', 'false');
+        playerAtk = Math.floor(playerAtk * 2.0);
+        playerHp = playerMaxHp;
+        addLog('✨ 超進化の種が輝き、真の姿へ覚醒した！');
+        updateUI();
+        setTimeout(() => {
+          turnInProgress = false;
+          if (isAuto) playerAction('atk');
+        }, 800);
+        return;
+      }
+
+      if (type === 'atk') {
+        const pImg = document.getElementById('player-img');
+        pImg.classList.add('anim-atk-player');
+        setTimeout(() => pImg.classList.remove('anim-atk-player'), 350);
+
+        setTimeout(() => {
+          const eImg = document.getElementById('enemy-img');
+          eImg.classList.add('anim-hit');
+          setTimeout(() => eImg.classList.remove('anim-hit'), 400);
+
+          const typeMulti = calcTypeMulti(pType, eType);
+          let baseDmg = Math.max(5, playerAtk - enemyDef * 0.4);
+          let dmg = Math.floor(baseDmg * (Math.random() * 0.3 + 0.85) * typeMulti);
+
+          enemyHp -= dmg;
+          saveCurrentEnemy();
+          showDmgPop('enemy', dmg);
+
+          let comment = typeMulti > 1.0 ? '（ばつぐん！）' : (typeMulti < 1.0 ? '（いまひとつ…）' : '');
+          addLog(`相棒のこうげき！ ${dmg} ダメージ！ ${comment}`);
+
+          updateUI();
+          if (enemyHp <= 0) { setTimeout(winBattle, 600); return; }
+
+          setTimeout(enemyTurn, 700);
+        }, 200);
+      } else if (type === 'def') {
+        addLog('🛡️ 相棒はしっかりと身を守っている！');
+        updateUI();
+        setTimeout(enemyTurn, 700);
+      }
+    }
+
+    function enemyTurn() {
+      const eImg = document.getElementById('enemy-img');
+      eImg.classList.add('anim-atk-enemy');
+      setTimeout(() => eImg.classList.remove('anim-atk-enemy'), 350);
+
+      setTimeout(() => {
+        const pImg = document.getElementById('player-img');
+        pImg.classList.add('anim-hit');
+        setTimeout(() => pImg.classList.remove('anim-hit'), 400);
+
+        const pType = document.getElementById('player-type').textContent;
+        const eType = enemyPokemon.type;
+        const typeMulti = calcTypeMulti(eType, pType);
+
+        const isCrit = Math.random() < 0.15;
+        let baseDmg = Math.max(4, enemyAtk - playerDef * 0.4);
+        let dmg = Math.floor(baseDmg * (Math.random() * 0.3 + 0.85) * typeMulti * (isCrit ? 1.8 : 1.0));
+
+        if (isDefending) dmg = Math.floor(dmg * 0.3);
+
+        playerHp -= dmg;
+        saveCurrentEnemy();
+        showDmgPop('player', dmg, isCrit);
+        addLog(`相手のこうげき！ ${dmg} ダメージ！` + (isCrit ? '（急所に当たった！）' : ''));
+
+        updateUI();
+
+        if (playerHp <= 0) {
+          const baseId = party[currentPartyIdx];
+          fainted[baseId] = true;
+          localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
+          addLog(`💀 相棒は たおれてしまった！`);
+
+          setTimeout(() => {
+            turnInProgress = false;
+            initBattle();
+          }, 1200);
+          return;
+        }
+
+        turnCount++;
+        if (turnCount % 3 === 0) {
+          triggerSlot();
+        } else {
+          turnInProgress = false;
+          updateUI();
+          if (isAuto) setTimeout(() => playerAction('atk'), 500);
+        }
+      }, 200);
+    }
+
+    // スロット
+    let slotTimer;
+    const SLOT_REWARDS = ['🌱 進化の種', '💖 HP回復(小)', '💖 HP回復(中)', '💖 HP回復(大)', '⚔️ 攻撃力UP', '✨ 超進化の種'];
+
+    function triggerSlot() {
+      if (isAuto) {
+        const r = SLOT_REWARDS[Math.floor(Math.random() * SLOT_REWARDS.length)];
+        applySlotReward(r);
+        addLog(`🎰 スロット自動発動: 【${r}】を獲得！`);
+        turnInProgress = false;
+        updateUI();
+        setTimeout(() => playerAction('atk'), 600);
+      } else {
+        document.getElementById('slot-modal').style.display = 'flex';
+        let idx = 0;
+        slotTimer = setInterval(() => {
+          idx = (idx + 1) % SLOT_REWARDS.length;
+          document.getElementById('slot-drum-text').textContent = SLOT_REWARDS[idx];
+        }, 80);
+      }
+    }
+
+    function stopSlot() {
+      clearInterval(slotTimer);
+      const chosen = document.getElementById('slot-drum-text').textContent;
+      applySlotReward(chosen);
+      document.getElementById('btn-slot-push').disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('slot-modal').style.display = 'none';
+        document.getElementById('btn-slot-push').disabled = false;
+        addLog(`🎰 スロット結果: 【${chosen}】を獲得！`);
+        turnInProgress = false;
+        updateUI();
+      }, 700);
+    }
+
+    function applySlotReward(r) {
+      if (r === '🌱 進化の種') {
+        if (seedStock < 3) seedStock++;
+        localStorage.setItem('my_battle_seeds', seedStock);
+      } else if (r === '💖 HP回復(小)') {
+        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.2));
+      } else if (r === '💖 HP回復(中)') {
+        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.4));
+      } else if (r === '💖 HP回復(大)') {
+        playerHp = playerMaxHp;
+      } else if (r === '⚔️ 攻撃力UP') {
+        playerAtk += 8;
+      } else if (r === '✨ 超進化の種') {
+        superSeed = true;
+        localStorage.setItem('my_super_seed', 'true');
+      }
+    }
+
+    function winBattle() {
+      const reward = isEnemyBoss ? 300 : 50;
+      coins += reward;
+      localStorage.setItem('my_casino_coins', coins);
+      localStorage.removeItem('my_current_enemy');
+
+      stage++;
+      localStorage.setItem('my_tower_stage', stage);
+
+      addLog(`🎉 撃破！ STAGE ${stage - 1} クリア！ +${reward}G`);
+      setTimeout(() => {
+        turnInProgress = false;
+        spawnNewEnemy();
+        updateUI();
+        if (isAuto) playerAction('atk');
+      }, 1000);
+    }
+
+    function toggleAuto() {
+      isAuto = !isAuto;
+      document.getElementById('btn-auto').classList.toggle('active', isAuto);
+      document.getElementById('btn-auto').textContent = isAuto ? 'Auto中' : 'Auto';
+      if (isAuto && !turnInProgress) playerAction('atk');
+    }
+
+    function openSwitchView() {
+      document.getElementById('cmd-view').style.display = 'none';
+      document.getElementById('switch-view').style.display = 'flex';
+      const grid = document.getElementById('switch-party-grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 6; i++) {
+        const id = party[i];
+        const card = document.createElement('div');
+
+        if (!id) {
+          card.className = 'party-slot-card empty';
+          card.innerHTML = `<span style="font-size:10px; color:#64748b;">(あき枠)</span>`;
+        } else {
+          const p = getPoke(id);
+          const lv = levels[id] || 1;
+          const isFaint = !!fainted[id];
+          const isCur = (i === currentPartyIdx);
+
+          card.className = `party-slot-card ${isCur ? 'current' : ''} ${isFaint ? 'fainted' : ''}`;
+          card.innerHTML = `
+            <img src="${p.img}" style="width:42px; height:42px; object-fit:contain;" onerror="this.src='images/slot1.png'">
+            <div style="font-size:10px; flex:1;">
+              <b style="font-size:11px;">${p.name}</b> Lv.${lv}<br>
+              <span class="type-badge type-${p.type}">${p.type}</span> ${isFaint ? '<span style="color:#ef4444; font-weight:bold; margin-left:3px;">ひんし</span>' : '<span style="color:#22c55e; font-weight:bold; margin-left:3px;">げんき</span>'}
+            </div>
+          `;
+
+          if (!isFaint && !isCur) {
+            card.onclick = () => {
+              if (confirm(`【${p.name}】に交代するかい？`)) {
+                currentPartyIdx = i;
+                closeSwitchView();
+                loadPlayerStats();
+                addLog(`行けっ！ 【${p.name}】！`);
+                updateUI();
+                setTimeout(enemyTurn, 600);
+              }
+            };
+          }
+        }
+        grid.appendChild(card);
+      }
+    }
+
+    function closeSwitchView() {
+      document.getElementById('switch-view').style.display = 'none';
+      document.getElementById('cmd-view').style.display = 'flex';
+    }
+
+    function openHistoryModal() {
+      document.getElementById('history-modal').style.display = 'flex';
+      const container = document.getElementById('history-log-content');
+      container.innerHTML = battleLogs.length > 0 ? battleLogs.map(l => `<div>• ${l}</div>`).join('') : 'まだログはありません。';
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('history-modal').style.display = 'none';
+    }
+
+    window.addEventListener('DOMContentLoaded', initBattle);
+  </script>
 </body>
 </html>
