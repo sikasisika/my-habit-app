@@ -25,7 +25,7 @@
     }
 
     body {
-      background-image: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 70%, #020617 100%);
+      background-image: radial-gradient(circle at 50% 20%, #312e81 0%, #0f172a 70%, #022c22 100%);
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -248,42 +248,19 @@
 
   </div>
 
-  <script>
-    // ガチャと完全に一致させたポケモン図鑑リスト
-    const DEX_POOL = [
-      { id: 'p0001', name: 'フシギダネ', rarity: 'N', img: 'images/gacha/p0001.png' },
-      { id: 'p0002', name: 'フシギソウ', rarity: 'R', img: 'images/gacha/p0002.png' },
-      { id: 'p0003', name: 'フシギバナ', rarity: 'SR', img: 'images/gacha/p0003.png' },
-      { id: 'p0003-3', name: 'メガフシギバナ', rarity: 'SSR', img: 'images/gacha/p0003-3.png' },
-      { id: 'p0003-33', name: 'キョダイフシギバナ', rarity: 'UR', img: 'images/gacha/p0003-33.png' },
-      { id: 'p0004', name: 'ヒトカゲ', rarity: 'N', img: 'images/gacha/p0004.png' },
-      { id: 'p0005', name: 'リザード', rarity: 'R', img: 'images/gacha/p0005.png' },
-      { id: 'p0006', name: 'リザードン', rarity: 'SR', img: 'images/gacha/p0006.png' },
-      { id: 'p0006-6x', name: 'メガリザードンX', rarity: 'SSR', img: 'images/gacha/p0006-6x.png' },
-      { id: 'p0006-6y', name: 'メガリザードンY', rarity: 'SSR', img: 'images/gacha/p0006-6y.png' },
-      { id: 'p0006-66', name: 'キョダイリザードン', rarity: 'UR', img: 'images/gacha/p0006-66.png' },
-      { id: 'p0007', name: 'ゼニガメ', rarity: 'N', img: 'images/gacha/p0007.png' },
-      { id: 'p0008', name: 'カメール', rarity: 'R', img: 'images/gacha/p0008.png' },
-      { id: 'p0009', name: 'カメックス', rarity: 'SR', img: 'images/gacha/p0009.png' },
-      { id: 'p0009-9', name: 'メガカメックス', rarity: 'SSR', img: 'images/gacha/p0009-9.png' },
-      { id: 'p0009-99', name: 'キョダイカメックス', rarity: 'UR', img: 'images/gacha/p0009-99.png' },
-      { id: 'p0015', name: 'スピアー', rarity: 'SR', img: 'images/gacha/p0015.png' },
-      { id: 'p0018', name: 'ピジョット', rarity: 'SR', img: 'images/gacha/p0018.png' },
-      { id: 'p0038', name: 'キュウコン', rarity: 'SR', img: 'images/gacha/p0038.png' },
-      { id: 'p0059', name: 'ウィンディ', rarity: 'SR', img: 'images/gacha/p0059.png' },
-      { id: 'p0094', name: 'ゲンガー', rarity: 'SR', img: 'images/gacha/p0094.png' },
-      { id: 'p0445', name: 'ガブリアス', rarity: 'SR', img: 'images/gacha/p0445.png' },
-      { id: 'p0448', name: 'ルカリオ', rarity: 'SR', img: 'images/gacha/p0448.png' }
-    ];
+  <!-- 共通マスターデータファイルの読み込み -->
+  <script src="pokemonData.js"></script>
 
+  <script>
     function renderDex() {
       const inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{}');
       const grid = document.getElementById('dex-grid');
       grid.innerHTML = '';
 
+      const pool = (typeof POKEMON_DATA !== 'undefined') ? POKEMON_DATA : [];
       let ownedCount = 0;
 
-      DEX_POOL.forEach(card => {
+      pool.forEach(card => {
         const count = inventory[card.id] || 0;
         const isOwned = count > 0;
         if (isOwned) ownedCount++;
@@ -300,8 +277,9 @@
         grid.appendChild(el);
       });
 
-      const rate = Math.round((ownedCount / DEX_POOL.length) * 100);
-      document.getElementById('progress-text').textContent = `${ownedCount} / ${DEX_POOL.length} (${rate}%)`;
+      const total = pool.length;
+      const rate = total > 0 ? Math.round((ownedCount / total) * 100) : 0;
+      document.getElementById('progress-text').textContent = `${ownedCount} / ${total} (${rate}%)`;
     }
 
     window.addEventListener('DOMContentLoaded', renderDex);
