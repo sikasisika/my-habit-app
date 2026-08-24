@@ -24,9 +24,9 @@
       min-height: 100vh;
       min-height: 100dvh;
       color: #333;
-      padding: 20px 16px;
-      padding-top: calc(20px + env(safe-area-inset-top));
-      padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      padding: 16px 14px;
+      padding-top: calc(14px + env(safe-area-inset-top));
+      padding-bottom: calc(14px + env(safe-area-inset-bottom));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -37,24 +37,24 @@
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     /* ヘッダー */
     .portal-header {
       text-align: center;
-      padding: 8px 0 2px;
+      padding: 4px 0 2px;
     }
     .portal-header h1 {
-      font-size: 22px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: 900;
       color: #1e293b;
       letter-spacing: 0.5px;
     }
     .portal-header p {
-      font-size: 12px;
+      font-size: 11px;
       color: #64748b;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     /* タップエフェクト */
@@ -65,8 +65,134 @@
       user-select: none;
     }
     .press-effect:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
       opacity: 0.88;
+    }
+
+    /* ========================================================= */
+    /* 🎮 ゲームボーイ風・相棒育成ウィジェット */
+    /* ========================================================= */
+    .gb-chassis {
+      background: #c0c2ce;
+      border-radius: 16px 16px 24px 24px;
+      padding: 10px 12px 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15), inset 0 2px 3px rgba(255, 255, 255, 0.8), inset 0 -3px 4px rgba(0, 0, 0, 0.2);
+      border: 1.5px solid #a1a3b0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .gb-screen-bezel {
+      background: #70757d;
+      border-radius: 10px 10px 18px 10px;
+      padding: 8px 10px;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.5);
+      border: 1px solid #5a5e66;
+    }
+
+    .gb-screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 8px;
+      font-weight: 900;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+    }
+    .battery-led {
+      width: 6px;
+      height: 6px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 4px #ef4444;
+      display: inline-block;
+      margin-right: 3px;
+    }
+
+    /* レトロ液晶画面 */
+    .gb-lcd {
+      background: #8b956d;
+      border: 2px solid #737c56;
+      border-radius: 6px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .gb-pet-box {
+      width: 58px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .gb-pet-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: contrast(1.4) drop-shadow(0 2px 3px rgba(15, 56, 15, 0.4));
+      transition: transform 0.15s ease;
+    }
+    .gb-pet-box:active .gb-pet-img {
+      transform: translateY(-6px) scale(1.08);
+    }
+
+    .gb-pet-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      color: #0f380f;
+    }
+    .gb-name-lv {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 900;
+      border-bottom: 1.5px solid #0f380f;
+      padding-bottom: 1px;
+    }
+    .gb-stats-row {
+      font-size: 9px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+    .gb-msg-box {
+      font-size: 9px;
+      font-weight: bold;
+      margin-top: 2px;
+      min-height: 14px;
+      color: #0f380f;
+      line-height: 1.2;
+    }
+
+    .gb-battle-btn {
+      background: #8b1d3f;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 3px 0 #591026, 0 4px 6px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .gb-battle-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #591026;
     }
 
     /* クイックステータス枠 */
@@ -74,7 +200,7 @@
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(8px);
       border-radius: 14px;
-      padding: 10px 16px;
+      padding: 8px 14px;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -89,12 +215,13 @@
     }
     .status-item span {
       display: block;
-      font-size: 11px;
+      font-size: 10px;
       color: #64748b;
     }
 
     .blur-value {
-      font-size: 15px;
+      font-size: 14px;
+      font-weight: bold;
       color: #1e293b;
       margin-top: 2px;
       display: block;
@@ -111,31 +238,31 @@
     .app-grid {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .app-card {
       background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 14px 16px;
+      border-radius: 14px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      gap: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.6);
     }
 
     .app-icon-box {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 20px;
       flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
     }
 
     .icon-money { background: linear-gradient(135deg, #34d399, #059669); color: #fff; }
@@ -143,29 +270,29 @@
     .icon-health { background: linear-gradient(135deg, #f87171, #dc2626); color: #fff; }
 
     .app-info { flex: 1; }
-    .app-info h2 { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
-    .app-info p { font-size: 11px; color: #64748b; line-height: 1.3; }
+    .app-info h2 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+    .app-info p { font-size: 10px; color: #64748b; line-height: 1.3; }
 
-    .arrow-icon { font-size: 15px; color: #94a3b8; font-weight: bold; }
+    .arrow-icon { font-size: 13px; color: #94a3b8; font-weight: bold; }
 
-    /* ミニゲーム・アイコンセクション */
+    /* ミニゲームセクション */
     .game-section {
       background: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(8px);
       border-radius: 16px;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
     .game-section-title {
       font-size: 11px;
       font-weight: 800;
       color: #64748b;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: 0.5px;
     }
     .game-icon-grid {
       display: flex;
-      gap: 16px;
+      gap: 14px;
       align-items: center;
       overflow-x: auto;
       padding-bottom: 4px;
@@ -175,28 +302,29 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       text-decoration: none;
       flex-shrink: 0;
     }
     .game-circle-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      font-size: 22px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
     .icon-game1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
     .icon-game2 { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
     .icon-game3 { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
     .icon-game4 { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+    .icon-game-tower { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
 
     .game-icon-label {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: bold;
       color: #1e293b;
       text-align: center;
@@ -212,14 +340,48 @@
       <p>日常の管理・記録をひとつに集約</p>
     </header>
 
+    <!-- 🎮 ゲームボーイ風 相棒育成ウィジェット -->
+    <div class="gb-chassis">
+      <div class="gb-screen-bezel">
+        <div class="gb-screen-header">
+          <div><span class="battery-led"></span>BATTERY</div>
+          <div>DOT MATRIX WITH STEREO SOUND</div>
+        </div>
+
+        <div class="gb-lcd" onclick="petPartner()" title="タップして触れ合う！">
+          <div class="gb-pet-box">
+            <img id="gb-partner-img" class="gb-pet-img" src="images/gacha/p0004.png" alt="" onerror="this.src='images/slot1.png'">
+          </div>
+          
+          <div class="gb-pet-info">
+            <div class="gb-name-lv">
+              <span id="gb-partner-name">ヒトカゲ</span>
+              <span id="gb-partner-lv">Lv.1</span>
+            </div>
+            <div class="gb-stats-row">
+              <span>HP: <b id="gb-partner-hp">120</b></span>
+              <span>ATK: <b id="gb-partner-atk">25</b></span>
+            </div>
+            <div class="gb-msg-box" id="gb-partner-msg">
+              ▶ タップしてスキンシップ！
+            </div>
+          </div>
+
+          <a href="battle.html" class="gb-battle-btn" onclick="event.stopPropagation()">
+            <span>⚔️ 塔へ</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- クイックサマリー（タップでぼかし切り替え） -->
     <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
       <div class="status-item">
-        <span>💰 総資産 <small style="font-size:9px; color:#94a3b8;">(タップ)</small></span>
+        <span>💰 総資産 <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
         <strong id="dash-total-assets" class="blur-value">--- 円</strong>
       </div>
       <div class="status-item">
-        <span>🐧 Suica <small style="font-size:9px; color:#94a3b8;">(タップ)</small></span>
+        <span>🐧 Suica <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
         <strong id="dash-suica-assets" class="blur-value">--- 円</strong>
       </div>
     </div>
@@ -259,36 +421,53 @@
 
     </div>
 
-    <!-- ミニゲーム（4つ横スクロール対応） -->
+    <!-- ミニゲーム＆バトル一覧 -->
     <div class="game-section">
-      <div class="game-section-title">🎮 MINI GAMES</div>
+      <div class="game-section-title">🎮 MINI GAMES & CASINO</div>
       <div class="game-icon-grid">
         
-        <a href="game1.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game1">⚡</div>
-          <span class="game-icon-label">スピードタップ</span>
+        <a href="battle.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game-tower">⚔️</div>
+          <span class="game-icon-label">タワーバトル</span>
         </a>
 
-        <a href="game2.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game2">🍉</div>
-          <span class="game-icon-label">マージパズル</span>
+        <a href="gacha.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game2">✨</div>
+          <span class="game-icon-label">ガチャ</span>
+        </a>
+
+        <a href="dex.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game3">📖</div>
+          <span class="game-icon-label">図鑑</span>
         </a>
 
         <a href="game3.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-game3">🎰</div>
-          <span class="game-icon-label">目押しスロット</span>
+          <span class="game-icon-label">スロット</span>
         </a>
 
-        <!-- 4. トランプゲーム（ソリティア＆ブラックジャック） -->
         <a href="game4.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-game4">🃏</div>
           <span class="game-icon-label">トランプ</span>
+        </a>
+
+        <a href="game1.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game1">⚡</div>
+          <span class="game-icon-label">タップ</span>
+        </a>
+
+        <a href="game2.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-game2">🍉</div>
+          <span class="game-icon-label">パズル</span>
         </a>
 
       </div>
     </div>
 
   </div>
+
+  <!-- 外部データファイルを読み込み -->
+  <script src="pokemonData.js"></script>
 
   <script>
     function loadQuickData() {
@@ -299,6 +478,8 @@
       const total = cash + bank + suica;
       document.getElementById('dash-total-assets').textContent = total.toLocaleString() + ' 円';
       document.getElementById('dash-suica-assets').textContent = suica.toLocaleString() + ' 円';
+
+      loadPartnerWidget();
     }
 
     function toggleBlur() {
@@ -307,6 +488,45 @@
 
       totalEl.classList.toggle('revealed');
       suicaEl.classList.toggle('revealed');
+    }
+
+    // ゲームボーイ風ウィジェットの相棒データ読み込み
+    function loadPartnerWidget() {
+      const partnerId = localStorage.getItem('my_battle_partner') || 'p0004';
+      const partnerLevels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+      const lv = partnerLevels[partnerId] || 1;
+
+      const base = (typeof POKEMON_DATA !== 'undefined' ? POKEMON_DATA.find(p => p.id === partnerId) : null) || { name: 'ヒトカゲ', img: 'images/gacha/p0004.png' };
+
+      const hp = 100 + (lv * 20);
+      const atk = 20 + (lv * 6);
+
+      document.getElementById('gb-partner-name').textContent = base.name;
+      document.getElementById('gb-partner-lv').textContent = `Lv.${lv}`;
+      document.getElementById('gb-partner-hp').textContent = hp;
+      document.getElementById('gb-partner-atk').textContent = atk;
+      document.getElementById('gb-partner-img').src = base.img;
+    }
+
+    // タップ時のリアクションメッセージ
+    const PET_MESSAGES = [
+      '▶ ごきげんの ようすだ！',
+      '▶ うれしそうに めを ほそめた！',
+      '▶ バトルに いきたそうに している！',
+      '▶ なつき度が あがった きがする！',
+      '▶ げんき いっぱいに はねた！'
+    ];
+
+    function petPartner() {
+      const msgEl = document.getElementById('gb-partner-msg');
+      const rand = PET_MESSAGES[Math.floor(Math.random() * PET_MESSAGES.length)];
+      msgEl.textContent = rand;
+      
+      const img = document.getElementById('gb-partner-img');
+      img.style.transform = 'translateY(-8px) scale(1.1)';
+      setTimeout(() => {
+        img.style.transform = 'translateY(0) scale(1)';
+      }, 200);
     }
 
     window.addEventListener('DOMContentLoaded', loadQuickData);
