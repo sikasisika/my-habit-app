@@ -51,24 +51,34 @@
       position: relative;
     }
 
-    /* 最上部ヘッダー */
+    /* 最上部ヘッダー（クリック判定を最前面に） */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
       padding: 0 4px;
-      height: 24px;
+      height: 28px;
+      position: relative;
+      z-index: 50;
     }
     .top-btn {
       color: #ffffff;
       text-decoration: none;
       font-size: 11px;
-      background: rgba(255, 255, 255, 0.12);
-      padding: 3px 8px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 4px 10px;
       border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .top-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.3);
     }
 
     /* DS筐体 */
@@ -152,7 +162,7 @@
       margin-bottom: 2px;
     }
 
-    /* ★ タイプ別カラーバッジ */
+    /* タイプ別カラーバッジ */
     .type-badge {
       font-size: 8px;
       font-weight: 900;
@@ -187,7 +197,6 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ★ ポケモンの迫力サイズ（影なし・鮮明表示） */
     .poke-sprite {
       object-fit: contain;
       position: relative;
@@ -238,7 +247,7 @@
     }
 
     /* ------------------------------------ */
-    /* 📱 下画面：コマンド（文字特大化＆どっしり配置） */
+    /* 📱 下画面：コマンド */
     /* ------------------------------------ */
     .ds-bottom-screen {
       flex: 1;
@@ -289,7 +298,7 @@
       100% { transform: translateY(3px); }
     }
 
-    /* 上段：こうげき / ぼうぎょ（文字サイズ17px・特大化） */
+    /* 上段：こうげき / ぼうぎょ */
     .cmd-row-top {
       flex: 1;
       display: grid;
@@ -378,9 +387,7 @@
     .seed-super-icon { opacity: 0.25; filter: grayscale(1); }
     .seed-super-icon.active { opacity: 1; filter: grayscale(0); animation: rainbowGlow 1.5s infinite linear; }
 
-    /* ------------------------------------ */
-    /* 🔄 交代画面（中身・文字・画像拡大版） */
-    /* ------------------------------------ */
+    /* 交代画面 */
     .switch-view-container {
       display: flex;
       flex-direction: column;
@@ -481,10 +488,11 @@
 
   <div class="container">
     
+    <!-- 最上部バー（直接遷移処理付き） -->
     <div class="top-bar">
-      <a href="index.html" class="top-btn">◀ ポータル</a>
+      <button class="top-btn" onclick="location.href='index.html'">◀ ポータル</button>
       <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
-      <a href="train.html" class="top-btn" style="background:#10b981;">🌱 育成ジム</a>
+      <button class="top-btn" style="background:#10b981;" onclick="location.href='train.html'">🌱 育成ジム</button>
     </div>
 
     <div class="ds-body">
@@ -536,7 +544,7 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド（文字特大・どっしりレイアウト） -->
+      <!-- 📱 下画面：コマンド -->
       <!-- ========================================================= -->
       <div class="ds-bottom-screen">
         
@@ -547,7 +555,7 @@
             <span class="pixel-arrow">▾</span>
           </div>
 
-          <!-- 上段：こうげき / ぼうぎょ（文字サイズ特大） -->
+          <!-- 上段：こうげき / ぼうぎょ -->
           <div class="cmd-row-top">
             <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
             <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
@@ -571,7 +579,7 @@
           </div>
         </div>
 
-        <!-- 🔄 交代選択ビュー（拡大版） -->
+        <!-- 🔄 交代選択ビュー -->
         <div class="switch-view-container" id="switch-view" style="display: none;">
           <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
             <span style="color:#fbbf24; font-weight:900;">👥 手持ちポケモン（タップで交代）</span>
@@ -638,12 +646,11 @@
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
-    // ★ 迫力サイズ（S〜G）
     function getSizePx(size) {
-      if (size === 'G') return 195; // キョダイマックス特大
-      if (size === 'L') return 165; // 大型
-      if (size === 'M') return 140; // 中型
-      return 115;                   // 小型
+      if (size === 'G') return 195;
+      if (size === 'L') return 165;
+      if (size === 'M') return 140;
+      return 115;
     }
 
     function getPoke(id) {
@@ -1008,7 +1015,6 @@
       if (isAuto && !turnInProgress) playerAction('atk');
     }
 
-    // ★ 交代画面（中身・文字・アイコン特大化＆タイプ色分け）
     function openSwitchView() {
       document.getElementById('cmd-view').style.display = 'none';
       document.getElementById('switch-view').style.display = 'flex';
