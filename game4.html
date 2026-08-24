@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>トランプスタジオ | ソリティア＆カジノ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #064e3b;
+    }
+
+    body {
+      background-image: radial-gradient(circle at 50% 20%, #065f46 0%, #064e3b 70%, #022c22 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 8px;
+      padding-top: calc(4px + env(safe-area-inset-top));
+      padding-bottom: calc(4px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    /* ヘッダー */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .top-btn {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
+    .top-btn:active { transform: scale(0.95); }
+
+    /* コイン・ステータスバー（ガチャ・スロット共通） */
+    .status-bar {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 5px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      flex-shrink: 0;
+    }
+    .coin-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+    .coin-val {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fbbf24;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    }
+
+    /* モード切替タブ */
+    .tab-group {
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 3px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 6px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+      border: none;
+      background: transparent;
+      color: #a7f3d0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+    }
+
+    /* メインゲーム枠 */
+    .game-card {
+      flex: 1 1 0%;
+      min-height: 0;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    /* ================= トランプカード汎用デザイン ================= */
+    .card {
+      width: 44px;
+      height: 62px;
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #94a3b8;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2px 3px;
+      font-weight: 900;
+      cursor: grab;
+      position: relative;
+      transition: transform 0.05s ease;
+    }
+    .card.red { color: #dc2626; }
+    .card.black { color: #1e293b; }
+    
+    .card .corner-top { font-size: 10px; line-height: 1; display: flex; flex-direction: column; align-items: flex-start; pointer-events: none; }
+    .card .center-suit { font-size: 16px; text-align: center; margin-top: -4px; pointer-events: none; }
+    .card .corner-btm { font-size: 10px; line-height: 1; display: flex; flex-direction: column; align-items: flex-end; transform: rotate(180deg); pointer-events: none; }
+
+    .card.back {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #172554 100%);
+      border: 2px solid #ffffff;
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 2px, transparent 0, transparent 6px);
+      cursor: default;
+    }
+    .card.back * { display: none; }
+
+    .card-slot {
+      width: 44px;
+      height: 62px;
+      border-radius: 6px;
+      border: 1.5px dashed rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+
+    /* ================= 1. ソリティア（クロンダイク）画面 ================= */
+    .sol-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .sol-deck-group { display: flex; gap: 6px; }
+    .sol-foundation-group { display: flex; gap: 4px; }
+
+    .sol-tableau {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      flex: 1;
+      min-height: 0;
+      position: relative;
+    }
+    .tableau-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      min-height: 100%;
+    }
+    .tableau-col .card {
+      position: absolute;
+    }
+
+    .sol-ctrl-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .btn-action {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-action:active { transform: scale(0.95); }
+
+    /* ドラッグ追従用コンテナ */
+    #drag-container {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1000;
+      display: none;
+    }
+    #drag-container .card {
+      position: absolute;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      transform: scale(1.06);
+    }
+
+    /* ================= 2. ブラックジャック画面 ================= */
+    .bj-view {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 8px;
+    }
+    .bj-area {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bj-area-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .bj-cards-row {
+      display: flex;
+      gap: 6px;
+      min-height: 64px;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    /* BET切り替えボタン群 */
+    .bet-selector {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-bet {
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-bet.active {
+      background: #f59e0b;
+      border-color: #fbbf24;
+      color: #000;
+    }
+
+    .bj-ctrls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn-bj {
+      padding: 10px 0;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-bj:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-hit { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .btn-stand { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .btn-start {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    }
+    .btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* 難易度設定モーダル */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 44, 34, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 10px;
+      border-radius: 14px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ヘッダー -->
+    <div class="top-bar">
+      <a href="index.html" class="top-btn">◀ ポータル</a>
+      <span style="font-size: 11px; font-weight: bold; color: #a7f3d0;">CARD STUDIO</span>
+      <button class="top-btn" onclick="openDiffModal()">⚙️ 難易度</button>
+    </div>
+
+    <!-- 共有コインステータスバー -->
+    <div class="status-bar">
+      <div class="coin-box">
+        <span>🪙 所持コイン:</span>
+        <span class="coin-val" id="coin-display">1,000</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <a href="gacha.html" class="top-btn" style="background:#db2777; border-color:#f472b6;">✨ ガチャへ</a>
+        <a href="game3.html" class="top-btn" style="background:#ea580c; border-color:#fbbf24;">🎰 スロットへ</a>
+      </div>
+    </div>
+
+    <!-- モードタブ -->
+    <div class="tab-group">
+      <button class="tab-btn active" id="tab-sol" onclick="switchGame('sol')">👑 ソリティア</button>
+      <button class="tab-btn" id="tab-bj" onclick="switchGame('bj')">🎰 ブラックジャック</button>
+    </div>
+
+    <!-- メインゲーム枠 -->
+    <div class="game-card">
+
+      <!-- 1. ソリティア画面 -->
+      <div id="view-sol" style="display: flex; flex-direction: column; height: 100%;">
+        
+        <div class="sol-top-row">
+          <div class="sol-deck-group">
+            <div class="card-slot" id="stock" onclick="drawStock()">🔄</div>
+            <div id="waste-slot" style="position: relative; width: 44px; height: 62px;"></div>
+          </div>
+
+          <div class="sol-foundation-group">
+            <div class="card-slot" id="f-0" data-f="0">♠</div>
+            <div class="card-slot" id="f-1" data-f="1">♥</div>
+            <div class="card-slot" id="f-2" data-f="2">♣</div>
+            <div class="card-slot" id="f-3" data-f="3">♦</div>
+          </div>
+        </div>
+
+        <div class="sol-tableau" id="tableau">
+          <div class="tableau-col" id="col-0" data-col="0"></div>
+          <div class="tableau-col" id="col-1" data-col="1"></div>
+          <div class="tableau-col" id="col-2" data-col="2"></div>
+          <div class="tableau-col" id="col-3" data-col="3"></div>
+          <div class="tableau-col" id="col-4" data-col="4"></div>
+          <div class="tableau-col" id="col-5" data-col="5"></div>
+          <div class="tableau-col" id="col-6" data-col="6"></div>
+        </div>
+
+        <div class="sol-ctrl-bar">
+          <span style="font-size: 11px; font-weight: bold; color: #a7f3d0;" id="diff-label">難易度: EASY (1枚)</span>
+          <div style="display: flex; gap: 4px;">
+            <button class="btn-action" onclick="undoMove()">↩ 1手戻す</button>
+            <button class="btn-action" onclick="initSolitaire()">🔄 新規</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ブラックジャック画面 -->
+      <div id="view-bj" class="bj-view" style="display: none;">
+        
+        <!-- ディーラー -->
+        <div class="bj-area">
+          <div class="bj-area-header">
+            <span>🎩 ディーラー</span>
+            <span id="dealer-score">スコア: ?</span>
+          </div>
+          <div class="bj-cards-row" id="dealer-cards"></div>
+        </div>
+
+        <!-- アナウンス＆BET選択 -->
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div id="bj-msg" style="font-size: 13px; font-weight: 900; color: #fbbf24; text-align: center; min-height: 20px;">
+            BETして勝負スタート！
+          </div>
+          <div class="bet-selector" id="bet-selector-area">
+            <span style="font-size:10px; color:#cbd5e1;">BET額:</span>
+            <button class="btn-bet active" id="bet-100" onclick="setBJBet(100)">100</button>
+            <button class="btn-bet" id="bet-500" onclick="setBJBet(500)">500</button>
+            <button class="btn-bet" id="bet-1000" onclick="setBJBet(1000)">1,000</button>
+          </div>
+        </div>
+
+        <!-- プレイヤー -->
+        <div class="bj-area">
+          <div class="bj-area-header">
+            <span>🧑 あなた (BET: <span id="bj-bet-display" style="color:#fbbf24;">100</span> コイン)</span>
+            <span id="player-score">スコア: 0</span>
+          </div>
+          <div class="bj-cards-row" id="player-cards"></div>
+        </div>
+
+        <!-- ボタン操作 -->
+        <div id="bj-action-group" style="display: flex; flex-direction: column; gap: 6px;">
+          <button class="btn-start" id="btn-start-bj" onclick="startBJGame()">🪙 BETして勝負開始！</button>
+          <div class="bj-ctrls" id="play-btns" style="display: none;">
+            <button class="btn-bj btn-hit" id="btn-hit" onclick="bjHit()">HIT (引く)</button>
+            <button class="btn-bj btn-stand" id="btn-stand" onclick="bjStand()">STAND (勝負)</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ドラッグ中の浮遊要素 -->
+    <div id="drag-container"></div>
+
+    <!-- 難易度設定モーダル -->
+    <div class="modal-overlay" id="diff-modal" style="display: none;">
+      <h2 style="font-size: 16px; color: #a7f3d0; text-align: center;">⚙️ ソリティア 難易度設定</h2>
+      <button class="btn-action" style="padding: 10px;" onclick="setDifficulty('easy')">
+        🟢 EASY (1枚めくり / 何度でも引き直しOK)
+      </button>
+      <button class="btn-action" style="padding: 10px;" onclick="setDifficulty('normal')">
+        🟡 NORMAL (3枚めくり / 何度でも引き直しOK)
+      </button>
+      <button class="btn-action" style="padding: 10px;" onclick="setDifficulty('hard')">
+        🔴 HARD (3枚めくり / 山札引き直し3回まで)
+      </button>
+      <button class="btn-action" style="margin-top: 10px; background:#334155;" onclick="closeDiffModal()">閉じる</button>
+    </div>
+
+  </div>
+
+  <script>
+    const SUITS = ['♠', '♥', '♣', '♦'];
+    const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+    let difficulty = localStorage.getItem('my_sol_diff') || 'easy';
+    let passesLeft = 3;
+
+    // ソリティア状態
+    let stock = [];
+    let waste = [];
+    let foundations = [[], [], [], []];
+    let tableau = [[], [], [], [], [], [], []];
+    let historyState = [];
+    let dragState = null;
+
+    // ブラックジャック状態
+    let bjDeck = [];
+    let dealerHand = [];
+    let playerHand = [];
+    let bjBet = 100;
+    let bjPlaying = false;
+
+    // 共通コイン管理
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+
+    function updateCoinUI() {
+      document.getElementById('coin-display').textContent = coins.toLocaleString();
+      localStorage.setItem('my_casino_coins', coins);
+    }
+
+    function switchGame(mode) {
+      document.getElementById('view-sol').style.display = mode === 'sol' ? 'flex' : 'none';
+      document.getElementById('view-bj').style.display = mode === 'bj' ? 'flex' : 'none';
+      document.getElementById('tab-sol').classList.toggle('active', mode === 'sol');
+      document.getElementById('tab-bj').classList.toggle('active', mode === 'bj');
+    }
+
+    function createDeck() {
+      const deck = [];
+      SUITS.forEach((suit, sIdx) => {
+        RANKS.forEach((rank, rIdx) => {
+          deck.push({
+            suit,
+            rank,
+            val: rIdx + 1,
+            color: (suit === '♥' || suit === '♦') ? 'red' : 'black',
+            faceUp: false,
+            id: `${sIdx}-${rIdx}`
+          });
+        });
+      });
+      return deck.sort(() => Math.random() - 0.5);
+    }
+
+    function renderCardHTML(card) {
+      if (!card.faceUp) return `<div class="card back"></div>`;
+      return `
+        <div class="card ${card.color}">
+          <div class="corner-top"><span>${card.rank}</span><span>${card.suit}</span></div>
+          <div class="center-suit">${card.suit}</div>
+          <div class="corner-btm"><span>${card.rank}</span><span>${card.suit}</span></div>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // 👑 ソリティア（クロンダイク）
+    // ==========================================
+    function initSolitaire() {
+      const deck = createDeck();
+      foundations = [[], [], [], []];
+      tableau = [[], [], [], [], [], [], []];
+      waste = [];
+      passesLeft = 3;
+      historyState = [];
+
+      for (let i = 0; i < 7; i++) {
+        for (let j = 0; j <= i; j++) {
+          const card = deck.pop();
+          if (j === i) card.faceUp = true;
+          tableau[i].push(card);
+        }
+      }
+      stock = deck;
+      renderSolitaire();
+    }
+
+    function renderSolitaire() {
+      document.getElementById('stock').innerHTML = stock.length > 0 ? `<div class="card back" style="width:100%; height:100%;"></div>` : '🔄';
+
+      const wasteSlot = document.getElementById('waste-slot');
+      wasteSlot.innerHTML = '';
+      if (waste.length > 0) {
+        const topWaste = waste[waste.length - 1];
+        const el = document.createElement('div');
+        el.innerHTML = renderCardHTML(topWaste);
+        const cardNode = el.firstElementChild;
+        attachDragAndClick(cardNode, { type: 'waste' });
+        wasteSlot.appendChild(cardNode);
+      }
+
+      for (let i = 0; i < 4; i++) {
+        const fSlot = document.getElementById(`f-${i}`);
+        const fStack = foundations[i];
+        if (fStack.length > 0) {
+          fSlot.innerHTML = renderCardHTML(fStack[fStack.length - 1]);
+        } else {
+          fSlot.innerHTML = SUITS[i];
+        }
+      }
+
+      for (let c = 0; c < 7; c++) {
+        const colEl = document.getElementById(`col-${c}`);
+        colEl.innerHTML = '';
+        const cards = tableau[c];
+        cards.forEach((card, r) => {
+          const el = document.createElement('div');
+          el.innerHTML = renderCardHTML(card);
+          const cardNode = el.firstElementChild;
+          cardNode.style.top = `${r * 15}px`;
+          if (card.faceUp) {
+            attachDragAndClick(cardNode, { type: 'tableau', col: c, idx: r });
+          }
+          colEl.appendChild(cardNode);
+        });
+      }
+      checkWin();
+    }
+
+    function attachDragAndClick(el, info) {
+      let startX = 0, startY = 0;
+      let isDragging = false;
+      let startTime = 0;
+
+      const onStart = (e) => {
+        e.stopPropagation();
+        const touch = e.touches ? e.touches[0] : e;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        startTime = Date.now();
+        isDragging = false;
+
+        dragState = {
+          info,
+          startX,
+          startY,
+          cards: info.type === 'waste' ? [waste[waste.length - 1]] : tableau[info.col].slice(info.idx),
+          sourceEl: el
+        };
+
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onEnd);
+      };
+
+      const onMove = (e) => {
+        if (!dragState) return;
+        const touch = e.touches ? e.touches[0] : e;
+        const dx = touch.clientX - startX;
+        const dy = touch.clientY - startY;
+
+        if (!isDragging && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+          isDragging = true;
+          startFloatingDrag(touch.clientX, touch.clientY);
+        }
+
+        if (isDragging) {
+          if (e.cancelable) e.preventDefault();
+          updateFloatingPosition(touch.clientX, touch.clientY);
+        }
+      };
+
+      const onEnd = (e) => {
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onEnd);
+        window.removeEventListener('touchmove', onMove);
+        window.removeEventListener('touchend', onEnd);
+
+        if (!dragState) return;
+
+        const dt = Date.now() - startTime;
+        if (!isDragging && dt < 300) {
+          if (info.type === 'waste') autoMoveFromWaste();
+          else autoMoveFromTableau(info.col, info.idx);
+        } else if (isDragging) {
+          const touch = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : e;
+          handleDrop(touch.clientX, touch.clientY);
+        }
+
+        endFloatingDrag();
+        dragState = null;
+      };
+
+      el.addEventListener('mousedown', onStart);
+      el.addEventListener('touchstart', onStart, { passive: true });
+    }
+
+    function startFloatingDrag(x, y) {
+      const container = document.getElementById('drag-container');
+      container.innerHTML = '';
+      container.style.display = 'block';
+
+      dragState.cards.forEach((card, idx) => {
+        const div = document.createElement('div');
+        div.innerHTML = renderCardHTML(card);
+        const node = div.firstElementChild;
+        node.style.top = `${idx * 15}px`;
+        container.appendChild(node);
+      });
+
+      updateFloatingPosition(x, y);
+      dragState.sourceEl.style.opacity = '0.3';
+    }
+
+    function updateFloatingPosition(x, y) {
+      const container = document.getElementById('drag-container');
+      container.style.left = `${x - 22}px`;
+      container.style.top = `${y - 31}px`;
+    }
+
+    function endFloatingDrag() {
+      const container = document.getElementById('drag-container');
+      container.style.display = 'none';
+      container.innerHTML = '';
+      if (dragState && dragState.sourceEl) dragState.sourceEl.style.opacity = '1';
+    }
+
+    function handleDrop(x, y) {
+      const elBelow = document.elementFromPoint(x, y);
+      if (!elBelow) { renderSolitaire(); return; }
+
+      const leadCard = dragState.cards[0];
+
+      const fSlot = elBelow.closest('[data-f]');
+      if (fSlot && dragState.cards.length === 1) {
+        const fIdx = parseInt(fSlot.getAttribute('data-f'));
+        const fStack = foundations[fIdx];
+        if ((fStack.length === 0 && leadCard.val === 1 && leadCard.suit === SUITS[fIdx]) ||
+            (fStack.length > 0 && fStack[fStack.length - 1].suit === leadCard.suit && fStack[fStack.length - 1].val + 1 === leadCard.val)) {
+          saveHistory();
+          fStack.push(leadCard);
+          if (dragState.info.type === 'waste') waste.pop();
+          else {
+            tableau[dragState.info.col].pop();
+            const col = tableau[dragState.info.col];
+            if (col.length > 0) col[col.length - 1].faceUp = true;
+          }
+          renderSolitaire();
+          return;
+        }
+      }
+
+      const colEl = elBelow.closest('.tableau-col');
+      if (colEl) {
+        const targetColIdx = parseInt(colEl.getAttribute('data-col'));
+        const targetCol = tableau[targetColIdx];
+
+        let valid = false;
+        if (targetCol.length === 0 && leadCard.val === 13) valid = true;
+        else if (targetCol.length > 0) {
+          const topCard = targetCol[targetCol.length - 1];
+          if (topCard.faceUp && topCard.color !== leadCard.color && topCard.val === leadCard.val + 1) valid = true;
+        }
+
+        if (valid) {
+          saveHistory();
+          targetCol.push(...dragState.cards);
+          if (dragState.info.type === 'waste') {
+            waste.pop();
+          } else {
+            tableau[dragState.info.col] = tableau[dragState.info.col].slice(0, dragState.info.idx);
+            const col = tableau[dragState.info.col];
+            if (col.length > 0) col[col.length - 1].faceUp = true;
+          }
+          renderSolitaire();
+          return;
+        }
+      }
+
+      renderSolitaire();
+    }
+
+    function drawStock() {
+      saveHistory();
+      const drawCount = difficulty === 'easy' ? 1 : 3;
+      if (stock.length === 0) {
+        if (difficulty === 'hard' && passesLeft <= 0) {
+          alert('山札の引き直し制限（3回）を超えたぜ！');
+          return;
+        }
+        stock = waste.reverse().map(c => { c.faceUp = false; return c; });
+        waste = [];
+        if (difficulty === 'hard') passesLeft--;
+      } else {
+        for (let i = 0; i < drawCount; i++) {
+          if (stock.length > 0) {
+            const card = stock.pop();
+            card.faceUp = true;
+            waste.push(card);
+          }
+        }
+      }
+      renderSolitaire();
+    }
+
+    function autoMoveFromWaste() {
+      if (waste.length === 0) return;
+      const card = waste[waste.length - 1];
+
+      for (let i = 0; i < 4; i++) {
+        const fStack = foundations[i];
+        if ((fStack.length === 0 && card.val === 1 && card.suit === SUITS[i]) ||
+            (fStack.length > 0 && fStack[fStack.length - 1].suit === card.suit && fStack[fStack.length - 1].val + 1 === card.val)) {
+          saveHistory();
+          fStack.push(waste.pop());
+          renderSolitaire();
+          return;
+        }
+      }
+
+      for (let c = 0; c < 7; c++) {
+        const col = tableau[c];
+        if (col.length === 0 && card.val === 13) {
+          saveHistory();
+          col.push(waste.pop());
+          renderSolitaire();
+          return;
+        } else if (col.length > 0) {
+          const topCol = col[col.length - 1];
+          if (topCol.faceUp && topCol.color !== card.color && topCol.val === card.val + 1) {
+            saveHistory();
+            col.push(waste.pop());
+            renderSolitaire();
+            return;
+          }
+        }
+      }
+    }
+
+    function autoMoveFromTableau(fromCol, cardIdx) {
+      const col = tableau[fromCol];
+      const card = col[cardIdx];
+
+      if (cardIdx === col.length - 1) {
+        for (let i = 0; i < 4; i++) {
+          const fStack = foundations[i];
+          if ((fStack.length === 0 && card.val === 1 && card.suit === SUITS[i]) ||
+              (fStack.length > 0 && fStack[fStack.length - 1].suit === card.suit && fStack[fStack.length - 1].val + 1 === card.val)) {
+            saveHistory();
+            fStack.push(col.pop());
+            if (col.length > 0) col[col.length - 1].faceUp = true;
+            renderSolitaire();
+            return;
+          }
+        }
+      }
+
+      const movingCards = col.slice(cardIdx);
+      for (let c = 0; c < 7; c++) {
+        if (c === fromCol) continue;
+        const targetCol = tableau[c];
+        if (targetCol.length === 0 && card.val === 13) {
+          saveHistory();
+          targetCol.push(...movingCards);
+          tableau[fromCol] = col.slice(0, cardIdx);
+          if (tableau[fromCol].length > 0) tableau[fromCol][tableau[fromCol].length - 1].faceUp = true;
+          renderSolitaire();
+          return;
+        } else if (targetCol.length > 0) {
+          const topTarget = targetCol[targetCol.length - 1];
+          if (topTarget.faceUp && topTarget.color !== card.color && topTarget.val === card.val + 1) {
+            saveHistory();
+            targetCol.push(...movingCards);
+            tableau[fromCol] = col.slice(0, cardIdx);
+            if (tableau[fromCol].length > 0) tableau[fromCol][tableau[fromCol].length - 1].faceUp = true;
+            renderSolitaire();
+            return;
+          }
+        }
+      }
+    }
+
+    function saveHistory() {
+      historyState.push(JSON.stringify({ stock, waste, foundations, tableau }));
+      if (historyState.length > 20) historyState.shift();
+    }
+
+    function undoMove() {
+      if (historyState.length === 0) return;
+      const state = JSON.parse(historyState.pop());
+      stock = state.stock;
+      waste = state.waste;
+      foundations = state.foundations;
+      tableau = state.tableau;
+      renderSolitaire();
+    }
+
+    function checkWin() {
+      const totalF = foundations.reduce((acc, cur) => acc + cur.length, 0);
+      if (totalF === 52) {
+        alert('🎉 ソリティア完全クリア！ 500コイン獲得！');
+        coins += 500;
+        updateCoinUI();
+      }
+    }
+
+    function openDiffModal() { document.getElementById('diff-modal').style.display = 'flex'; }
+    function closeDiffModal() { document.getElementById('diff-modal').style.display = 'none'; }
+    function setDifficulty(d) {
+      difficulty = d;
+      localStorage.setItem('my_sol_diff', d);
+      document.getElementById('diff-label').textContent = `難易度: ${d.toUpperCase()}`;
+      closeDiffModal();
+      initSolitaire();
+    }
+
+    // ==========================================
+    // 🎰 カジノ・ブラックジャック（修正版）
+    // ==========================================
+    function setBJBet(amount) {
+      if (bjPlaying) return;
+      bjBet = amount;
+      document.getElementById('bj-bet-display').textContent = amount;
+      ['100', '500', '1000'].forEach(b => {
+        document.getElementById(`bet-${b}`).classList.toggle('active', parseInt(b) === amount);
+      });
+    }
+
+    function startBJGame() {
+      if (coins < bjBet) {
+        alert('コインが足りないぜ！ソリティアかスロットで増やしてこよう！');
+        return;
+      }
+      coins -= bjBet;
+      updateCoinUI();
+
+      bjDeck = createDeck().map(c => { c.faceUp = true; return c; });
+      dealerHand = [bjDeck.pop(), bjDeck.pop()];
+      dealerHand[1].faceUp = false;
+      playerHand = [bjDeck.pop(), bjDeck.pop()];
+
+      bjPlaying = true;
+      document.getElementById('btn-start-bj').style.display = 'none';
+      document.getElementById('play-btns').style.display = 'grid';
+      document.getElementById('bet-selector-area').style.opacity = '0.4';
+      document.getElementById('bj-msg').textContent = 'HIT（もう1枚）か STAND（勝負）を選ぼう！';
+
+      renderBJ();
+
+      // ナチュラルブラックジャック（初期21）チェック
+      if (calcScore(playerHand) === 21) {
+        setTimeout(() => bjStand(), 400);
+      }
+    }
+
+    function calcScore(hand) {
+      let score = 0;
+      let aces = 0;
+      hand.forEach(c => {
+        if (!c.faceUp) return;
+        if (c.val === 1) { aces++; score += 11; }
+        else if (c.val >= 10) score += 10;
+        else score += c.val;
+      });
+      while (score > 21 && aces > 0) { score -= 10; aces--; }
+      return score;
+    }
+
+    function renderBJ() {
+      const dCards = document.getElementById('dealer-cards');
+      dCards.innerHTML = '';
+      dealerHand.forEach(c => dCards.innerHTML += renderCardHTML(c));
+
+      const pCards = document.getElementById('player-cards');
+      pCards.innerHTML = '';
+      playerHand.forEach(c => pCards.innerHTML += renderCardHTML(c));
+
+      const pScore = calcScore(playerHand);
+      document.getElementById('player-score').textContent = `スコア: ${pScore}`;
+      document.getElementById('dealer-score').textContent = `スコア: ${dealerHand[1].faceUp ? calcScore(dealerHand) : '?'}`;
+    }
+
+    function bjHit() {
+      if (!bjPlaying) return;
+      playerHand.push(bjDeck.pop());
+      renderBJ();
+
+      const pScore = calcScore(playerHand);
+      if (pScore > 21) {
+        // バースト確定
+        endBJ('bust');
+      } else if (pScore === 21) {
+        // 21到達で自動スタンド
+        setTimeout(() => bjStand(), 300);
+      }
+    }
+
+    function bjStand() {
+      if (!bjPlaying) return;
+      dealerHand[1].faceUp = true;
+      
+      while (calcScore(dealerHand) < 17) {
+        dealerHand.push(bjDeck.pop());
+      }
+      renderBJ();
+
+      const pScore = calcScore(playerHand);
+      const dScore = calcScore(dealerHand);
+
+      if (dScore > 21) {
+        endBJ('dealer_bust');
+      } else if (pScore > dScore) {
+        endBJ('win');
+      } else if (pScore === dScore) {
+        endBJ('push');
+      } else {
+        endBJ('lose');
+      }
+    }
+
+    function endBJ(result) {
+      bjPlaying = false;
+      dealerHand[1].faceUp = true;
+      renderBJ();
+
+      document.getElementById('btn-start-bj').style.display = 'block';
+      document.getElementById('play-btns').style.display = 'none';
+      document.getElementById('bet-selector-area').style.opacity = '1';
+
+      const msgEl = document.getElementById('bj-msg');
+      if (result === 'win' || result === 'dealer_bust') {
+        const winAmount = bjBet * 2;
+        coins += winAmount;
+        msgEl.innerHTML = `🎉 勝利！ +${winAmount.toLocaleString()} コイン獲得！`;
+      } else if (result === 'push') {
+        coins += bjBet;
+        msgEl.textContent = '🤝 引き分け！BETコインが返却されたぞ。';
+      } else if (result === 'bust') {
+        msgEl.innerHTML = `<span style="color:#ef4444;">💥 バースト（21オーバー）！負けだ……！</span>`;
+      } else {
+        msgEl.innerHTML = `<span style="color:#ef4444;">💀 ディーラーの勝ち……！次は勝とうぜ！</span>`;
+      }
+
+      updateCoinUI();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCoinUI();
+      initSolitaire();
+      document.getElementById('diff-label').textContent = `難易度: ${difficulty.toUpperCase()}`;
+    });
+  </script>
+</body>
+</html>
