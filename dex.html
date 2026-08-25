@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ポケモン図鑑 | コレクションスタジオ</title>
 
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -274,7 +278,7 @@
     .badge-N   { background: #64748b; color: #fff; }
 
     /* ========================================================= */
-    /* 🔍 ポップアップ拡大＆詳細モーダル（育成＆お気に入り対応） */
+    /* 🔍 ポップアップ拡大＆詳細モーダル */
     /* ========================================================= */
     .detail-overlay {
       position: absolute;
@@ -358,7 +362,6 @@
     }
     .stat-val { color: #38bdf8; font-weight: bold; }
 
-    /* モーダル内アクションボタン群 */
     .modal-actions {
       display: flex;
       flex-direction: column;
@@ -521,10 +524,11 @@
 
   </div>
 
+  <!-- 外部データ ＆ クラウド同期モジュール -->
   <script src="pokemonData.js"></script>
+  <script src="cloudSync.js"></script>
 
   <script>
-    // たねポケモンID取得関数
     function getBasePokemonId(id) {
       if (id.startsWith('p0001') || id.startsWith('p0002') || id.startsWith('p0003')) return 'p0001';
       if (id.startsWith('p0004') || id.startsWith('p0005') || id.startsWith('p0006')) return 'p0004';
@@ -590,7 +594,6 @@
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
     let favoriteId = localStorage.getItem('my_favorite_pokemon') || 'p0004';
 
-    // ★ 初期ソート順を「昇順（小さい順）」に設定
     let currentSortOrder = 'asc'; 
     let selectedPokemon = null;
 
@@ -612,7 +615,16 @@
       return { lv, hp, atk, def, count };
     }
 
-    // 手持ちスロット描画（タップで該当ポケモンの詳細へ）
+    // クラウド側でデータ更新時の自動同期
+    window.onCloudSyncUpdated = function() {
+      inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{}');
+      party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+      levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+      favoriteId = localStorage.getItem('my_favorite_pokemon') || 'p0004';
+      filterAndRender();
+    };
+
     function renderSlots() {
       const container = document.getElementById('party-slots');
       container.innerHTML = '';
@@ -632,7 +644,7 @@
         }
         container.appendChild(slot);
       }
-      document.getElementById('top-coins').textContent = coins;
+      document.getElementById('top-coins').textContent = coins.toLocaleString();
     }
 
     function toggleSortOrder() {
@@ -650,14 +662,12 @@
       const sortType = document.getElementById('sort-type').value;
       const pool = (typeof POKEMON_DATA !== 'undefined') ? [...POKEMON_DATA] : [];
 
-      // 1. 検索フィルタ
       let list = pool.filter(card => {
         if (!query) return true;
         const sub = card.subName || '';
         return card.name.toLowerCase().includes(query) || sub.toLowerCase().includes(query) || card.id.toLowerCase().includes(query);
       });
 
-      // 2. ソート処理（手持ち優先を撤廃し、純粋な昇順/降順に整列）
       list.sort((a, b) => {
         const statA = getPokeStats(a);
         const statB = getPokeStats(b);
@@ -674,7 +684,6 @@
         } else if (sortType === 'hp') {
           valA = statA.hp; valB = statB.hp;
         } else {
-          // 図鑑ID順（例: p0001, p0002...）
           valA = a.id; valB = b.id;
           return currentSortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
         }
@@ -682,7 +691,6 @@
         return currentSortOrder === 'asc' ? (valA - valB) : (valB - valA);
       });
 
-      // 3. レンダリング
       list.forEach(card => {
         const count = inventory[card.id] || 0;
         const isOwned = count > 0;
@@ -709,7 +717,6 @@
       });
     }
 
-    // モーダル
     function openModal(card) {
       selectedPokemon = card;
       const stats = getPokeStats(card);
@@ -733,11 +740,9 @@
         ? card.desc 
         : `【${card.name}】${card.subName ? `(${card.subName})` : ''}\n図鑑ID: ${card.id.toUpperCase()}\nタイプ: ${card.type || 'ノーマル'}\nサイズ: ${card.size || 'S'}\nレアリティ: ${card.rarity}`;
 
-      // お気に入りボタンUI
       const favBtn = document.getElementById('btn-fav-toggle');
       favBtn.className = `btn-fav-toggle ${isFav ? 'active' : ''}`;
 
-      // 編成可否判定
       updatePartyBtnUI(card, inParty);
 
       switchTab('stat');
@@ -751,7 +756,6 @@
       document.getElementById('tab-desc-content').style.display = (type === 'desc') ? 'block' : 'none';
     }
 
-    // 編成可否判定（たねポケモンを所持しているか）
     function updatePartyBtnUI(card, inParty) {
       const btn = document.getElementById('btn-party-toggle');
       const baseId = getBasePokemonId(card.id);
@@ -774,7 +778,6 @@
       }
     }
 
-    // 手持ち編成切り替え
     function togglePartyFromModal() {
       if (!selectedPokemon) return;
       const id = selectedPokemon.id;
@@ -791,11 +794,13 @@
       }
 
       localStorage.setItem('my_battle_party', JSON.stringify(party));
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       updatePartyBtnUI(selectedPokemon, !inParty);
       filterAndRender();
     }
 
-    // お気に入り登録切り替え
     function toggleFavoriteFromModal() {
       if (!selectedPokemon) return;
       const id = selectedPokemon.id;
@@ -806,11 +811,13 @@
         favoriteId = id;
         localStorage.setItem('my_favorite_pokemon', id);
       }
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       document.getElementById('btn-fav-toggle').classList.toggle('active', favoriteId === id);
       filterAndRender();
     }
 
-    // 図鑑内での直接レベルアップ（100G消費）
     function levelUpFromModal() {
       if (!selectedPokemon) return;
       if (coins < 100) {
@@ -826,13 +833,16 @@
       levels[baseId] = curLv + 1;
       localStorage.setItem('my_partner_levels', JSON.stringify(levels));
 
-      // UI即時更新
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
+
       const stats = getPokeStats(selectedPokemon);
       document.getElementById('modal-lv').textContent = `Lv.${stats.lv}`;
       document.getElementById('modal-hp').textContent = stats.hp;
       document.getElementById('modal-atk').textContent = stats.atk;
       document.getElementById('modal-def').textContent = stats.def;
-      document.getElementById('top-coins').textContent = coins;
+      document.getElementById('top-coins').textContent = coins.toLocaleString();
 
       filterAndRender();
     }
