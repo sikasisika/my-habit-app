@@ -50,7 +50,7 @@
       position: relative;
     }
 
-    /* 最上部ヘッダー（ポータル＆1F帰還ボタン） */
+    /* 最上部ヘッダー */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -200,7 +200,6 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ポケモンスプライト基本設定 */
     .poke-sprite {
       object-fit: contain !important;
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.65));
@@ -252,6 +251,70 @@
       0% { background: rgba(239, 68, 68, 0.95); opacity: 1; }
       100% { background: transparent; opacity: 0; }
     }
+
+    /* 📊 上画面：半透明コンティニュー・リザルトオーバーレイ */
+    .top-result-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      gap: 10px;
+      z-index: 60;
+    }
+    .result-card {
+      width: 90%;
+      background: rgba(30, 41, 59, 0.9);
+      border: 2px solid #fbbf24;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+      padding-bottom: 4px;
+    }
+
+    /* 階層選択オーバーレイ */
+    .floor-select-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 8px;
+      z-index: 70;
+    }
+    .floor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .floor-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border-radius: 6px;
+      padding: 8px 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .floor-btn:active { transform: scale(0.95); }
+    .floor-btn.locked { opacity: 0.3; cursor: not-allowed; border-color: #475569; }
 
     /* アクションアニメ */
     .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
@@ -487,7 +550,7 @@
       z-index: 30;
     }
     .slot-drum-box {
-      width: 160px;
+      width: 170px;
       height: 48px;
       background: linear-gradient(180deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
       border: 2px solid #fbbf24;
@@ -542,8 +605,8 @@
     <!-- 最上部バー -->
     <div class="top-bar">
       <a href="index.html" class="top-btn" onclick="window.location.href='index.html'; return false;">◀ ポータル</a>
-      <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
-      <button class="top-btn" style="background:#ef4444; border-color:#f87171;" onclick="returnToFirstFloor()">🚩 1Fへ帰還</button>
+      <span style="font-size: 11px; color:#cbd5e1; cursor:pointer;" onclick="openFloorSelectModal()">階層: <b id="stage-text" style="color:#fbbf24;">1F</b> ▾</span>
+      <button class="top-btn" style="background:#ef4444; border-color:#f87171;" onclick="openResultModal(false)">🚩 帰還確認</button>
     </div>
 
     <div class="ds-body">
@@ -591,6 +654,42 @@
             <span>ATK:<b id="player-atk-val">25</b> DEF:<b id="player-def-val">18</b></span>
             <span id="player-hp-val">120 / 120</span>
           </div>
+        </div>
+
+        <!-- 📊 上画面：半透明コンティニュー・リザルト画面 -->
+        <div class="top-result-overlay" id="top-result-overlay" style="display: none;">
+          <b style="font-size:14px; color:#fbbf24;" id="result-title">🚩 帰還リザルト確認</b>
+          <div class="result-card">
+            <div class="result-row">
+              <span style="color:#94a3b8;">現在の到達階層</span>
+              <b id="res-stage" style="color:#38bdf8;">1F</b>
+            </div>
+            <div class="result-row">
+              <span style="color:#94a3b8;">所持コイン</span>
+              <b id="res-coins" style="color:#facc15;">0 G</b>
+            </div>
+            <div class="result-row">
+              <span style="color:#94a3b8;">進化の種ストック</span>
+              <b id="res-seeds" style="color:#4ade80;">0 個</b>
+            </div>
+            <div class="result-row" style="border-bottom:none;">
+              <span style="color:#94a3b8;">超進化の種</span>
+              <b id="res-super" style="color:#ec4899;">なし</b>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; width:90%;">
+            <button class="top-btn" style="flex:1; background:#475569;" onclick="closeResultModal()">つづける</button>
+            <button class="top-btn" style="flex:1; background:#ef4444;" onclick="executeReturnToFloor(1)">1Fへ戻る</button>
+          </div>
+        </div>
+
+        <!-- 階層セレクト画面 -->
+        <div class="floor-select-overlay" id="floor-select-overlay" style="display: none;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; color:#fbbf24; font-weight:bold;">🚀 出発フロア選択（10階層区切り）</span>
+            <button class="top-btn" onclick="closeFloorSelectModal()">とじる</button>
+          </div>
+          <div class="floor-grid" id="floor-grid-container"></div>
         </div>
 
       </div>
@@ -642,7 +741,7 @@
 
         <!-- 🎰 スロットオーバーレイ -->
         <div class="slot-view-overlay" id="slot-modal" style="display: none;">
-          <span style="font-size:11px; color:#fbbf24;">🎰 スロット援護ルーレット！</span>
+          <span style="font-size:11px; color:#fbbf24;" id="slot-modal-title">🎰 スロット援護ルーレット！</span>
           <div class="slot-drum-box" id="slot-drum-text">🌱 進化の種</div>
           <button class="btn-slot-push" id="btn-slot-push" onclick="stopSlot()">プッシュ！</button>
         </div>
@@ -677,7 +776,6 @@
       'ドラゴン': { weak: ['こおり', 'ドラゴン', 'フェアリー'], resist: ['ほのお', 'みず', 'くさ', 'でんき'] }
     };
 
-    // 系統の「たねポケモンID」を取得
     function getBasePokemonId(id) {
       if (id.startsWith('p0001') || id.startsWith('p0002') || id.startsWith('p0003')) return 'p0001';
       if (id.startsWith('p0004') || id.startsWith('p0005') || id.startsWith('p0006')) return 'p0004';
@@ -737,10 +835,8 @@
       return id.split('-')[0];
     }
 
-    // 進化チェーン定義
     function getEvoInfo(id) {
       const evoMap = {
-        // 3段階進化
         'p0001': { next: 'p0002', cost: 1 },
         'p0002': { next: 'p0003', cost: 3 },
         'p0004': { next: 'p0005', cost: 1 },
@@ -777,8 +873,6 @@
         'p0148': { next: 'p0149', cost: 3 },
         'p0443': { next: 'p0444', cost: 1 },
         'p0444': { next: 'p0445', cost: 3 },
-
-        // 2段階進化
         'p0019': { next: 'p0020', cost: 3 },
         'p0019-a': { next: 'p0020-a', cost: 3 },
         'p0021': { next: 'p0022', cost: 3 },
@@ -831,7 +925,6 @@
       return evoMap[id] || null;
     }
 
-    // 覚醒（メガ・メガZ・キョダイ）候補取得
     function getAwakenCandidates(id) {
       const base = id.split('-')[0];
       const candidates = [];
@@ -851,15 +944,18 @@
     let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
     let fainted = JSON.parse(localStorage.getItem('my_fainted_pokemon') || '{}');
     let stage = parseInt(localStorage.getItem('my_tower_stage') || '1');
+    let maxClearedStage = parseInt(localStorage.getItem('my_tower_max_stage') || '1');
 
     let seedStock = parseInt(localStorage.getItem('my_battle_seeds') || '0');
     let superSeed = localStorage.getItem('my_super_seed') === 'true';
 
     let currentPartyIdx = 0;
-    let currentInBattleId = null;
+    // ★ 手持ち6匹の「現在の進化形態ID」を個別管理（交代しても進化状態を完全維持）
+    let partyForms = [];
     let turnCount = 0;
     let isAuto = false;
     let turnInProgress = false;
+    let isBossRoulette = false;
     let battleLogs = [];
 
     let playerMaxHp = 100, playerHp = 100, playerAtk = 20, playerDef = 15;
@@ -869,7 +965,6 @@
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
-    // サイズ指定（キョダイは210pxの超巨大）
     function getSizePx(size) {
       if (size === 'G') return 210;
       if (size === 'L') return 145;
@@ -885,28 +980,28 @@
       return { id, name: 'ポケモン', subName: '', type: 'ノーマル', size: 'S', img: 'images/gacha/' + id + '.png' };
     }
 
-    // パーティのたねポケモンバリデーション
     function validateParty() {
       const validParty = [];
       party.forEach(id => {
         const baseId = getBasePokemonId(id);
         if (inventory[baseId] > 0) {
-          validParty.push(baseId); // たね形態で出撃
+          validParty.push(baseId);
         }
       });
-      if (validParty.length === 0) {
-        validParty.push('p0004'); // フォールバック
-      }
+      if (validParty.length === 0) validParty.push('p0004');
       party = validParty;
       localStorage.setItem('my_battle_party', JSON.stringify(party));
 
+      // 初回なら partyForms を初期化
+      if (partyForms.length !== party.length) {
+        partyForms = [...party];
+      }
+
       currentPartyIdx = party.findIndex(id => !fainted[id]);
       if (currentPartyIdx === -1) {
-        alert('手持ちのポケモンが全員ひんしだ！\n育成ジムで回復しよう！');
-        window.location.href = 'train.html';
+        openResultModal(true); // 全滅時リザルト表示
         return false;
       }
-      currentInBattleId = party[currentPartyIdx];
       return true;
     }
 
@@ -918,14 +1013,15 @@
     }
 
     function loadPlayerStats() {
-      const poke = getPoke(currentInBattleId);
-      const baseId = getBasePokemonId(currentInBattleId);
+      const currentFormId = partyForms[currentPartyIdx] || party[currentPartyIdx];
+      const poke = getPoke(currentFormId);
+      const baseId = getBasePokemonId(currentFormId);
       const lv = levels[baseId] || 1;
 
       let statMulti = 1.0;
-      if (currentInBattleId.includes('-z')) statMulti = 2.8;
-      else if (currentInBattleId.includes('-k')) statMulti = 2.5;
-      else if (currentInBattleId.includes('-m') || currentInBattleId.includes('-x') || currentInBattleId.includes('-y')) statMulti = 2.2;
+      if (currentFormId.includes('-z')) statMulti = 2.8;
+      else if (currentFormId.includes('-k')) statMulti = 2.5;
+      else if (currentFormId.includes('-m') || currentFormId.includes('-x') || currentFormId.includes('-y')) statMulti = 2.2;
       else if (poke.size === 'L') statMulti = 1.7;
       else if (poke.size === 'M') statMulti = 1.35;
 
@@ -969,7 +1065,6 @@
       spawnNewEnemy();
     }
 
-    // 敵の出現（メガ・キョダイは10Fごとのボス階層のみ）
     function spawnNewEnemy() {
       const pool = (typeof POKEMON_DATA !== 'undefined') ? POKEMON_DATA : [];
       isEnemyBoss = (stage % 10 === 0);
@@ -1019,7 +1114,6 @@
       eImg.style.width = px + 'px';
       eImg.style.height = px + 'px';
 
-      // 敵のメガ・キョダイ常時オーラ
       eImg.classList.remove('aura-mega', 'aura-kyodai');
       if (enemyPokemon.id.includes('-k')) eImg.classList.add('aura-kyodai');
       else if (enemyPokemon.id.includes('-m') || enemyPokemon.id.includes('-x') || enemyPokemon.id.includes('-y') || enemyPokemon.id.includes('-z')) eImg.classList.add('aura-mega');
@@ -1048,11 +1142,11 @@
       ['btn-atk', 'btn-def'].forEach(id => document.getElementById(id).disabled = turnInProgress);
     }
 
-    // 進化・覚醒の判定
     let nextEvoTarget = null;
     let nextAwakenTarget = null;
 
     function checkEvoAwakenStatus() {
+      const currentFormId = partyForms[currentPartyIdx] || party[currentPartyIdx];
       const btn = document.getElementById('btn-evo-awaken');
       const btnTxt = document.getElementById('evo-btn-text');
 
@@ -1062,7 +1156,7 @@
       btn.disabled = true;
 
       // 1. 通常進化チェック
-      const evoInfo = getEvoInfo(currentInBattleId);
+      const evoInfo = getEvoInfo(currentFormId);
       if (evoInfo && inventory[evoInfo.next] > 0) {
         if (seedStock >= evoInfo.cost) {
           nextEvoTarget = evoInfo;
@@ -1073,9 +1167,9 @@
         }
       }
 
-      // 2. 覚醒チェック（メガ・メガZ・キョダイ）
-      if (superSeed && !currentInBattleId.includes('-m') && !currentInBattleId.includes('-k') && !currentInBattleId.includes('-z')) {
-        const candidates = getAwakenCandidates(currentInBattleId);
+      // 2. 覚醒チェック
+      if (superSeed && !currentFormId.includes('-m') && !currentFormId.includes('-k') && !currentFormId.includes('-z')) {
+        const candidates = getAwakenCandidates(currentFormId);
         const available = candidates.filter(aid => inventory[aid] > 0);
         if (available.length > 0) {
           nextAwakenTarget = available[0];
@@ -1086,10 +1180,9 @@
         }
       }
 
-      btnTxt.textContent = (currentInBattleId.includes('-m') || currentInBattleId.includes('-k') || currentInBattleId.includes('-z')) ? '覚醒中' : (evoInfo ? 'しんか' : '最大形態');
+      btnTxt.textContent = (currentFormId.includes('-m') || currentFormId.includes('-k') || currentFormId.includes('-z')) ? '覚醒中' : (evoInfo ? 'しんか' : '最大形態');
     }
 
-    // 進化・覚醒の実行
     function triggerEvoOrAwaken() {
       if (turnInProgress) return;
 
@@ -1098,7 +1191,7 @@
         seedStock -= nextEvoTarget.cost;
         localStorage.setItem('my_battle_seeds', seedStock);
 
-        currentInBattleId = nextEvoTarget.next;
+        partyForms[currentPartyIdx] = nextEvoTarget.next; // 進化状態を保存
         const isSecond = (nextEvoTarget.cost === 3);
         playFlashEffect(isSecond ? 'gold' : 'silver');
 
@@ -1110,7 +1203,7 @@
         superSeed = false;
         localStorage.setItem('my_super_seed', 'false');
 
-        currentInBattleId = nextAwakenTarget;
+        partyForms[currentPartyIdx] = nextAwakenTarget;
         const isKyodai = targetPoke.id.includes('-k');
         playFlashEffect(isKyodai ? 'red' : 'rainbow');
 
@@ -1217,21 +1310,29 @@
         updateUI();
 
         if (playerHp <= 0) {
-          const baseId = getBasePokemonId(currentInBattleId);
+          const baseId = getBasePokemonId(party[currentPartyIdx]);
           fainted[baseId] = true;
           localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
           addLog(`💀 相棒は たおれてしまった！`);
 
           setTimeout(() => {
             turnInProgress = false;
-            initBattle();
+            // 次の元気な仲間へ
+            const nextAlive = party.findIndex(id => !fainted[id]);
+            if (nextAlive === -1) {
+              openResultModal(true); // 全滅
+            } else {
+              currentPartyIdx = nextAlive;
+              loadPlayerStats();
+              updateUI();
+            }
           }, 1200);
           return;
         }
 
         turnCount++;
         if (turnCount % 3 === 0) {
-          triggerSlot();
+          triggerSlot(false);
         } else {
           turnInProgress = false;
           updateUI();
@@ -1240,25 +1341,30 @@
       }, 200);
     }
 
-    // スロット
+    // スロット（通常＆ボス豪華版）
     let slotTimer;
-    const SLOT_REWARDS = ['🌱 進化の種', '💖 HP回復(小)', '💖 HP回復(中)', '💖 HP回復(大)', '⚔️ 攻撃力UP', '✨ 超進化の種'];
+    const SLOT_REWARDS_NORMAL = ['🌱 進化の種', '💖 HP回復(小)', '💖 HP回復(中)', '💖 HP回復(大)', '⚔️ 攻撃力UP', '✨ 超進化の種'];
+    const SLOT_REWARDS_BOSS = ['🌱 進化の種×2', '✨ 超進化の種', '💰 1000 G', '💖 全員HP全快', '⚔️ 永久ATK+20'];
 
-    function triggerSlot() {
+    function triggerSlot(isBoss = false) {
+      isBossRoulette = isBoss;
+      const rewards = isBoss ? SLOT_REWARDS_BOSS : SLOT_REWARDS_NORMAL;
+      document.getElementById('slot-modal-title').textContent = isBoss ? '👑 BOSS撃破！ 豪華ボーナスルーレット！' : '🎰 スロット援護ルーレット！';
+
       if (isAuto) {
-        const r = SLOT_REWARDS[Math.floor(Math.random() * SLOT_REWARDS.length)];
+        const r = rewards[Math.floor(Math.random() * rewards.length)];
         applySlotReward(r);
         addLog(`🎰 スロット自動発動: 【${r}】を獲得！`);
         turnInProgress = false;
         updateUI();
-        setTimeout(() => playerAction('atk'), 600);
+        if (!isBoss) setTimeout(() => playerAction('atk'), 600);
       } else {
         document.getElementById('slot-modal').style.display = 'flex';
         let idx = 0;
         slotTimer = setInterval(() => {
-          idx = (idx + 1) % SLOT_REWARDS.length;
-          document.getElementById('slot-drum-text').textContent = SLOT_REWARDS[idx];
-        }, 80);
+          idx = (idx + 1) % rewards.length;
+          document.getElementById('slot-drum-text').textContent = rewards[idx];
+        }, 70);
       }
     }
 
@@ -1280,57 +1386,127 @@
     function applySlotReward(r) {
       if (r === '🌱 進化の種') {
         if (seedStock < 3) seedStock++;
-        localStorage.setItem('my_battle_seeds', seedStock);
+      } else if (r === '🌱 進化の種×2') {
+        seedStock = Math.min(3, seedStock + 2);
       } else if (r === '💖 HP回復(小)') {
         playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.25));
       } else if (r === '💖 HP回復(中)') {
         playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.5));
       } else if (r === '💖 HP回復(大)') {
         playerHp = playerMaxHp;
+      } else if (r === '💖 全員HP全快') {
+        playerHp = playerMaxHp;
+        fainted = {};
+        localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
       } else if (r === '⚔️ 攻撃力UP') {
         playerAtk += 10;
+      } else if (r === '⚔️ 永久ATK+20') {
+        playerAtk += 20;
       } else if (r === '✨ 超進化の種') {
         superSeed = true;
         localStorage.setItem('my_super_seed', 'true');
+      } else if (r === '💰 1000 G') {
+        coins += 1000;
+        localStorage.setItem('my_casino_coins', coins);
       }
+      localStorage.setItem('my_battle_seeds', seedStock);
     }
 
     function winBattle() {
-      const reward = isEnemyBoss ? 500 : 60;
+      const reward = isEnemyBoss ? 300 : 50;
       coins += reward;
       localStorage.setItem('my_casino_coins', coins);
       localStorage.removeItem('my_current_enemy');
 
-      // 覚醒はその階層限定なので解除
-      if (currentInBattleId.includes('-m') || currentInBattleId.includes('-k') || currentInBattleId.includes('-z')) {
-        currentInBattleId = currentInBattleId.split('-')[0];
+      // 覚醒はその階層限定なので解除（通常進化はそのままキープ！）
+      const curForm = partyForms[currentPartyIdx] || '';
+      if (curForm.includes('-m') || curForm.includes('-k') || curForm.includes('-z')) {
+        partyForms[currentPartyIdx] = curForm.split('-')[0];
         loadPlayerStats();
       }
 
+      // 到達階層更新
+      if (stage > maxClearedStage) {
+        maxClearedStage = stage;
+        localStorage.setItem('my_tower_max_stage', maxClearedStage);
+      }
+
+      const prevStage = stage;
       stage++;
       localStorage.setItem('my_tower_stage', stage);
 
-      addLog(`🎉 撃破！ STAGE ${stage - 1} クリア！ +${reward}G`);
+      addLog(`🎉 撃破！ STAGE ${prevStage} クリア！ +${reward}G`);
+
+      // ★ 10Fボス撃破時は豪華ルーレット発動！
+      if (prevStage % 10 === 0) {
+        setTimeout(() => {
+          triggerSlot(true);
+        }, 500);
+      }
+
       setTimeout(() => {
         turnInProgress = false;
         spawnNewEnemy();
         updateUI();
-        if (isAuto) playerAction('atk');
+        if (isAuto && prevStage % 10 !== 0) playerAction('atk');
       }, 1000);
     }
 
-    // 1Fへ帰還
-    function returnToFirstFloor() {
-      if (confirm('1Fへ帰還しますか？\n（現在の獲得コインとアイテムを維持して1Fから登り直せます）')) {
-        stage = 1;
-        localStorage.setItem('my_tower_stage', '1');
-        localStorage.removeItem('my_current_enemy');
-        currentInBattleId = party[currentPartyIdx];
-        loadPlayerStats();
-        spawnNewEnemy();
-        updateUI();
-        addLog('🚩 1Fへ帰還した！ アイテムを活かして再挑戦だ！');
+    // 📊 半透明リザルト／コンティニューモーダル
+    function openResultModal(isWipeout = false) {
+      document.getElementById('result-title').textContent = isWipeout ? '💀 全滅してしまった…' : '🚩 帰還リザルト確認';
+      document.getElementById('res-stage').textContent = `${stage}F`;
+      document.getElementById('res-coins').textContent = `${coins} G`;
+      document.getElementById('res-seeds').textContent = `${seedStock} / 3 個`;
+      document.getElementById('res-super').textContent = superSeed ? 'あり ✨' : 'なし';
+      document.getElementById('top-result-overlay').style.display = 'flex';
+    }
+
+    function closeResultModal() {
+      document.getElementById('top-result-overlay').style.display = 'none';
+    }
+
+    function executeReturnToFloor(targetFloor) {
+      stage = targetFloor;
+      localStorage.setItem('my_tower_stage', stage);
+      localStorage.removeItem('my_current_enemy');
+
+      // 帰還時はたねポケモン状態にリセット
+      partyForms = [...party];
+      fainted = {};
+      localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
+
+      closeResultModal();
+      closeFloorSelectModal();
+      initBattle();
+      addLog(`🚩 ${targetFloor}Fから再スタート！ 資材を活用して頂上を目指そう！`);
+    }
+
+    // 🚀 10階層区切りのフロア選択
+    function openFloorSelectModal() {
+      const container = document.getElementById('floor-grid-container');
+      container.innerHTML = '';
+
+      // 1F, 11F, 21F, 31F...
+      for (let f = 1; f <= 101; f += 10) {
+        const btn = document.createElement('button');
+        const isUnlocked = (f === 1 || f <= maxClearedStage);
+        btn.className = `floor-btn ${isUnlocked ? '' : 'locked'}`;
+        btn.innerHTML = `${f}F` + (isUnlocked ? '' : '<br><span style="font-size:8px;">未到達</span>');
+        if (isUnlocked) {
+          btn.onclick = () => {
+            if (confirm(`${f}Fから出発しますか？`)) {
+              executeReturnToFloor(f);
+            }
+          };
+        }
+        container.appendChild(btn);
       }
+      document.getElementById('floor-select-overlay').style.display = 'flex';
+    }
+
+    function closeFloorSelectModal() {
+      document.getElementById('floor-select-overlay').style.display = 'none';
     }
 
     function toggleAuto() {
@@ -1348,16 +1524,17 @@
       grid.innerHTML = '';
 
       for (let i = 0; i < 6; i++) {
-        const id = party[i];
+        const baseId = party[i];
         const card = document.createElement('div');
 
-        if (!id) {
+        if (!baseId) {
           card.className = 'party-slot-card empty';
           card.innerHTML = `<span style="font-size:10px; color:#64748b;">(あき枠)</span>`;
         } else {
-          const p = getPoke(id);
-          const lv = levels[id] || 1;
-          const isFaint = !!fainted[id];
+          const curFormId = partyForms[i] || baseId; // 進化した姿で表示
+          const p = getPoke(curFormId);
+          const lv = levels[baseId] || 1;
+          const isFaint = !!fainted[baseId];
           const isCur = (i === currentPartyIdx);
 
           card.className = `party-slot-card ${isCur ? 'current' : ''} ${isFaint ? 'fainted' : ''}`;
@@ -1373,7 +1550,6 @@
             card.onclick = () => {
               if (confirm(`【${p.name}】に交代するかい？`)) {
                 currentPartyIdx = i;
-                currentInBattleId = id;
                 closeSwitchView();
                 loadPlayerStats();
                 addLog(`行けっ！ 【${p.name}】！`);
