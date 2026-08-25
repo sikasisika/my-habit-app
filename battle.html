@@ -50,7 +50,7 @@
       position: relative;
     }
 
-    /* 最上部ヘッダー */
+    /* 最上部ヘッダー（ポータル＆1F帰還ボタン） */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -68,19 +68,15 @@
       font-size: 11px;
       font-weight: bold;
       background: rgba(255, 255, 255, 0.22);
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
       border: 1.5px solid rgba(255, 255, 255, 0.45);
       cursor: pointer !important;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      pointer-events: auto !important;
     }
-    .top-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.4);
-    }
+    .top-btn:active { transform: scale(0.92); }
 
     /* DS本体フレーム */
     .ds-body {
@@ -108,7 +104,7 @@
       overflow: hidden;
     }
 
-    /* 相手プレート（左上） */
+    /* 相手情報プレート */
     .enemy-plate {
       position: absolute;
       top: 10px;
@@ -117,22 +113,20 @@
       border: 1.5px solid #f87171;
       border-radius: 6px;
       padding: 4px 8px;
-      width: 145px;
+      width: 150px;
       z-index: 10;
     }
 
-    /* 相手スプライト枠（右上・中央寄り） */
+    /* スプライト枠 */
     .enemy-sprite-box {
       position: absolute;
-      top: 15px;
+      top: 10px;
       right: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 5;
     }
-
-    /* 相棒スプライト枠（左下・中央寄り） */
     .player-sprite-box {
       position: absolute;
       bottom: 15px;
@@ -143,7 +137,7 @@
       z-index: 5;
     }
 
-    /* 相棒プレート（右下） */
+    /* 相棒情報プレート */
     .player-plate {
       position: absolute;
       bottom: 10px;
@@ -152,7 +146,7 @@
       border: 1.5px solid #38bdf8;
       border-radius: 6px;
       padding: 4px 8px;
-      width: 155px;
+      width: 160px;
       z-index: 10;
     }
 
@@ -181,6 +175,14 @@
     .type-ひこう   { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
     .type-こおり   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
     .type-エスパー { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .type-かくとう { background: linear-gradient(135deg, #b91c1c, #991b1b); }
+    .type-どく     { background: linear-gradient(135deg, #9333ea, #7e22ce); }
+    .type-じめん   { background: linear-gradient(135deg, #d97706, #b45309); }
+    .type-いわ     { background: linear-gradient(135deg, #78716c, #57534e); }
+    .type-ドラゴン { background: linear-gradient(135deg, #4f46e5, #3730a3); }
+    .type-はがね   { background: linear-gradient(135deg, #64748b, #475569); }
+    .type-あく     { background: linear-gradient(135deg, #334155, #1e293b); }
+    .type-フェアリー { background: linear-gradient(135deg, #f472b6, #db2777); }
 
     .hp-gauge-bg {
       width: 100%;
@@ -198,15 +200,60 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ポケモン画像（直接JSでpx指定＋ドロップシャドウで自然な立体感） */
+    /* ポケモンスプライト基本設定 */
     .poke-sprite {
       object-fit: contain !important;
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.65));
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease, filter 0.3s ease;
       display: block;
     }
 
-    /* 💥 攻撃＆被弾アニメ */
+    /* 👑 敵のメガ・キョダイ常時キラキラオーラ */
+    .aura-mega {
+      animation: megaGlow 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes megaGlow {
+      0% { filter: drop-shadow(0 0 8px #f43f5e) drop-shadow(0 0 16px #38bdf8); }
+      100% { filter: drop-shadow(0 0 16px #ec4899) drop-shadow(0 0 28px #a855f7); }
+    }
+    .aura-kyodai {
+      animation: kyodaiGlow 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes kyodaiGlow {
+      0% { filter: drop-shadow(0 0 12px #ef4444) drop-shadow(0 0 24px #991b1b); }
+      100% { filter: drop-shadow(0 0 24px #ff0055) drop-shadow(0 0 36px #ff0000); }
+    }
+
+    /* ✨ 進化・覚醒エフェクト用オーバーレイ */
+    .evo-flash-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+    }
+    .flash-silver { animation: silverFlash 0.7s ease-out forwards; }
+    @keyframes silverFlash {
+      0% { background: rgba(226, 232, 240, 0.9); opacity: 1; }
+      100% { background: transparent; opacity: 0; }
+    }
+    .flash-gold { animation: goldFlash 0.8s ease-out forwards; }
+    @keyframes goldFlash {
+      0% { background: rgba(251, 191, 36, 0.95); opacity: 1; }
+      100% { background: transparent; opacity: 0; }
+    }
+    .flash-rainbow { animation: rainbowFlash 0.9s ease-out forwards; }
+    @keyframes rainbowFlash {
+      0% { background: linear-gradient(45deg, rgba(236,72,153,0.9), rgba(56,189,248,0.9), rgba(250,204,21,0.9)); opacity: 1; }
+      100% { background: transparent; opacity: 0; }
+    }
+    .flash-red { animation: redFlash 0.9s ease-out forwards; }
+    @keyframes redFlash {
+      0% { background: rgba(239, 68, 68, 0.95); opacity: 1; }
+      100% { background: transparent; opacity: 0; }
+    }
+
+    /* アクションアニメ */
     .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
     @keyframes pAtkAnim {
       0% { transform: translate(0, 0) scale(1); }
@@ -298,9 +345,9 @@
       100% { transform: translateY(3px); }
     }
 
-    /* 上段：こうげき / ぼうぎょ（特大ボタンスタイル） */
+    /* 上段：こうげき / ぼうぎょ */
     .cmd-row-top {
-      flex: 1.6;
+      flex: 1.5;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
@@ -326,7 +373,7 @@
     .btn-atk { background: linear-gradient(135deg, #f87171, #dc2626); }
     .btn-def { background: linear-gradient(135deg, #60a5fa, #2563eb); }
 
-    /* 下段：こうたい / かくせい / Auto */
+    /* 下段：こうたい / しんか・かくせい / Auto */
     .cmd-row-bottom {
       flex: 1;
       display: flex;
@@ -334,12 +381,12 @@
       align-items: stretch;
     }
     .btn-sub-small {
-      width: 68px;
+      width: 65px;
       height: 100%;
       border-radius: 8px;
       border: 1.5px solid rgba(255, 255, 255, 0.25);
       color: #fff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       cursor: pointer;
       display: flex;
@@ -353,13 +400,14 @@
     .btn-auto { background: #059669; }
     .btn-auto.active { background: #d97706; }
 
-    .btn-awaken-box {
+    /* 進化・覚醒ボタン */
+    .btn-evo-awaken {
       flex: 1;
       height: 100%;
       border-radius: 8px;
-      border: 2px solid #fbbf24;
-      background: rgba(251, 191, 36, 0.15);
-      color: #fff;
+      border: 2px solid #64748b;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -367,30 +415,35 @@
       cursor: pointer;
       box-shadow: 0 4px 0 rgba(0,0,0,0.4);
     }
-    .btn-awaken-box:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
-    .btn-awaken-box:disabled { opacity: 0.35; cursor: not-allowed; border-color: #64748b; }
-    .btn-awaken-box.ready {
+    .btn-evo-awaken:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+    .btn-evo-awaken:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-evo-awaken.ready-evo {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-color: #34d399;
+      color: #fff;
+      animation: pulseEvo 1.5s infinite;
+    }
+    .btn-evo-awaken.ready-awaken {
       background: linear-gradient(135deg, #ec4899, #be185d);
       border-color: #f43f5e;
-      animation: rainbowGlow 2s infinite linear;
+      color: #fff;
+      animation: pulseAwaken 1.5s infinite;
     }
-    @keyframes rainbowGlow {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
+    @keyframes pulseEvo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+    @keyframes pulseAwaken { 0%, 100% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
 
     .seed-track {
       display: flex;
       gap: 5px;
-      font-size: 12px;
+      font-size: 11px;
       margin-top: 2px;
     }
     .seed-icon { opacity: 0.25; filter: grayscale(1); }
     .seed-icon.active { opacity: 1; filter: grayscale(0); text-shadow: 0 0 6px #4ade80; }
     .seed-super-icon { opacity: 0.25; filter: grayscale(1); }
-    .seed-super-icon.active { opacity: 1; filter: grayscale(0); animation: rainbowGlow 1.5s infinite linear; }
+    .seed-super-icon.active { opacity: 1; filter: grayscale(0); animation: pulseAwaken 1.5s infinite linear; }
 
-    /* 交代画面（拡大表示） */
+    /* 交代画面 */
     .switch-view-container {
       display: flex;
       flex-direction: column;
@@ -415,12 +468,7 @@
       gap: 8px;
       cursor: pointer;
     }
-    .party-slot-card.empty {
-      border: 1.5px dashed rgba(255, 255, 255, 0.2);
-      background: transparent;
-      cursor: default;
-      justify-content: center;
-    }
+    .party-slot-card.empty { border: 1.5px dashed rgba(255,255,255,0.2); background: transparent; cursor: default; justify-content: center; }
     .party-slot-card.current { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); box-shadow: 0 0 8px rgba(56, 189, 248, 0.3); }
     .party-slot-card.fainted { border-color: #ef4444; opacity: 0.45; cursor: not-allowed; }
 
@@ -495,7 +543,7 @@
     <div class="top-bar">
       <a href="index.html" class="top-btn" onclick="window.location.href='index.html'; return false;">◀ ポータル</a>
       <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
-      <a href="train.html" class="top-btn" style="background:#10b981;" onclick="window.location.href='train.html'; return false;">🌱 育成ジム</a>
+      <button class="top-btn" style="background:#ef4444; border-color:#f87171;" onclick="returnToFirstFloor()">🚩 1Fへ帰還</button>
     </div>
 
     <div class="ds-body">
@@ -504,7 +552,8 @@
       <!-- 📺 上画面：バトルフィールド（50%） -->
       <!-- ========================================================= -->
       <div class="ds-top-screen">
-        
+        <div id="evo-flash" class="evo-flash-overlay"></div>
+
         <!-- 相手プレート -->
         <div class="enemy-plate">
           <div class="plate-header">
@@ -547,7 +596,7 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド（50%・手描き通り画面をフル活用） -->
+      <!-- 📱 下画面：コマンド（50%） -->
       <!-- ========================================================= -->
       <div class="ds-bottom-screen">
         
@@ -558,18 +607,18 @@
             <span class="pixel-arrow">▾</span>
           </div>
 
-          <!-- 上段：こうげき / ぼうぎょ（大型ボタン） -->
+          <!-- 上段：こうげき / ぼうぎょ -->
           <div class="cmd-row-top">
             <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
             <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
           </div>
 
-          <!-- 下段：こうたい / かくせい / Auto -->
+          <!-- 下段：こうたい / しんか・かくせい / Auto -->
           <div class="cmd-row-bottom">
             <button class="btn-sub-small btn-switch" onclick="openSwitchView()">こうたい</button>
             
-            <button class="btn-awaken-box" id="btn-awaken" onclick="playerAction('awaken')" disabled>
-              <span style="font-size:12px; font-weight:900;">かくせい</span>
+            <button class="btn-evo-awaken" id="btn-evo-awaken" onclick="triggerEvoOrAwaken()" disabled>
+              <span id="evo-btn-text" style="font-size:12px; font-weight:900;">しんか</span>
               <div class="seed-track">
                 <span class="seed-icon" id="seed-1">🌱</span>
                 <span class="seed-icon" id="seed-2">🌱</span>
@@ -617,13 +666,184 @@
 
   <script>
     const TYPE_CHART = {
-      'ほのお':   { weak: ['みず', 'じめん', 'いわ'], resist: ['くさ', 'こおり', 'むし', 'はがね'] },
+      'ほのお':   { weak: ['みず', 'じめん', 'いわ'], resist: ['くさ', 'こおり', 'むし', 'はがね', 'ほのお', 'フェアリー'] },
       'みず':     { weak: ['でんき', 'くさ'], resist: ['ほのお', 'みず', 'こおり', 'はがね'] },
       'くさ':     { weak: ['ほのお', 'こおり', 'どく', 'ひこう', 'むし'], resist: ['みず', 'でんき', 'くさ', 'じめん'] },
       'でんき':   { weak: ['じめん'], resist: ['でんき', 'ひこう', 'はがね'] },
       'ノーマル': { weak: ['かくとう'], resist: ['ゴースト'] },
-      'ゴースト': { weak: ['ゴースト', 'あく'], resist: ['ノーマル', 'かくとう', 'どく', 'むし'] }
+      'ゴースト': { weak: ['ゴースト', 'あく'], resist: ['ノーマル', 'かくとう', 'どく', 'むし'] },
+      'かくとう': { weak: ['ひこう', 'エスパー', 'フェアリー'], resist: ['いわ', 'むし', 'あく'] },
+      'エスパー': { weak: ['むし', 'ゴースト', 'あく'], resist: ['かくとう', 'エスパー'] },
+      'ドラゴン': { weak: ['こおり', 'ドラゴン', 'フェアリー'], resist: ['ほのお', 'みず', 'くさ', 'でんき'] }
     };
+
+    // 系統の「たねポケモンID」を取得
+    function getBasePokemonId(id) {
+      if (id.startsWith('p0001') || id.startsWith('p0002') || id.startsWith('p0003')) return 'p0001';
+      if (id.startsWith('p0004') || id.startsWith('p0005') || id.startsWith('p0006')) return 'p0004';
+      if (id.startsWith('p0007') || id.startsWith('p0008') || id.startsWith('p0009')) return 'p0007';
+      if (id.startsWith('p0010') || id.startsWith('p0011') || id.startsWith('p0012')) return 'p0010';
+      if (id.startsWith('p0013') || id.startsWith('p0014') || id.startsWith('p0015')) return 'p0013';
+      if (id.startsWith('p0016') || id.startsWith('p0017') || id.startsWith('p0018')) return 'p0016';
+      if (id.startsWith('p0019') || id.startsWith('p0020')) return id.includes('-a') ? 'p0019-a' : 'p0019';
+      if (id.startsWith('p0021') || id.startsWith('p0022')) return 'p0021';
+      if (id.startsWith('p0023') || id.startsWith('p0024')) return 'p0023';
+      if (id.startsWith('p0025') || id.startsWith('p0026')) return id.includes('-a') ? 'p0026-a' : 'p0025';
+      if (id.startsWith('p0027') || id.startsWith('p0028')) return id.includes('-a') ? 'p0027-a' : 'p0027';
+      if (id.startsWith('p0029') || id.startsWith('p0030') || id.startsWith('p0031')) return 'p0029';
+      if (id.startsWith('p0032') || id.startsWith('p0033') || id.startsWith('p0034')) return 'p0032';
+      if (id.startsWith('p0035') || id.startsWith('p0036')) return 'p0035';
+      if (id.startsWith('p0037') || id.startsWith('p0038')) return id.includes('-a') ? 'p0037-a' : 'p0037';
+      if (id.startsWith('p0039') || id.startsWith('p0040')) return 'p0039';
+      if (id.startsWith('p0041') || id.startsWith('p0042')) return 'p0041';
+      if (id.startsWith('p0043') || id.startsWith('p0044') || id.startsWith('p0045')) return 'p0043';
+      if (id.startsWith('p0046') || id.startsWith('p0047')) return 'p0046';
+      if (id.startsWith('p0048') || id.startsWith('p0049')) return 'p0048';
+      if (id.startsWith('p0050') || id.startsWith('p0051')) return id.includes('-a') ? 'p0050-a' : 'p0050';
+      if (id.startsWith('p0052') || id.startsWith('p0053')) return id.includes('-a') ? 'p0052-a' : id.includes('-g') ? 'p0052-g' : 'p0052';
+      if (id.startsWith('p0054') || id.startsWith('p0055')) return 'p0054';
+      if (id.startsWith('p0056') || id.startsWith('p0057')) return 'p0056';
+      if (id.startsWith('p0058') || id.startsWith('p0059')) return id.includes('-h') ? 'p0058-h' : 'p0058';
+      if (id.startsWith('p0060') || id.startsWith('p0061') || id.startsWith('p0062')) return 'p0060';
+      if (id.startsWith('p0063') || id.startsWith('p0064') || id.startsWith('p0065')) return 'p0063';
+      if (id.startsWith('p0066') || id.startsWith('p0067') || id.startsWith('p0068')) return 'p0066';
+      if (id.startsWith('p0069') || id.startsWith('p0070') || id.startsWith('p0071')) return 'p0069';
+      if (id.startsWith('p0072') || id.startsWith('p0073')) return 'p0072';
+      if (id.startsWith('p0074') || id.startsWith('p0075') || id.startsWith('p0076')) return id.includes('-a') ? 'p0074-a' : 'p0074';
+      if (id.startsWith('p0077') || id.startsWith('p0078')) return id.includes('-g') ? 'p0077-g' : 'p0077';
+      if (id.startsWith('p0079') || id.startsWith('p0080')) return id.includes('-g') ? 'p0079-g' : 'p0079';
+      if (id.startsWith('p0081') || id.startsWith('p0082')) return 'p0081';
+      if (id.startsWith('p0083')) return id.includes('-g') ? 'p0083-g' : 'p0083';
+      if (id.startsWith('p0084') || id.startsWith('p0085')) return 'p0084';
+      if (id.startsWith('p0086') || id.startsWith('p0087')) return 'p0086';
+      if (id.startsWith('p0088') || id.startsWith('p0089')) return id.includes('-a') ? 'p0088-a' : 'p0088';
+      if (id.startsWith('p0090') || id.startsWith('p0091')) return 'p0090';
+      if (id.startsWith('p0092') || id.startsWith('p0093') || id.startsWith('p0094')) return 'p0092';
+      if (id.startsWith('p0098') || id.startsWith('p0099')) return 'p0098';
+      if (id.startsWith('p0100') || id.startsWith('p0101')) return id.includes('-h') ? 'p0100-h' : 'p0100';
+      if (id.startsWith('p0102') || id.startsWith('p0103')) return 'p0102';
+      if (id.startsWith('p0104') || id.startsWith('p0105')) return 'p0104';
+      if (id.startsWith('p0109') || id.startsWith('p0110')) return 'p0109';
+      if (id.startsWith('p0111') || id.startsWith('p0112')) return 'p0111';
+      if (id.startsWith('p0116') || id.startsWith('p0117')) return 'p0116';
+      if (id.startsWith('p0118') || id.startsWith('p0119')) return 'p0118';
+      if (id.startsWith('p0120') || id.startsWith('p0121')) return 'p0120';
+      if (id.startsWith('p0133') || id.startsWith('p0134') || id.startsWith('p0135') || id.startsWith('p0136')) return 'p0133';
+      if (id.startsWith('p0138') || id.startsWith('p0139')) return 'p0138';
+      if (id.startsWith('p0140') || id.startsWith('p0141')) return 'p0140';
+      if (id.startsWith('p0147') || id.startsWith('p0148') || id.startsWith('p0149')) return 'p0147';
+      if (id.startsWith('p0443') || id.startsWith('p0444') || id.startsWith('p0445')) return 'p0443';
+      if (id.startsWith('p0447') || id.startsWith('p0448')) return 'p0447';
+      return id.split('-')[0];
+    }
+
+    // 進化チェーン定義
+    function getEvoInfo(id) {
+      const evoMap = {
+        // 3段階進化
+        'p0001': { next: 'p0002', cost: 1 },
+        'p0002': { next: 'p0003', cost: 3 },
+        'p0004': { next: 'p0005', cost: 1 },
+        'p0005': { next: 'p0006', cost: 3 },
+        'p0007': { next: 'p0008', cost: 1 },
+        'p0008': { next: 'p0009', cost: 3 },
+        'p0010': { next: 'p0011', cost: 1 },
+        'p0011': { next: 'p0012', cost: 3 },
+        'p0013': { next: 'p0014', cost: 1 },
+        'p0014': { next: 'p0015', cost: 3 },
+        'p0016': { next: 'p0017', cost: 1 },
+        'p0017': { next: 'p0018', cost: 3 },
+        'p0029': { next: 'p0030', cost: 1 },
+        'p0030': { next: 'p0031', cost: 3 },
+        'p0032': { next: 'p0033', cost: 1 },
+        'p0033': { next: 'p0034', cost: 3 },
+        'p0043': { next: 'p0044', cost: 1 },
+        'p0044': { next: 'p0045', cost: 3 },
+        'p0060': { next: 'p0061', cost: 1 },
+        'p0061': { next: 'p0062', cost: 3 },
+        'p0063': { next: 'p0064', cost: 1 },
+        'p0064': { next: 'p0065', cost: 3 },
+        'p0066': { next: 'p0067', cost: 1 },
+        'p0067': { next: 'p0068', cost: 3 },
+        'p0069': { next: 'p0070', cost: 1 },
+        'p0070': { next: 'p0071', cost: 3 },
+        'p0074': { next: 'p0075', cost: 1 },
+        'p0075': { next: 'p0076', cost: 3 },
+        'p0074-a': { next: 'p0075-a', cost: 1 },
+        'p0075-a': { next: 'p0076-a', cost: 3 },
+        'p0092': { next: 'p0093', cost: 1 },
+        'p0093': { next: 'p0094', cost: 3 },
+        'p0147': { next: 'p0148', cost: 1 },
+        'p0148': { next: 'p0149', cost: 3 },
+        'p0443': { next: 'p0444', cost: 1 },
+        'p0444': { next: 'p0445', cost: 3 },
+
+        // 2段階進化
+        'p0019': { next: 'p0020', cost: 3 },
+        'p0019-a': { next: 'p0020-a', cost: 3 },
+        'p0021': { next: 'p0022', cost: 3 },
+        'p0023': { next: 'p0024', cost: 3 },
+        'p0025': { next: 'p0026', cost: 3 },
+        'p0027': { next: 'p0028', cost: 3 },
+        'p0027-a': { next: 'p0028-a', cost: 3 },
+        'p0035': { next: 'p0036', cost: 3 },
+        'p0037': { next: 'p0038', cost: 3 },
+        'p0037-a': { next: 'p0038-a', cost: 3 },
+        'p0039': { next: 'p0040', cost: 3 },
+        'p0041': { next: 'p0042', cost: 3 },
+        'p0046': { next: 'p0047', cost: 3 },
+        'p0048': { next: 'p0049', cost: 3 },
+        'p0050': { next: 'p0051', cost: 3 },
+        'p0050-a': { next: 'p0051-a', cost: 3 },
+        'p0052': { next: 'p0053', cost: 3 },
+        'p0052-a': { next: 'p0053-a', cost: 3 },
+        'p0054': { next: 'p0055', cost: 3 },
+        'p0056': { next: 'p0057', cost: 3 },
+        'p0058': { next: 'p0059', cost: 3 },
+        'p0058-h': { next: 'p0059-h', cost: 3 },
+        'p0072': { next: 'p0073', cost: 3 },
+        'p0077': { next: 'p0078', cost: 3 },
+        'p0077-g': { next: 'p0078-g', cost: 3 },
+        'p0079': { next: 'p0080', cost: 3 },
+        'p0079-g': { next: 'p0080-g', cost: 3 },
+        'p0081': { next: 'p0082', cost: 3 },
+        'p0084': { next: 'p0085', cost: 3 },
+        'p0086': { next: 'p0087', cost: 3 },
+        'p0088': { next: 'p0089', cost: 3 },
+        'p0088-a': { next: 'p0089-a', cost: 3 },
+        'p0090': { next: 'p0091', cost: 3 },
+        'p0096': { next: 'p0097', cost: 3 },
+        'p0098': { next: 'p0099', cost: 3 },
+        'p0100': { next: 'p0101', cost: 3 },
+        'p0100-h': { next: 'p0101-h', cost: 3 },
+        'p0102': { next: 'p0103', cost: 3 },
+        'p0104': { next: 'p0105', cost: 3 },
+        'p0109': { next: 'p0110', cost: 3 },
+        'p0111': { next: 'p0112', cost: 3 },
+        'p0116': { next: 'p0117', cost: 3 },
+        'p0118': { next: 'p0119', cost: 3 },
+        'p0120': { next: 'p0121', cost: 3 },
+        'p0129': { next: 'p0130', cost: 3 },
+        'p0138': { next: 'p0139', cost: 3 },
+        'p0140': { next: 'p0141', cost: 3 },
+        'p0447': { next: 'p0448', cost: 3 }
+      };
+      return evoMap[id] || null;
+    }
+
+    // 覚醒（メガ・メガZ・キョダイ）候補取得
+    function getAwakenCandidates(id) {
+      const base = id.split('-')[0];
+      const candidates = [];
+      const subTypes = ['-m', '-x', '-y', '-z', '-k'];
+      subTypes.forEach(s => {
+        const testId = base + s;
+        if (POKEMON_DATA.some(p => p.id === testId)) {
+          candidates.push(testId);
+        }
+      });
+      return candidates;
+    }
 
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
     let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
@@ -636,6 +856,7 @@
     let superSeed = localStorage.getItem('my_super_seed') === 'true';
 
     let currentPartyIdx = 0;
+    let currentInBattleId = null;
     let turnCount = 0;
     let isAuto = false;
     let turnInProgress = false;
@@ -643,18 +864,17 @@
 
     let playerMaxHp = 100, playerHp = 100, playerAtk = 20, playerDef = 15;
     let isDefending = false;
-    let isPlayerAwakened = false;
 
     let enemyPokemon = null;
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
-    // ★ ポケモンのサイズ（S/M/L/G）をピクセルで厳密指定
+    // サイズ指定（キョダイは210pxの超巨大）
     function getSizePx(size) {
-      if (size === 'G') return 175; // キョダイ・メガ進化
-      if (size === 'L') return 145; // 大型
-      if (size === 'M') return 120; // 中型
-      return 95;                    // 小型（ヒトカゲ・コラッタ等）
+      if (size === 'G') return 210;
+      if (size === 'L') return 145;
+      if (size === 'M') return 120;
+      return 95;
     }
 
     function getPoke(id) {
@@ -662,45 +882,65 @@
         const found = POKEMON_DATA.find(p => p.id === id);
         if (found) return found;
       }
-      return { id, name: 'ポケモン', type: 'ノーマル', size: 'S', img: 'images/gacha/' + id + '.png' };
+      return { id, name: 'ポケモン', subName: '', type: 'ノーマル', size: 'S', img: 'images/gacha/' + id + '.png' };
+    }
+
+    // パーティのたねポケモンバリデーション
+    function validateParty() {
+      const validParty = [];
+      party.forEach(id => {
+        const baseId = getBasePokemonId(id);
+        if (inventory[baseId] > 0) {
+          validParty.push(baseId); // たね形態で出撃
+        }
+      });
+      if (validParty.length === 0) {
+        validParty.push('p0004'); // フォールバック
+      }
+      party = validParty;
+      localStorage.setItem('my_battle_party', JSON.stringify(party));
+
+      currentPartyIdx = party.findIndex(id => !fainted[id]);
+      if (currentPartyIdx === -1) {
+        alert('手持ちのポケモンが全員ひんしだ！\n育成ジムで回復しよう！');
+        window.location.href = 'train.html';
+        return false;
+      }
+      currentInBattleId = party[currentPartyIdx];
+      return true;
     }
 
     function initBattle() {
-      const aliveIdx = party.findIndex(id => !fainted[id]);
-      if (aliveIdx === -1) {
-        alert('手持ちのポケモンが全員ひんしだ！\n育成ジムで回復するか、明日になるのを待とう！');
-        window.location.href = 'train.html';
-        return;
-      }
-
-      currentPartyIdx = aliveIdx;
+      if (!validateParty()) return;
       loadPlayerStats();
       loadOrSpawnEnemy();
       updateUI();
     }
 
     function loadPlayerStats() {
-      const baseId = party[currentPartyIdx];
-      const poke = getPoke(baseId);
+      const poke = getPoke(currentInBattleId);
+      const baseId = getBasePokemonId(currentInBattleId);
       const lv = levels[baseId] || 1;
 
-      let evoMulti = 1.0;
-      if (seedStock >= 3) evoMulti = 1.6;
-      else if (seedStock >= 1) evoMulti = 1.3;
+      let statMulti = 1.0;
+      if (currentInBattleId.includes('-z')) statMulti = 2.8;
+      else if (currentInBattleId.includes('-k')) statMulti = 2.5;
+      else if (currentInBattleId.includes('-m') || currentInBattleId.includes('-x') || currentInBattleId.includes('-y')) statMulti = 2.2;
+      else if (poke.size === 'L') statMulti = 1.7;
+      else if (poke.size === 'M') statMulti = 1.35;
 
-      playerMaxHp = Math.floor((110 + lv * 18) * evoMulti);
+      playerMaxHp = Math.floor((110 + lv * 20) * statMulti);
       playerHp = playerMaxHp;
-      playerAtk = Math.floor((22 + lv * 5) * evoMulti);
-      playerDef = Math.floor((16 + lv * 4) * evoMulti);
-      isPlayerAwakened = false;
+      playerAtk = Math.floor((22 + lv * 5) * statMulti);
+      playerDef = Math.floor((16 + lv * 4) * statMulti);
 
-      document.getElementById('player-name').textContent = `${poke.name} Lv.${lv}`;
+      const titleName = poke.subName ? `${poke.name} (${poke.subName})` : poke.name;
+      document.getElementById('player-name').textContent = `${titleName} Lv.${lv}`;
       
       const pTypeEl = document.getElementById('player-type');
       pTypeEl.textContent = poke.type;
       pTypeEl.className = `type-badge type-${poke.type}`;
 
-      // ★ 画像サイズをJSで直接適用
       const pImg = document.getElementById('player-img');
       pImg.src = poke.img;
       const px = getSizePx(poke.size || 'S');
@@ -729,26 +969,27 @@
       spawnNewEnemy();
     }
 
+    // 敵の出現（メガ・キョダイは10Fごとのボス階層のみ）
     function spawnNewEnemy() {
       const pool = (typeof POKEMON_DATA !== 'undefined') ? POKEMON_DATA : [];
       isEnemyBoss = (stage % 10 === 0);
 
       if (isEnemyBoss) {
-        const bosses = pool.filter(p => p.isBossOnly || p.rarity === 'UR' || p.rarity === 'SSR');
+        const bosses = pool.filter(p => p.id.includes('-m') || p.id.includes('-k') || p.id.includes('-x') || p.id.includes('-y') || p.id.includes('-z') || p.rarity === 'UR');
         enemyPokemon = bosses.length > 0 ? bosses[Math.floor(Math.random() * bosses.length)] : pool[0];
       } else {
-        const regulars = pool.filter(p => !p.isBossOnly && !p.isLegend);
+        const regulars = pool.filter(p => !p.id.includes('-m') && !p.id.includes('-k') && !p.id.includes('-x') && !p.id.includes('-y') && !p.id.includes('-z') && p.rarity !== 'UR');
         enemyPokemon = regulars.length > 0 ? regulars[Math.floor(Math.random() * regulars.length)] : pool[0];
       }
 
-      enemyMaxHp = Math.floor((75 + stage * 22) * (isEnemyBoss ? 2.2 : 1.0));
+      enemyMaxHp = Math.floor((75 + stage * 22) * (isEnemyBoss ? 2.5 : 1.0));
       enemyHp = enemyMaxHp;
-      enemyAtk = Math.floor((14 + stage * 4.2) * (isEnemyBoss ? 1.4 : 1.0));
+      enemyAtk = Math.floor((14 + stage * 4.2) * (isEnemyBoss ? 1.5 : 1.0));
       enemyDef = Math.floor(10 + stage * 3);
 
       saveCurrentEnemy();
       applyEnemyUI();
-      addLog(isEnemyBoss ? `⚠️ 強敵【${enemyPokemon.name}】が立ち塞がった！` : `野生の【${enemyPokemon.name}】が現れた！`);
+      addLog(isEnemyBoss ? `👑 BOSS【${enemyPokemon.name}】が立ち塞がった！` : `野生の【${enemyPokemon.name}】が現れた！`);
     }
 
     function saveCurrentEnemy() {
@@ -765,18 +1006,23 @@
 
     function applyEnemyUI() {
       document.getElementById('stage-text').textContent = `${stage}F` + (isEnemyBoss ? ' 👑' : '');
-      document.getElementById('enemy-name').textContent = `${enemyPokemon.name} Lv.${stage}`;
+      const eTitle = enemyPokemon.subName ? `${enemyPokemon.name} (${enemyPokemon.subName})` : enemyPokemon.name;
+      document.getElementById('enemy-name').textContent = `${eTitle} Lv.${stage}`;
       
       const eTypeEl = document.getElementById('enemy-type');
       eTypeEl.textContent = enemyPokemon.type;
       eTypeEl.className = `type-badge type-${enemyPokemon.type}`;
 
-      // ★ 相手画像サイズをJSで直接適用
       const eImg = document.getElementById('enemy-img');
       eImg.src = enemyPokemon.img;
       const px = getSizePx(enemyPokemon.size || 'S');
       eImg.style.width = px + 'px';
       eImg.style.height = px + 'px';
+
+      // 敵のメガ・キョダイ常時オーラ
+      eImg.classList.remove('aura-mega', 'aura-kyodai');
+      if (enemyPokemon.id.includes('-k')) eImg.classList.add('aura-kyodai');
+      else if (enemyPokemon.id.includes('-m') || enemyPokemon.id.includes('-x') || enemyPokemon.id.includes('-y') || enemyPokemon.id.includes('-z')) eImg.classList.add('aura-mega');
     }
 
     function updateUI() {
@@ -797,19 +1043,87 @@
       }
       document.getElementById('seed-super').classList.toggle('active', superSeed);
 
-      const awakenBtn = document.getElementById('btn-awaken');
-      const baseId = party[currentPartyIdx];
-      const hasAwakenForm = Object.keys(inventory).some(id => id.startsWith(baseId + '-') && inventory[id] > 0);
-
-      if (superSeed && hasAwakenForm && !isPlayerAwakened) {
-        awakenBtn.disabled = false;
-        awakenBtn.classList.add('ready');
-      } else {
-        awakenBtn.disabled = true;
-        awakenBtn.classList.remove('ready');
-      }
+      checkEvoAwakenStatus();
 
       ['btn-atk', 'btn-def'].forEach(id => document.getElementById(id).disabled = turnInProgress);
+    }
+
+    // 進化・覚醒の判定
+    let nextEvoTarget = null;
+    let nextAwakenTarget = null;
+
+    function checkEvoAwakenStatus() {
+      const btn = document.getElementById('btn-evo-awaken');
+      const btnTxt = document.getElementById('evo-btn-text');
+
+      nextEvoTarget = null;
+      nextAwakenTarget = null;
+      btn.className = 'btn-evo-awaken';
+      btn.disabled = true;
+
+      // 1. 通常進化チェック
+      const evoInfo = getEvoInfo(currentInBattleId);
+      if (evoInfo && inventory[evoInfo.next] > 0) {
+        if (seedStock >= evoInfo.cost) {
+          nextEvoTarget = evoInfo;
+          btn.disabled = false;
+          btn.classList.add('ready-evo');
+          btnTxt.textContent = `しんか(${evoInfo.cost}個)`;
+          return;
+        }
+      }
+
+      // 2. 覚醒チェック（メガ・メガZ・キョダイ）
+      if (superSeed && !currentInBattleId.includes('-m') && !currentInBattleId.includes('-k') && !currentInBattleId.includes('-z')) {
+        const candidates = getAwakenCandidates(currentInBattleId);
+        const available = candidates.filter(aid => inventory[aid] > 0);
+        if (available.length > 0) {
+          nextAwakenTarget = available[0];
+          btn.disabled = false;
+          btn.classList.add('ready-awaken');
+          btnTxt.textContent = 'かくせい！';
+          return;
+        }
+      }
+
+      btnTxt.textContent = (currentInBattleId.includes('-m') || currentInBattleId.includes('-k') || currentInBattleId.includes('-z')) ? '覚醒中' : (evoInfo ? 'しんか' : '最大形態');
+    }
+
+    // 進化・覚醒の実行
+    function triggerEvoOrAwaken() {
+      if (turnInProgress) return;
+
+      if (nextEvoTarget) {
+        const nextPoke = getPoke(nextEvoTarget.next);
+        seedStock -= nextEvoTarget.cost;
+        localStorage.setItem('my_battle_seeds', seedStock);
+
+        currentInBattleId = nextEvoTarget.next;
+        const isSecond = (nextEvoTarget.cost === 3);
+        playFlashEffect(isSecond ? 'gold' : 'silver');
+
+        addLog(`🌟 相棒は【${nextPoke.name}】へ進化した！ HP全快！`);
+        loadPlayerStats();
+        updateUI();
+      } else if (nextAwakenTarget) {
+        const targetPoke = getPoke(nextAwakenTarget);
+        superSeed = false;
+        localStorage.setItem('my_super_seed', 'false');
+
+        currentInBattleId = nextAwakenTarget;
+        const isKyodai = targetPoke.id.includes('-k');
+        playFlashEffect(isKyodai ? 'red' : 'rainbow');
+
+        addLog(`🌈 相棒は【${targetPoke.name}】へ覚醒した！ パワー全開！`);
+        loadPlayerStats();
+        updateUI();
+      }
+    }
+
+    function playFlashEffect(type) {
+      const flashEl = document.getElementById('evo-flash');
+      flashEl.className = `evo-flash-overlay flash-${type}`;
+      setTimeout(() => { flashEl.className = 'evo-flash-overlay'; }, 900);
     }
 
     function addLog(txt) {
@@ -841,21 +1155,6 @@
 
       const pType = document.getElementById('player-type').textContent;
       const eType = enemyPokemon.type;
-
-      if (type === 'awaken') {
-        isPlayerAwakened = true;
-        superSeed = false;
-        localStorage.setItem('my_super_seed', 'false');
-        playerAtk = Math.floor(playerAtk * 2.0);
-        playerHp = playerMaxHp;
-        addLog('✨ 超進化の種が輝き、真の姿へ覚醒した！');
-        updateUI();
-        setTimeout(() => {
-          turnInProgress = false;
-          if (isAuto) playerAction('atk');
-        }, 800);
-        return;
-      }
 
       if (type === 'atk') {
         const pImg = document.getElementById('player-img');
@@ -913,12 +1212,12 @@
         playerHp -= dmg;
         saveCurrentEnemy();
         showDmgPop('player', dmg, isCrit);
-        addLog(`相手のこうげき！ ${dmg} ダメージ！` + (isCrit ? '（急所に当たった！）' : ''));
+        addLog(`相手のこうげき！ ${dmg} ダメージ！` + (isCrit ? '（急所！）' : ''));
 
         updateUI();
 
         if (playerHp <= 0) {
-          const baseId = party[currentPartyIdx];
+          const baseId = getBasePokemonId(currentInBattleId);
           fainted[baseId] = true;
           localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
           addLog(`💀 相棒は たおれてしまった！`);
@@ -983,13 +1282,13 @@
         if (seedStock < 3) seedStock++;
         localStorage.setItem('my_battle_seeds', seedStock);
       } else if (r === '💖 HP回復(小)') {
-        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.2));
+        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.25));
       } else if (r === '💖 HP回復(中)') {
-        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.4));
+        playerHp = Math.min(playerMaxHp, playerHp + Math.floor(playerMaxHp * 0.5));
       } else if (r === '💖 HP回復(大)') {
         playerHp = playerMaxHp;
       } else if (r === '⚔️ 攻撃力UP') {
-        playerAtk += 8;
+        playerAtk += 10;
       } else if (r === '✨ 超進化の種') {
         superSeed = true;
         localStorage.setItem('my_super_seed', 'true');
@@ -997,10 +1296,16 @@
     }
 
     function winBattle() {
-      const reward = isEnemyBoss ? 300 : 50;
+      const reward = isEnemyBoss ? 500 : 60;
       coins += reward;
       localStorage.setItem('my_casino_coins', coins);
       localStorage.removeItem('my_current_enemy');
+
+      // 覚醒はその階層限定なので解除
+      if (currentInBattleId.includes('-m') || currentInBattleId.includes('-k') || currentInBattleId.includes('-z')) {
+        currentInBattleId = currentInBattleId.split('-')[0];
+        loadPlayerStats();
+      }
 
       stage++;
       localStorage.setItem('my_tower_stage', stage);
@@ -1012,6 +1317,20 @@
         updateUI();
         if (isAuto) playerAction('atk');
       }, 1000);
+    }
+
+    // 1Fへ帰還
+    function returnToFirstFloor() {
+      if (confirm('1Fへ帰還しますか？\n（現在の獲得コインとアイテムを維持して1Fから登り直せます）')) {
+        stage = 1;
+        localStorage.setItem('my_tower_stage', '1');
+        localStorage.removeItem('my_current_enemy');
+        currentInBattleId = party[currentPartyIdx];
+        loadPlayerStats();
+        spawnNewEnemy();
+        updateUI();
+        addLog('🚩 1Fへ帰還した！ アイテムを活かして再挑戦だ！');
+      }
     }
 
     function toggleAuto() {
@@ -1054,6 +1373,7 @@
             card.onclick = () => {
               if (confirm(`【${p.name}】に交代するかい？`)) {
                 currentPartyIdx = i;
+                currentInBattleId = id;
                 closeSwitchView();
                 loadPlayerStats();
                 addLog(`行けっ！ 【${p.name}】！`);
