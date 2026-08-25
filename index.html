@@ -354,7 +354,7 @@
     }
 
     /* ========================================================= */
-    /* 7. 🎮 ミニゲームセクション（上段3つ / 下段3つのグリッド） */
+    /* 7. 🎮 ミニゲーム＆ツールセクション（上段3 / 下段4） */
     /* ========================================================= */
     .game-section {
       background: rgba(255, 255, 255, 0.6);
@@ -362,18 +362,31 @@
       border-radius: 16px;
       padding: 12px 14px;
       border: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .game-section-title {
       font-size: 11px;
       font-weight: 800;
       color: #64748b;
-      margin-bottom: 10px;
       letter-spacing: 0.5px;
     }
-    .game-grid-2rows {
+
+    /* 上段（3列：ガチャ / 図鑑 / 道具） */
+    .game-grid-top {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px 8px;
+      gap: 8px;
+    }
+
+    /* 下段（4列：トランプ / スロット / タップ / パズル） */
+    .game-grid-bottom {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      border-top: 1px dashed rgba(100, 116, 139, 0.25);
+      padding-top: 10px;
     }
 
     .game-icon-item {
@@ -384,21 +397,22 @@
       text-decoration: none;
     }
     .game-circle-icon {
-      width: 48px;
-      height: 48px;
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 20px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
-    .icon-gacha { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
-    .icon-dex { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
-    .icon-slot { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
-    .icon-card { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
-    .icon-tap { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+    .icon-gacha  { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
+    .icon-dex    { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+    .icon-bag    { background: linear-gradient(135deg, #eab308, #ca8a04); color: #fff; }
+    .icon-card   { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+    .icon-slot   { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
+    .icon-tap    { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
     .icon-puzzle { background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff; }
 
     .game-icon-label {
@@ -519,48 +533,51 @@
       <div class="tower-banner-arrow">挑戦する ❯</div>
     </a>
 
-    <!-- 7. ミニゲーム（上段3つ / 下段3つ） -->
+    <!-- 7. ミニゲーム＆コレクション -->
     <div class="game-section">
-      <div class="game-section-title">🎮 MINI GAMES & CASINO</div>
-      <div class="game-grid-2rows">
-        
-        <!-- 上段1: ガチャ -->
+      <div class="game-section-title">🎮 MINI GAMES & COLLECTION</div>
+      
+      <!-- 上段3つ: ガチャ / 図鑑 / 道具 -->
+      <div class="game-grid-top">
         <a href="gacha.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-gacha">✨</div>
           <span class="game-icon-label">ガチャ</span>
         </a>
 
-        <!-- 上段2: 図鑑 -->
         <a href="dex.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-dex">📖</div>
           <span class="game-icon-label">図鑑</span>
         </a>
 
-        <!-- 上段3: スロット -->
-        <a href="game3.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-slot">🎰</div>
-          <span class="game-icon-label">スロット</span>
+        <a href="bag.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-bag">🎒</div>
+          <span class="game-icon-label">道具</span>
         </a>
+      </div>
 
-        <!-- 下段1: トランプ -->
+      <!-- 下段4つ: トランプ / スロット / タップ / パズル -->
+      <div class="game-grid-bottom">
         <a href="game4.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-card">🃏</div>
           <span class="game-icon-label">トランプ</span>
         </a>
 
-        <!-- 下段2: タップ -->
+        <a href="game3.html" class="game-icon-item press-effect">
+          <div class="game-circle-icon icon-slot">🎰</div>
+          <span class="game-icon-label">スロット</span>
+        </a>
+
         <a href="game1.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-tap">⚡</div>
           <span class="game-icon-label">タップ</span>
         </a>
 
-        <!-- 下段3: パズル -->
         <a href="game2.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-puzzle">🍉</div>
           <span class="game-icon-label">パズル</span>
         </a>
-
       </div>
+
     </div>
 
   </div>
