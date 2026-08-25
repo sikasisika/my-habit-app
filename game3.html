@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>目押しパチスロ | スロットホール</title>
 
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -71,7 +75,7 @@
     }
     .top-btn:active { transform: scale(0.95); }
 
-    /* ナビゲーションリンク（別ページ連携） */
+    /* ナビゲーションリンク */
     .nav-links {
       display: flex;
       gap: 6px;
@@ -325,6 +329,7 @@
     <!-- ページ間ナビゲーション -->
     <div class="nav-links">
       <a href="game3.html" class="nav-btn active">🎰 スロット</a>
+      <a href="game4.html" class="nav-btn">🃏 トランプ</a>
       <a href="gacha.html" class="nav-btn">✨ ガチャ</a>
       <a href="dex.html" class="nav-btn">📖 図鑑</a>
     </div>
@@ -415,8 +420,10 @@
   <!-- 自作BGM音源（Pixel_1.mp3） -->
   <audio id="bgm-audio" src="audio/Pixel_1.mp3" preload="auto" loop></audio>
 
+  <!-- クラウド同期モジュール -->
+  <script src="cloudSync.js"></script>
+
   <script>
-    // 10種類のスロットリール絵柄データ（slot1.png 〜 slot10.png）
     const CARDS = [
       { id: 0, name: 'リプレイ',   rarity: 'N',   img: 'images/slot1.png',  win: 100 },
       { id: 1, name: 'ベル',       rarity: 'N',   img: 'images/slot2.png',  win: 200 },
@@ -447,9 +454,14 @@
     }, { once: true });
 
     function updateCoinDisplay() {
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
       document.getElementById('coin-display').textContent = coins.toLocaleString();
-      localStorage.setItem('my_casino_coins', coins);
     }
+
+    // クラウド側データ更新時の自動同期
+    window.onCloudSyncUpdated = function() {
+      updateCoinDisplay();
+    };
 
     function toggleBgm() {
       const btn = document.getElementById('bgm-toggle-btn');
@@ -464,7 +476,11 @@
 
     function addDailyBonus() {
       coins += 500;
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinDisplay();
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       alert('🎁 ボーナスコイン 500枚 ゲット！');
     }
 
@@ -477,7 +493,12 @@
       }
 
       coins -= 100;
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinDisplay();
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
+
       document.getElementById('btn-spin').disabled = true;
       document.getElementById('slot-msg').textContent = '目押しで狙いを定めてストップ！';
 
@@ -560,6 +581,11 @@
 
       if (totalWin > 0) {
         coins += totalWin;
+        localStorage.setItem('my_casino_coins', coins);
+        updateCoinDisplay();
+        if (typeof window.saveGameDataToCloud === 'function') {
+          window.saveGameDataToCloud();
+        }
         msgEl.innerHTML = `🎉 <strong style="color:#fbbf24;">目押し成功！ ${winningLines.join(' + ')} 成立！ +${totalWin.toLocaleString()} コイン！</strong>`;
       } else {
         msgEl.textContent = '惜しい……！タイミングを見極めて目押ししよう！';
