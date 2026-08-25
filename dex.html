@@ -90,7 +90,7 @@
       box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
     }
 
-    /* 手持ち6枠プレビューバー */
+    /* 手持ち6枠プレビューバー（タップでショートカット詳細） */
     .party-preview-bar {
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(8px);
@@ -107,16 +107,19 @@
       gap: 4px;
     }
     .party-slot {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 6px;
       background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.1s ease;
     }
+    .party-slot:active { transform: scale(0.9); }
     .party-slot img { width: 100%; height: 100%; object-fit: contain; }
 
     /* 検索＆ソートコントローラー */
@@ -193,7 +196,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       position: relative;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -202,11 +205,9 @@
     }
     .dex-item:active { transform: scale(0.96); }
 
-    /* 手持ち中ピン留め枠 */
     .dex-item.in-party {
       border: 1.5px solid #38bdf8 !important;
       background: rgba(56, 189, 248, 0.15) !important;
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
     }
     .party-tag {
       position: absolute;
@@ -218,6 +219,14 @@
       color: #fff;
       padding: 1px 4px;
       border-radius: 3px;
+    }
+    .fav-tag {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 9px;
+      color: #fbbf24;
+      text-shadow: 0 0 4px #000;
     }
 
     .dex-item.locked {
@@ -231,8 +240,8 @@
     }
 
     .dex-item img {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       object-fit: contain;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     }
@@ -242,12 +251,19 @@
       font-weight: 800;
       color: #fff;
       text-align: center;
-      line-height: 1.2;
+      line-height: 1.1;
+    }
+    .dex-subname {
+      font-size: 7px;
+      color: #94a3b8;
+      text-align: center;
+      line-height: 1.0;
     }
     .dex-lv-tag {
       font-size: 8px;
       color: #facc15;
       font-weight: bold;
+      margin-top: 1px;
     }
 
     .dex-rarity { font-size: 7px; font-weight: 900; padding: 1px 4px; border-radius: 3px; }
@@ -258,7 +274,7 @@
     .badge-N   { background: #64748b; color: #fff; }
 
     /* ========================================================= */
-    /* 🔍 ポップアップ拡大＆詳細モーダル（タブ切り替え） */
+    /* 🔍 ポップアップ拡大＆詳細モーダル（育成＆お気に入り対応） */
     /* ========================================================= */
     .detail-overlay {
       position: absolute;
@@ -288,21 +304,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.7);
     }
     .detail-card img {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
       filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
     }
 
-    /* モーダル内タブ */
     .modal-tabs {
       display: flex;
       width: 100%;
       gap: 6px;
+      margin-top: 4px;
     }
     .modal-tab-btn {
       flex: 1;
@@ -323,13 +339,13 @@
 
     .tab-content {
       width: 100%;
-      min-height: 80px;
+      min-height: 75px;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-size: 11px;
-      line-height: 1.5;
+      line-height: 1.4;
       color: #cbd5e1;
     }
 
@@ -341,6 +357,51 @@
       font-size: 10px;
     }
     .stat-val { color: #38bdf8; font-weight: bold; }
+
+    /* モーダル内アクションボタン群 */
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .btn-action-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .btn-train-inline {
+      flex: 1;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 7px 0;
+      border-radius: 8px;
+      border: 1px solid #34d399;
+      cursor: pointer;
+    }
+    .btn-train-inline:active { transform: scale(0.96); }
+
+    .btn-fav-toggle {
+      width: 38px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid #fbbf24;
+      color: #fbbf24;
+      font-size: 15px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .btn-fav-toggle.active {
+      background: #fbbf24;
+      color: #000;
+    }
 
     .party-toggle-btn {
       width: 100%;
@@ -354,6 +415,7 @@
     }
     .btn-add-party { background: linear-gradient(135deg, #0284c7, #0369a1); }
     .btn-remove-party { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .btn-disabled-party { background: #475569; opacity: 0.5; cursor: not-allowed; }
 
     .modal-close-btn {
       width: 100%;
@@ -375,26 +437,26 @@
     <div class="top-bar">
       <a href="index.html" class="top-btn">◀ ポータル</a>
       <span style="font-size: 11px; font-weight: bold; color: #cbd5e1;">COLLECTION DEX</span>
-      <a href="train.html" class="top-btn" style="background:#10b981;">🌱 育成ジム</a>
+      <span style="font-size: 11px; color:#fbbf24;">所持: <b id="top-coins">0</b> G</span>
     </div>
 
     <!-- ページリンク -->
     <div class="nav-links">
-      <a href="battle.html" class="nav-btn">⚔️ バトル</a>
+      <a href="tower_home.html" class="nav-btn">🏰 塔へ</a>
       <a href="train.html" class="nav-btn">🌱 育成</a>
       <a href="dex.html" class="nav-btn active">📖 図鑑</a>
       <a href="gacha.html" class="nav-btn">✨ ガチャ</a>
     </div>
 
-    <!-- 手持ち6体プレビュー -->
+    <!-- 手持ち6体プレビュー（タップでショートカット） -->
     <div class="party-preview-bar">
-      <span style="font-size:9px; color:#cbd5e1;">出撃手持ち (最大6体):</span>
+      <span style="font-size:9px; color:#cbd5e1;">出撃手持ち (タップで詳細):</span>
       <div class="party-slots" id="party-slots"></div>
     </div>
 
     <!-- 検索＆ソートバー -->
     <div class="filter-box">
-      <input type="text" class="search-input" id="search-input" placeholder="🔍 なまえで検索（例: ピカチュウ、リザードン）..." oninput="filterAndRender()">
+      <input type="text" class="search-input" id="search-input" placeholder="🔍 なまえ・番号で検索..." oninput="filterAndRender()">
       
       <div class="sort-controls">
         <select class="sort-select" id="sort-type" onchange="filterAndRender()">
@@ -405,7 +467,7 @@
           <option value="def">ぼうぎょ力順</option>
           <option value="hp">HP順</option>
         </select>
-        <button class="sort-order-btn" id="btn-sort-order" onclick="toggleSortOrder()">▼ 降順</button>
+        <button class="sort-order-btn" id="btn-sort-order" onclick="toggleSortOrder()">▲ 昇順</button>
       </div>
     </div>
 
@@ -419,7 +481,8 @@
       <div class="detail-card" onclick="event.stopPropagation()">
         <span class="dex-rarity" id="modal-rarity">SR</span>
         <img id="modal-img" src="" alt="">
-        <div style="font-size:14px; font-weight:900; color:#fff;" id="modal-name">ポケモン名</div>
+        <div style="font-size:14px; font-weight:900; color:#fff; text-align:center;" id="modal-name">ポケモン名</div>
+        <div style="font-size:9px; color:#94a3b8; margin-top:-4px;" id="modal-subname"></div>
 
         <!-- タブ切り替えボタン -->
         <div class="modal-tabs">
@@ -430,6 +493,7 @@
         <!-- タブ1: ステータス -->
         <div class="tab-content" id="tab-stat-content">
           <div class="stat-row"><span>レベル</span><span class="stat-val" id="modal-lv">Lv.1</span></div>
+          <div class="stat-row"><span>タイプ / サイズ</span><span class="stat-val" id="modal-type-size">ほのお / S</span></div>
           <div class="stat-row"><span>HP (たいりょく)</span><span class="stat-val" id="modal-hp">120</span></div>
           <div class="stat-row"><span>ATK (こうげき)</span><span class="stat-val" id="modal-atk">25</span></div>
           <div class="stat-row"><span>DEF (ぼうぎょ)</span><span class="stat-val" id="modal-def">18</span></div>
@@ -438,14 +502,20 @@
 
         <!-- タブ2: 説明文 -->
         <div class="tab-content" id="tab-desc-content" style="display: none;">
-          <div id="modal-desc-text" style="font-size:10px; color:#e2e8f0; line-height:1.6;">
-            説明文は準備中だぜ！
-          </div>
+          <div id="modal-desc-text" style="font-size:10px; color:#e2e8f0; line-height:1.5;"></div>
         </div>
 
-        <!-- 手持ち編成ボタン -->
-        <button class="party-toggle-btn" id="btn-party-toggle" onclick="togglePartyFromModal()">手持ちに入れる</button>
-        <button class="modal-close-btn" onclick="closeModal()">閉じる</button>
+        <!-- アクションボタン群 -->
+        <div class="modal-actions">
+          <div class="btn-action-row">
+            <button class="btn-train-inline" onclick="levelUpFromModal()">🌱 100Gでレベルアップ</button>
+            <button class="btn-fav-toggle" id="btn-fav-toggle" onclick="toggleFavoriteFromModal()" title="お気に入り登録（ポータル表示）">★</button>
+          </div>
+
+          <button class="party-toggle-btn" id="btn-party-toggle" onclick="togglePartyFromModal()">手持ちに入れる</button>
+          <button class="modal-close-btn" onclick="closeModal()">閉じる</button>
+        </div>
+
       </div>
     </div>
 
@@ -454,19 +524,81 @@
   <script src="pokemonData.js"></script>
 
   <script>
+    // たねポケモンID取得関数
+    function getBasePokemonId(id) {
+      if (id.startsWith('p0001') || id.startsWith('p0002') || id.startsWith('p0003')) return 'p0001';
+      if (id.startsWith('p0004') || id.startsWith('p0005') || id.startsWith('p0006')) return 'p0004';
+      if (id.startsWith('p0007') || id.startsWith('p0008') || id.startsWith('p0009')) return 'p0007';
+      if (id.startsWith('p0010') || id.startsWith('p0011') || id.startsWith('p0012')) return 'p0010';
+      if (id.startsWith('p0013') || id.startsWith('p0014') || id.startsWith('p0015')) return 'p0013';
+      if (id.startsWith('p0016') || id.startsWith('p0017') || id.startsWith('p0018')) return 'p0016';
+      if (id.startsWith('p0019') || id.startsWith('p0020')) return id.includes('-a') ? 'p0019-a' : 'p0019';
+      if (id.startsWith('p0021') || id.startsWith('p0022')) return 'p0021';
+      if (id.startsWith('p0023') || id.startsWith('p0024')) return 'p0023';
+      if (id.startsWith('p0025') || id.startsWith('p0026')) return id.includes('-a') ? 'p0026-a' : 'p0025';
+      if (id.startsWith('p0027') || id.startsWith('p0028')) return id.includes('-a') ? 'p0027-a' : 'p0027';
+      if (id.startsWith('p0029') || id.startsWith('p0030') || id.startsWith('p0031')) return 'p0029';
+      if (id.startsWith('p0032') || id.startsWith('p0033') || id.startsWith('p0034')) return 'p0032';
+      if (id.startsWith('p0035') || id.startsWith('p0036')) return 'p0035';
+      if (id.startsWith('p0037') || id.startsWith('p0038')) return id.includes('-a') ? 'p0037-a' : 'p0037';
+      if (id.startsWith('p0039') || id.startsWith('p0040')) return 'p0039';
+      if (id.startsWith('p0041') || id.startsWith('p0042')) return 'p0041';
+      if (id.startsWith('p0043') || id.startsWith('p0044') || id.startsWith('p0045')) return 'p0043';
+      if (id.startsWith('p0046') || id.startsWith('p0047')) return 'p0046';
+      if (id.startsWith('p0048') || id.startsWith('p0049')) return 'p0048';
+      if (id.startsWith('p0050') || id.startsWith('p0051')) return id.includes('-a') ? 'p0050-a' : 'p0050';
+      if (id.startsWith('p0052') || id.startsWith('p0053')) return id.includes('-a') ? 'p0052-a' : id.includes('-g') ? 'p0052-g' : 'p0052';
+      if (id.startsWith('p0054') || id.startsWith('p0055')) return 'p0054';
+      if (id.startsWith('p0056') || id.startsWith('p0057')) return 'p0056';
+      if (id.startsWith('p0058') || id.startsWith('p0059')) return id.includes('-h') ? 'p0058-h' : 'p0058';
+      if (id.startsWith('p0060') || id.startsWith('p0061') || id.startsWith('p0062')) return 'p0060';
+      if (id.startsWith('p0063') || id.startsWith('p0064') || id.startsWith('p0065')) return 'p0063';
+      if (id.startsWith('p0066') || id.startsWith('p0067') || id.startsWith('p0068')) return 'p0066';
+      if (id.startsWith('p0069') || id.startsWith('p0070') || id.startsWith('p0071')) return 'p0069';
+      if (id.startsWith('p0072') || id.startsWith('p0073')) return 'p0072';
+      if (id.startsWith('p0074') || id.startsWith('p0075') || id.startsWith('p0076')) return id.includes('-a') ? 'p0074-a' : 'p0074';
+      if (id.startsWith('p0077') || id.startsWith('p0078')) return id.includes('-g') ? 'p0077-g' : 'p0077';
+      if (id.startsWith('p0079') || id.startsWith('p0080')) return id.includes('-g') ? 'p0079-g' : 'p0079';
+      if (id.startsWith('p0081') || id.startsWith('p0082')) return 'p0081';
+      if (id.startsWith('p0083')) return id.includes('-g') ? 'p0083-g' : 'p0083';
+      if (id.startsWith('p0084') || id.startsWith('p0085')) return 'p0084';
+      if (id.startsWith('p0086') || id.startsWith('p0087')) return 'p0086';
+      if (id.startsWith('p0088') || id.startsWith('p0089')) return id.includes('-a') ? 'p0088-a' : 'p0088';
+      if (id.startsWith('p0090') || id.startsWith('p0091')) return 'p0090';
+      if (id.startsWith('p0092') || id.startsWith('p0093') || id.startsWith('p0094')) return 'p0092';
+      if (id.startsWith('p0098') || id.startsWith('p0099')) return 'p0098';
+      if (id.startsWith('p0100') || id.startsWith('p0101')) return id.includes('-h') ? 'p0100-h' : 'p0100';
+      if (id.startsWith('p0102') || id.startsWith('p0103')) return 'p0102';
+      if (id.startsWith('p0104') || id.startsWith('p0105')) return 'p0104';
+      if (id.startsWith('p0109') || id.startsWith('p0110')) return 'p0109';
+      if (id.startsWith('p0111') || id.startsWith('p0112')) return 'p0111';
+      if (id.startsWith('p0116') || id.startsWith('p0117')) return 'p0116';
+      if (id.startsWith('p0118') || id.startsWith('p0119')) return 'p0118';
+      if (id.startsWith('p0120') || id.startsWith('p0121')) return 'p0120';
+      if (id.startsWith('p0133') || id.startsWith('p0134') || id.startsWith('p0135') || id.startsWith('p0136')) return 'p0133';
+      if (id.startsWith('p0138') || id.startsWith('p0139')) return 'p0138';
+      if (id.startsWith('p0140') || id.startsWith('p0141')) return 'p0140';
+      if (id.startsWith('p0147') || id.startsWith('p0148') || id.startsWith('p0149')) return 'p0147';
+      if (id.startsWith('p0443') || id.startsWith('p0444') || id.startsWith('p0445')) return 'p0443';
+      if (id.startsWith('p0447') || id.startsWith('p0448')) return 'p0447';
+      return id.split('-')[0];
+    }
+
     let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{}');
     let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
     let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let favoriteId = localStorage.getItem('my_favorite_pokemon') || 'p0004';
 
-    let currentSortOrder = 'desc'; // 'asc' or 'desc'
+    // ★ 初期ソート順を「昇順（小さい順）」に設定
+    let currentSortOrder = 'asc'; 
     let selectedPokemon = null;
 
     function getPokeStats(card) {
-      const baseId = card.id.split('-')[0];
+      const baseId = getBasePokemonId(card.id);
       const lv = levels[baseId] || 1;
       const count = inventory[card.id] || 0;
 
-      // レアリティ・形態ボーナス
       let multi = 1.0;
       if (card.rarity === 'R') multi = 1.2;
       if (card.rarity === 'SR') multi = 1.5;
@@ -480,18 +612,27 @@
       return { lv, hp, atk, def, count };
     }
 
+    // 手持ちスロット描画（タップで該当ポケモンの詳細へ）
     function renderSlots() {
       const container = document.getElementById('party-slots');
       container.innerHTML = '';
       for (let i = 0; i < 6; i++) {
         const slot = document.createElement('div');
         slot.className = 'party-slot';
-        if (party[i]) {
-          const p = (typeof POKEMON_DATA !== 'undefined' ? POKEMON_DATA.find(x => x.id === party[i]) : null) || { img: 'images/gacha/' + party[i] + '.png' };
+        const pid = party[i];
+        if (pid) {
+          const p = (typeof POKEMON_DATA !== 'undefined' ? POKEMON_DATA.find(x => x.id === pid) : null) || { id: pid, img: 'images/gacha/' + pid + '.png' };
           slot.innerHTML = `<img src="${p.img}" onerror="this.src='images/slot1.png'">`;
+          slot.onclick = () => {
+            const found = POKEMON_DATA.find(x => x.id === pid);
+            if (found) openModal(found);
+          };
+        } else {
+          slot.innerHTML = `<span style="font-size:8px; color:#64748b;">(空)</span>`;
         }
         container.appendChild(slot);
       }
+      document.getElementById('top-coins').textContent = coins;
     }
 
     function toggleSortOrder() {
@@ -512,17 +653,12 @@
       // 1. 検索フィルタ
       let list = pool.filter(card => {
         if (!query) return true;
-        return card.name.toLowerCase().includes(query) || card.id.toLowerCase().includes(query);
+        const sub = card.subName || '';
+        return card.name.toLowerCase().includes(query) || sub.toLowerCase().includes(query) || card.id.toLowerCase().includes(query);
       });
 
-      // 2. ソート処理
+      // 2. ソート処理（手持ち優先を撤廃し、純粋な昇順/降順に整列）
       list.sort((a, b) => {
-        const inPartyA = party.includes(a.id) ? 1 : 0;
-        const inPartyB = party.includes(b.id) ? 1 : 0;
-
-        // ★ 手持ち中（パーティー）を最優先で一番上に配置
-        if (inPartyA !== inPartyB) return inPartyB - inPartyA;
-
         const statA = getPokeStats(a);
         const statB = getPokeStats(b);
 
@@ -538,7 +674,7 @@
         } else if (sortType === 'hp') {
           valA = statA.hp; valB = statB.hp;
         } else {
-          // 図鑑ID順
+          // 図鑑ID順（例: p0001, p0002...）
           valA = a.id; valB = b.id;
           return currentSortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
         }
@@ -551,15 +687,18 @@
         const count = inventory[card.id] || 0;
         const isOwned = count > 0;
         const inParty = party.includes(card.id);
+        const isFav = (favoriteId === card.id);
         const stats = getPokeStats(card);
 
         const el = document.createElement('div');
         el.className = `dex-item ${isOwned ? '' : 'locked'} ${inParty ? 'in-party' : ''}`;
         el.innerHTML = `
           ${inParty ? '<span class="party-tag">手持ち</span>' : ''}
+          ${isFav ? '<span class="fav-tag">★</span>' : ''}
           <span class="dex-rarity badge-${card.rarity}">${card.rarity}</span>
           <img src="${card.img}" loading="lazy" onerror="this.src='images/slot1.png'">
           <span class="dex-name">${isOwned ? card.name : '???'}</span>
+          ${card.subName && isOwned ? `<span class="dex-subname">${card.subName}</span>` : ''}
           ${isOwned ? `<span class="dex-lv-tag">Lv.${stats.lv}</span>` : '<span style="font-size:7px; color:#64748b;">未所持</span>'}
         `;
 
@@ -575,13 +714,16 @@
       selectedPokemon = card;
       const stats = getPokeStats(card);
       const inParty = party.includes(card.id);
+      const isFav = (favoriteId === card.id);
 
       document.getElementById('modal-rarity').className = `dex-rarity badge-${card.rarity}`;
       document.getElementById('modal-rarity').textContent = card.rarity;
       document.getElementById('modal-img').src = card.img;
       document.getElementById('modal-name').textContent = card.name;
+      document.getElementById('modal-subname').textContent = card.subName || '';
 
       document.getElementById('modal-lv').textContent = `Lv.${stats.lv}`;
+      document.getElementById('modal-type-size').textContent = `${card.type || 'ノーマル'} / ${card.size || 'S'}`;
       document.getElementById('modal-hp').textContent = stats.hp;
       document.getElementById('modal-atk').textContent = stats.atk;
       document.getElementById('modal-def').textContent = stats.def;
@@ -589,9 +731,15 @@
 
       document.getElementById('modal-desc-text').textContent = card.desc 
         ? card.desc 
-        : `【${card.name}】\n図鑑番号: ${card.id.toUpperCase()}\nレアリティ: ${card.rarity}\n（※説明文は準備中だぜ！）`;
+        : `【${card.name}】${card.subName ? `(${card.subName})` : ''}\n図鑑ID: ${card.id.toUpperCase()}\nタイプ: ${card.type || 'ノーマル'}\nサイズ: ${card.size || 'S'}\nレアリティ: ${card.rarity}`;
 
-      updatePartyBtnUI(inParty);
+      // お気に入りボタンUI
+      const favBtn = document.getElementById('btn-fav-toggle');
+      favBtn.className = `btn-fav-toggle ${isFav ? 'active' : ''}`;
+
+      // 編成可否判定
+      updatePartyBtnUI(card, inParty);
+
       switchTab('stat');
       document.getElementById('detail-modal').style.display = 'flex';
     }
@@ -603,17 +751,30 @@
       document.getElementById('tab-desc-content').style.display = (type === 'desc') ? 'block' : 'none';
     }
 
-    function updatePartyBtnUI(inParty) {
+    // 編成可否判定（たねポケモンを所持しているか）
+    function updatePartyBtnUI(card, inParty) {
       const btn = document.getElementById('btn-party-toggle');
+      const baseId = getBasePokemonId(card.id);
+      const hasBase = (inventory[baseId] > 0);
+
       if (inParty) {
         btn.className = 'party-toggle-btn btn-remove-party';
         btn.textContent = '手持ちから外す';
+        btn.disabled = false;
       } else {
-        btn.className = 'party-toggle-btn btn-add-party';
-        btn.textContent = '手持ちに入れる (出撃枠)';
+        if (!hasBase) {
+          btn.className = 'party-toggle-btn btn-disabled-party';
+          btn.textContent = '⚠️ たねポケモン未所持 (編成不可)';
+          btn.disabled = true;
+        } else {
+          btn.className = 'party-toggle-btn btn-add-party';
+          btn.textContent = '手持ちに入れる (出撃枠)';
+          btn.disabled = false;
+        }
       }
     }
 
+    // 手持ち編成切り替え
     function togglePartyFromModal() {
       if (!selectedPokemon) return;
       const id = selectedPokemon.id;
@@ -630,7 +791,49 @@
       }
 
       localStorage.setItem('my_battle_party', JSON.stringify(party));
-      updatePartyBtnUI(!inParty);
+      updatePartyBtnUI(selectedPokemon, !inParty);
+      filterAndRender();
+    }
+
+    // お気に入り登録切り替え
+    function toggleFavoriteFromModal() {
+      if (!selectedPokemon) return;
+      const id = selectedPokemon.id;
+      if (favoriteId === id) {
+        favoriteId = '';
+        localStorage.removeItem('my_favorite_pokemon');
+      } else {
+        favoriteId = id;
+        localStorage.setItem('my_favorite_pokemon', id);
+      }
+      document.getElementById('btn-fav-toggle').classList.toggle('active', favoriteId === id);
+      filterAndRender();
+    }
+
+    // 図鑑内での直接レベルアップ（100G消費）
+    function levelUpFromModal() {
+      if (!selectedPokemon) return;
+      if (coins < 100) {
+        alert('コインが足りないぜ！ (必要: 100G)');
+        return;
+      }
+
+      coins -= 100;
+      localStorage.setItem('my_casino_coins', coins);
+
+      const baseId = getBasePokemonId(selectedPokemon.id);
+      const curLv = levels[baseId] || 1;
+      levels[baseId] = curLv + 1;
+      localStorage.setItem('my_partner_levels', JSON.stringify(levels));
+
+      // UI即時更新
+      const stats = getPokeStats(selectedPokemon);
+      document.getElementById('modal-lv').textContent = `Lv.${stats.lv}`;
+      document.getElementById('modal-hp').textContent = stats.hp;
+      document.getElementById('modal-atk').textContent = stats.atk;
+      document.getElementById('modal-def').textContent = stats.def;
+      document.getElementById('top-coins').textContent = coins;
+
       filterAndRender();
     }
 
