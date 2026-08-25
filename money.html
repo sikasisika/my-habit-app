@@ -333,7 +333,7 @@
       position: fixed;
       inset: 0;
       background: #0f172a;
-      z-index: 9999;
+      z-index: 99999;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -410,8 +410,8 @@
 </head>
 <body>
 
-  <!-- 🔒 ロック画面オーバーレイ -->
-  <div class="lock-overlay" id="lock-screen" style="display: none;">
+  <!-- 🔒 ロック画面オーバーレイ（初期状態で完全表示） -->
+  <div class="lock-overlay" id="lock-screen">
     <div class="lock-icon">🔐</div>
     <div class="lock-title" id="lock-msg-title">暗証番号を入力</div>
     <div class="lock-subtitle" id="lock-msg-sub">4桁のパスコードを入力してください</div>
@@ -595,7 +595,6 @@
       }
     }
 
-    // LocalStorageヘルパー
     function getStoredNumber(key) {
       const val = localStorage.getItem(key);
       return (val !== null && val !== '') ? Number(val) : 0;
@@ -624,16 +623,23 @@
       if (!savedPin) {
         // 初回：PIN設定案内
         isSettingMode = true;
+        tempNewPin = '';
+        enteredPin = '';
+        updateDots();
         document.getElementById('lock-msg-title').textContent = '暗証番号を登録';
         document.getElementById('lock-msg-sub').textContent = '新しい4桁の暗証番号を入力してください';
         document.getElementById('lock-screen').style.display = 'flex';
       } else if (isLockEnabled) {
-        // ロック起動
+        // ロック中
         isSettingMode = false;
+        tempNewPin = '';
+        enteredPin = '';
+        updateDots();
         document.getElementById('lock-msg-title').textContent = '暗証番号を入力';
         document.getElementById('lock-msg-sub').textContent = '4桁のパスコードを入力してください';
         document.getElementById('lock-screen').style.display = 'flex';
       } else {
+        // ロック解除済み/無効
         document.getElementById('lock-screen').style.display = 'none';
       }
     }
@@ -641,8 +647,10 @@
     function updateDots() {
       for (let i = 0; i < 4; i++) {
         const dot = document.getElementById(`dot-${i}`);
-        if (i < enteredPin.length) dot.classList.add('filled');
-        else dot.classList.remove('filled');
+        if (dot) {
+          if (i < enteredPin.length) dot.classList.add('filled');
+          else dot.classList.remove('filled');
+        }
       }
     }
 
@@ -668,19 +676,17 @@
 
       if (isSettingMode) {
         if (!tempNewPin) {
-          // 1回目の入力完了 ➔ 確認のため再入力
           tempNewPin = enteredPin;
           enteredPin = '';
           updateDots();
           document.getElementById('lock-msg-title').textContent = 'もう一度入力';
           document.getElementById('lock-msg-sub').textContent = '確認のため同じ暗証番号を入力してください';
         } else {
-          // 2回目の入力完了 ➔ 一致チェック
           if (enteredPin === tempNewPin) {
             localStorage.setItem('my_money_pin', enteredPin);
             localStorage.setItem('my_money_lock_enabled', 'true');
             syncToFirebaseAndLocal();
-            alert('🔐 暗証番号を登録・設定したぜ！');
+            alert('🔐 暗証番号を登録したぜ！');
             document.getElementById('lock-screen').style.display = 'none';
           } else {
             alert('暗証番号が一致しなかったぜ。最初からやり直してくれ！');
@@ -691,7 +697,6 @@
           }
         }
       } else {
-        // ロック解除判定
         if (enteredPin === savedPin) {
           enteredPin = '';
           updateDots();
@@ -713,7 +718,6 @@
       );
 
       if (action) {
-        // PIN変更
         if (currentPin) {
           const input = prompt('現在の4桁の暗証番号を入力してください:');
           if (input !== currentPin) {
@@ -729,7 +733,6 @@
         document.getElementById('lock-msg-sub').textContent = '新しい4桁の暗証番号を入力してください';
         document.getElementById('lock-screen').style.display = 'flex';
       } else {
-        // ON/OFF切り替え
         const toggle = confirm(`暗証番号ロックを【${isEnabled ? '無効（次回からスキップ）' : '有効（毎回要求）'}】にしますか？`);
         if (toggle) {
           localStorage.setItem('my_money_lock_enabled', (!isEnabled).toString());
@@ -781,7 +784,6 @@
           if (d.currentRoute !== undefined) localStorage.setItem('myCurrentRoute', d.currentRoute);
           if (d.confirmSetting !== undefined) localStorage.setItem('myConfirmSetting', d.confirmSetting);
           if (d.moneyPin !== undefined && d.moneyPin !== '') localStorage.setItem('my_money_pin', d.moneyPin);
-          if (d.lockEnabled !== undefined) localStorage.setItem('my_money_lock_enabled', d.lockEnabled);
           
           updateDisplay();
           setSyncStatus(false);
@@ -926,7 +928,6 @@
       alert('運賃設定をクラウドに保存したぜ！');
     }
 
-    // 通勤ワンタップ
     function quickCommute(type) {
       const fares = getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 });
       const currentRoute = localStorage.getItem('myCurrentRoute') || 'A';
@@ -962,7 +963,6 @@
       syncToFirebaseAndLocal();
     }
 
-    // メイン記録
     function recordMainTransaction() {
       const direction = document.getElementById('main-direction').value;
       const account = document.getElementById('main-account').value;
@@ -1009,7 +1009,6 @@
       syncToFirebaseAndLocal();
     }
 
-    // Suica手動記録
     function recordSuicaTransaction() {
       const direction = document.getElementById('suica-direction').value;
       const amountInput = document.getElementById('suica-amount');
