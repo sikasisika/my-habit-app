@@ -12,7 +12,13 @@
   <meta name="theme-color" content="#111111">
   <link rel="apple-touch-icon" href="images/kibana.png">
 
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     :root, [data-theme="kibana"] {
       --bg-color: rgba(38, 46, 64, 0.7);
@@ -84,10 +90,10 @@
       gap: 16px;
     }
 
-    /* ポータルへ戻るナビゲーション */
+    /* ポータルへ戻るナビゲーション ＆ 同期ステータス */
     .top-nav {
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
       margin-bottom: -4px;
     }
@@ -105,6 +111,23 @@
     }
     .back-btn:active {
       opacity: 0.7;
+    }
+
+    /* 同期ステータスバッジ */
+    .sync-status-badge {
+      font-size: 10px;
+      font-weight: bold;
+      color: #a7f3d0;
+      background: rgba(5, 150, 105, 0.35);
+      border: 1px solid rgba(167, 243, 208, 0.4);
+      padding: 4px 8px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+    .sync-status-badge.syncing {
+      color: #fde68a;
+      background: rgba(217, 119, 6, 0.35);
+      border-color: rgba(253, 230, 138, 0.4);
     }
 
     .theme-selector {
@@ -256,9 +279,10 @@
 
   <div class="app-container">
 
-    <!-- ポータルへ戻る -->
+    <!-- ポータルへ戻る ＆ 同期ステータス -->
     <div class="top-nav">
       <a href="index.html" class="back-btn">◀ ポータルへ戻る</a>
+      <span id="sync-status" class="sync-status-badge">☁️ クラウド同期中...</span>
     </div>
 
     <div class="theme-selector">
@@ -314,6 +338,92 @@
   </div>
 
   <script>
+    // =========================================================
+    // 🔥 Firebase 初期化 ＆ Firestore連携
+    // =========================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDe2qsA9wEb1z3993Cz2EBJR2LY4GzUibk",
+      authDomain: "my-private-chat-d5464.firebaseapp.com",
+      projectId: "my-private-chat-d5464",
+      storageBucket: "my-private-chat-d5464.firebasestorage.app",
+      messagingSenderId: "272901563642",
+      appId: "1:272901563642:web:af2c6f6d57572e33c61543"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const healthDocRef = db.collection('app_data').doc('health_fitness');
+
+    function setSyncStatus(isSyncing) {
+      const badge = document.getElementById('sync-status');
+      if (badge) {
+        if (isSyncing) {
+          badge.className = 'sync-status-badge syncing';
+          badge.textContent = '☁️ 同期中...';
+        } else {
+          badge.className = 'sync-status-badge';
+          badge.textContent = '☁️ クラウド同期済';
+        }
+      }
+    }
+
+    // Firebaseへの保存
+    async function syncHealthToFirebase() {
+      setSyncStatus(true);
+      const todayKey = 'tasks_' + new Date().toDateString();
+      const data = {
+        theme: currentTheme,
+        weightHistory: JSON.parse(localStorage.getItem('weightHistory') || '[]'),
+        todayTasks: JSON.parse(localStorage.getItem(todayKey) || '{"study":false,"exercise":false}'),
+        todayDateKey: todayKey,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await healthDocRef.set(data, { merge: true });
+        setSyncStatus(false);
+      } catch (err) {
+        console.error('Firebase health save error:', err);
+        setSyncStatus(false);
+      }
+    }
+
+    // Firebaseからのリアルタイム同期
+    function listenToHealthFirebase() {
+      healthDocRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          const d = doc.data();
+          if (d.theme) {
+            currentTheme = d.theme;
+            localStorage.setItem('myHealthTheme', d.theme);
+            document.documentElement.setAttribute('data-theme', d.theme);
+          }
+          if (d.weightHistory) {
+            localStorage.setItem('weightHistory', JSON.stringify(d.weightHistory));
+            updateChart();
+            updateDiaryList();
+          }
+          const todayKey = 'tasks_' + new Date().toDateString();
+          if (d.todayDateKey === todayKey && d.todayTasks) {
+            localStorage.setItem(todayKey, JSON.stringify(d.todayTasks));
+            document.getElementById('chk-study').checked = !!d.todayTasks.study;
+            document.getElementById('chk-exercise').checked = !!d.todayTasks.exercise;
+          }
+          setSyncStatus(false);
+        } else {
+          syncHealthToFirebase();
+        }
+      }, (err) => {
+        console.error('Firebase health listen error:', err);
+        setSyncStatus(false);
+      });
+    }
+
+    // =========================================================
+    // 習慣・健康管理ロジック
+    // =========================================================
     let currentTheme = localStorage.getItem('myHealthTheme') || 'kibana';
 
     const oshiQuotes = {
@@ -361,6 +471,7 @@
       
       const msg = document.getElementById('oshi-msg');
       msg.textContent = oshiQuotes[themeName][0];
+      syncHealthToFirebase();
     }
 
     function onTaskCheck(checkbox) {
@@ -370,6 +481,7 @@
         exercise: document.getElementById('chk-exercise').checked
       };
       localStorage.setItem(todayKey, JSON.stringify(taskState));
+      syncHealthToFirebase();
 
       if (checkbox.checked) {
         const msg = document.getElementById('oshi-msg');
@@ -422,6 +534,7 @@
 
       updateChart();
       updateDiaryList();
+      syncHealthToFirebase();
 
       const msg = document.getElementById('oshi-msg');
       msg.textContent = oshiQuotes[currentTheme][0];
@@ -524,6 +637,7 @@
 
       updateChart();
       updateDiaryList();
+      listenToHealthFirebase();
     };
   </script>
 
