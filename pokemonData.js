@@ -866,6 +866,7 @@ const POKEMON_DATA = [
   // 359 アブソル
   { id: 'p0359', name: 'アブソル', subName: '', type: 'あく', size: 'M', rarity: 'SR', img: 'images/gacha/p0359.png', rate: 12 },
   { id: 'p0359-m', name: 'アブソル', subName: 'メガシンカ', type: 'あく', size: 'G', rarity: 'SSR', img: 'images/gacha/p0359-m.png', rate: 7 },
+  { id: 'p0359-z', name: 'アブソル', subName: 'メガシンカ', type: 'あく', size: 'G', rarity: 'SSR', img: 'images/gacha/p0359-z.png', rate: 7 },
 
   // 360 ソーナノ
   { id: 'p0360', name: 'ソーナノ', subName: '', type: 'エスパー', size: 'S', rarity: 'N', img: 'images/gacha/p0360.png', rate: 30 },
@@ -916,9 +917,9 @@ const POKEMON_DATA = [
 
   // 382 - 384 超古代伝説
   { id: 'p0382', name: 'カイオーガ', subName: '', type: 'みず', size: 'L', rarity: 'UR', img: 'images/gacha/p0382.png', rate: 3 },
-  { id: 'p0382-p', name: 'カイオーガ', subName: 'ゲンシカイキ', type: 'みず', size: 'G', rarity: 'UR', img: 'images/gacha/p0382-p.png', rate: 3 },
+  { id: 'p0382-m', name: 'カイオーガ', subName: 'ゲンシカイキ', type: 'みず', size: 'G', rarity: 'UR', img: 'images/gacha/p0382-m.png', rate: 3 },
   { id: 'p0383', name: 'グラードン', subName: '', type: 'じめん', size: 'L', rarity: 'UR', img: 'images/gacha/p0383.png', rate: 3 },
-  { id: 'p0383-p', name: 'グラードン', subName: 'ゲンシカイキ', type: 'じめん', size: 'G', rarity: 'UR', img: 'images/gacha/p0383-p.png', rate: 3 },
+  { id: 'p0383-m', name: 'グラードン', subName: 'ゲンシカイキ', type: 'じめん', size: 'G', rarity: 'UR', img: 'images/gacha/p0383-m.png', rate: 3 },
   { id: 'p0384', name: 'レックウザ', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0384.png', rate: 3 },
   { id: 'p0384-m', name: 'レックウザ', subName: 'メガシンカ', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0384-m.png', rate: 3 },
 
