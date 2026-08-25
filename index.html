@@ -70,7 +70,7 @@
     }
 
     /* ========================================================= */
-    /* 🎮 ゲームボーイ風・相棒（お気に入り）育成ウィジェット */
+    /* 1. 🎮 ゲームボーイ風・相棒（お気に入り）育成ウィジェット */
     /* ========================================================= */
     .gb-chassis {
       background: #c0c2ce;
@@ -111,7 +111,6 @@
       margin-right: 3px;
     }
 
-    /* レトロ液晶画面 */
     .gb-lcd {
       background: #8b956d;
       border: 2px solid #737c56;
@@ -205,7 +204,91 @@
     .btn-dex-link { background: #2563eb; box-shadow: 0 2px 0 #1d4ed8; }
 
     /* ========================================================= */
-    /* 🏰 タワーバトル専用・横長ワイドバナーボタン */
+    /* 2. 💰 クイックステータス枠（総資産 / Suica） */
+    /* ========================================================= */
+    .status-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+    }
+    .status-item {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .status-item span {
+      display: block;
+      font-size: 10px;
+      color: #64748b;
+    }
+
+    .blur-value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #1e293b;
+      margin-top: 2px;
+      display: block;
+      filter: blur(6px);
+      transition: filter 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .blur-value.revealed {
+      filter: blur(0px);
+    }
+
+    /* ========================================================= */
+    /* 3〜5. メインツールカード一覧 */
+    /* ========================================================= */
+    .app-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .app-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .app-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    }
+
+    .icon-money { background: linear-gradient(135deg, #34d399, #059669); color: #fff; }
+    .icon-chat { background: linear-gradient(135deg, #60a5fa, #2563eb); color: #fff; }
+    .icon-health { background: linear-gradient(135deg, #f87171, #dc2626); color: #fff; }
+
+    .app-info { flex: 1; }
+    .app-info h2 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+    .app-info p { font-size: 10px; color: #64748b; line-height: 1.3; }
+
+    .arrow-icon { font-size: 13px; color: #94a3b8; font-weight: bold; }
+
+    /* ========================================================= */
+    /* 6. 🏰 タワーバトル専用・横長ワイドバナーボタン */
     /* ========================================================= */
     .tower-banner-card {
       width: 100%;
@@ -270,107 +353,27 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    /* クイックステータス枠 */
-    .status-panel {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(8px);
-      border-radius: 14px;
-      padding: 8px 14px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-    }
-    .status-item {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .status-item span {
-      display: block;
-      font-size: 10px;
-      color: #64748b;
-    }
-
-    .blur-value {
-      font-size: 14px;
-      font-weight: bold;
-      color: #1e293b;
-      margin-top: 2px;
-      display: block;
-      filter: blur(6px);
-      transition: filter 0.2s ease;
-      cursor: pointer;
-      user-select: none;
-    }
-    .blur-value.revealed {
-      filter: blur(0px);
-    }
-
-    /* メインツールカード一覧 */
-    .app-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .app-card {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      border-radius: 14px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-    }
-
-    .app-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-    }
-
-    .icon-money { background: linear-gradient(135deg, #34d399, #059669); color: #fff; }
-    .icon-chat { background: linear-gradient(135deg, #60a5fa, #2563eb); color: #fff; }
-    .icon-health { background: linear-gradient(135deg, #f87171, #dc2626); color: #fff; }
-
-    .app-info { flex: 1; }
-    .app-info h2 { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
-    .app-info p { font-size: 10px; color: #64748b; line-height: 1.3; }
-
-    .arrow-icon { font-size: 13px; color: #94a3b8; font-weight: bold; }
-
-    /* ミニゲームセクション */
+    /* ========================================================= */
+    /* 7. 🎮 ミニゲームセクション（上段3つ / 下段3つのグリッド） */
+    /* ========================================================= */
     .game-section {
       background: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(8px);
       border-radius: 16px;
-      padding: 10px 14px;
+      padding: 12px 14px;
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
     .game-section-title {
       font-size: 11px;
       font-weight: 800;
       color: #64748b;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
     }
-    .game-icon-grid {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      overflow-x: auto;
-      padding-bottom: 4px;
+    .game-grid-2rows {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px 8px;
     }
 
     .game-icon-item {
@@ -379,7 +382,6 @@
       align-items: center;
       gap: 4px;
       text-decoration: none;
-      flex-shrink: 0;
     }
     .game-circle-icon {
       width: 48px;
@@ -392,13 +394,15 @@
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
-    .icon-game1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
-    .icon-game2 { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
-    .icon-game3 { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
-    .icon-game4 { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+    .icon-gacha { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
+    .icon-dex { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+    .icon-slot { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
+    .icon-card { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+    .icon-tap { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+    .icon-puzzle { background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff; }
 
     .game-icon-label {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: bold;
       color: #1e293b;
       text-align: center;
@@ -414,7 +418,7 @@
       <p>日常の管理・記録をひとつに集約</p>
     </header>
 
-    <!-- 🎮 ゲームボーイ風 相棒（お気に入り）育成ウィジェット -->
+    <!-- 1. ゲームボーイ風 相棒（お気に入り）育成ウィジェット -->
     <div class="gb-chassis">
       <div class="gb-screen-bezel">
         <div class="gb-screen-header">
@@ -453,7 +457,54 @@
       </div>
     </div>
 
-    <!-- 🏰 タワーバトル専用 横長ワイドバナーボタン -->
+    <!-- 2. 総資産 / Suica（クイックサマリー） -->
+    <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
+      <div class="status-item">
+        <span>💰 総資産 <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
+        <strong id="dash-total-assets" class="blur-value">--- 円</strong>
+      </div>
+      <div class="status-item">
+        <span>🐧 Suica <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
+        <strong id="dash-suica-assets" class="blur-value">--- 円</strong>
+      </div>
+    </div>
+
+    <!-- 3〜5. メインアプリ一覧（お小遣い / メッセージ / ボディ管理） -->
+    <div class="app-grid">
+      
+      <!-- 3. お小遣い・資産管理 -->
+      <a href="money.html" class="app-card press-effect">
+        <div class="app-icon-box icon-money">💰</div>
+        <div class="app-info">
+          <h2>お小遣い・資産管理</h2>
+          <p>現金・銀行・Suica残高とワンタップ通勤記録</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+      <!-- 4. メッセージ＆メモ -->
+      <a href="message.html" class="app-card press-effect">
+        <div class="app-icon-box icon-chat">💬</div>
+        <div class="app-info">
+          <h2>メッセージ＆メモ</h2>
+          <p>複数端末のリアルタイム共有・固定メモ帳</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+      <!-- 5. 健康・運動管理（ボディ管理） -->
+      <a href="health.html" class="app-card press-effect">
+        <div class="app-icon-box icon-health">💪</div>
+        <div class="app-info">
+          <h2>健康・運動管理</h2>
+          <p>日々の運動習慣や体調のクイック記録</p>
+        </div>
+        <div class="arrow-icon">❯</div>
+      </a>
+
+    </div>
+
+    <!-- 6. ポケモン バトルタワー（横長ワイドバナー） -->
     <a href="tower_home.html" class="tower-banner-card press-effect">
       <img src="images/tower_banner.png" alt="バトルタワー" class="tower-banner-img" onerror="this.style.display='none'">
       
@@ -468,85 +519,44 @@
       <div class="tower-banner-arrow">挑戦する ❯</div>
     </a>
 
-    <!-- クイックサマリー -->
-    <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
-      <div class="status-item">
-        <span>💰 総資産 <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
-        <strong id="dash-total-assets" class="blur-value">--- 円</strong>
-      </div>
-      <div class="status-item">
-        <span>🐧 Suica <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
-        <strong id="dash-suica-assets" class="blur-value">--- 円</strong>
-      </div>
-    </div>
-
-    <!-- メインアプリ一覧 -->
-    <div class="app-grid">
-      
-      <!-- 1. お小遣い＆資産管理 -->
-      <a href="money.html" class="app-card press-effect">
-        <div class="app-icon-box icon-money">💰</div>
-        <div class="app-info">
-          <h2>お小遣い・資産管理</h2>
-          <p>現金・銀行・Suica残高とワンタップ通勤記録</p>
-        </div>
-        <div class="arrow-icon">❯</div>
-      </a>
-
-      <!-- 2. プライベートチャット＆メモ -->
-      <a href="message.html" class="app-card press-effect">
-        <div class="app-icon-box icon-chat">💬</div>
-        <div class="app-info">
-          <h2>メッセージ＆メモ</h2>
-          <p>複数端末のリアルタイム共有・固定メモ帳</p>
-        </div>
-        <div class="arrow-icon">❯</div>
-      </a>
-
-      <!-- 3. 健康・運動管理 -->
-      <a href="health.html" class="app-card press-effect">
-        <div class="app-icon-box icon-health">💪</div>
-        <div class="app-info">
-          <h2>健康・運動管理</h2>
-          <p>日々の運動習慣や体調のクイック記録</p>
-        </div>
-        <div class="arrow-icon">❯</div>
-      </a>
-
-    </div>
-
-    <!-- ミニゲーム＆カジノ一覧 -->
+    <!-- 7. ミニゲーム（上段3つ / 下段3つ） -->
     <div class="game-section">
       <div class="game-section-title">🎮 MINI GAMES & CASINO</div>
-      <div class="game-icon-grid">
+      <div class="game-grid-2rows">
         
+        <!-- 上段1: ガチャ -->
         <a href="gacha.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game2">✨</div>
+          <div class="game-circle-icon icon-gacha">✨</div>
           <span class="game-icon-label">ガチャ</span>
         </a>
 
+        <!-- 上段2: 図鑑 -->
         <a href="dex.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game3">📖</div>
+          <div class="game-circle-icon icon-dex">📖</div>
           <span class="game-icon-label">図鑑</span>
         </a>
 
+        <!-- 上段3: スロット -->
         <a href="game3.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game3">🎰</div>
+          <div class="game-circle-icon icon-slot">🎰</div>
           <span class="game-icon-label">スロット</span>
         </a>
 
+        <!-- 下段1: トランプ -->
         <a href="game4.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game4">🃏</div>
+          <div class="game-circle-icon icon-card">🃏</div>
           <span class="game-icon-label">トランプ</span>
         </a>
 
+        <!-- 下段2: タップ -->
         <a href="game1.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game1">⚡</div>
+          <div class="game-circle-icon icon-tap">⚡</div>
           <span class="game-icon-label">タップ</span>
         </a>
 
+        <!-- 下段3: パズル -->
         <a href="game2.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game2">🍉</div>
+          <div class="game-circle-icon icon-puzzle">🍉</div>
           <span class="game-icon-label">パズル</span>
         </a>
 
@@ -578,12 +588,9 @@
       suicaEl.classList.toggle('revealed');
     }
 
-    // ★ お気に入り（またはパーティ先頭）ポケモンをGBウィジェットに反映
     function loadPartnerWidget() {
-      // 1. お気に入り（my_favorite_pokemon）を最優先取得
       let partnerId = localStorage.getItem('my_favorite_pokemon');
       
-      // 2. なければパーティ先頭
       if (!partnerId) {
         const party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
         partnerId = party[0] || 'p0004';
