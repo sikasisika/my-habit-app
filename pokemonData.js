@@ -991,11 +991,14 @@ const POKEMON_DATA = [
 
   // 420 - 421 チェリンボ系統
   { id: 'p0420', name: 'チェリンボ', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0420.png', rate: 30 },
-  { id: 'p0421', name: 'チェリム', subName: '', type: 'くさ', size: 'S', rarity: 'R', img: 'images/gacha/p0421.png', rate: 20 },
+  { id: 'p0421', name: 'チェリム', subName: 'ネガフォルム', type: 'くさ', size: 'S', rarity: 'R', img: 'images/gacha/p0421.png', rate: 20 },
+  { id: 'p0421p', name: 'チェリム', subName: 'ポジフォルム', type: 'くさ', size: 'S', rarity: 'R', img: 'images/gacha/p0421p.png', rate: 20 },
 
   // 422 - 423 カラナクシ系統
-  { id: 'p0422', name: 'カラナクシ', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0422.png', rate: 30 },
-  { id: 'p0423', name: 'トリトドン', subName: '', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0423.png', rate: 20 },
+  { id: 'p0422', name: 'カラナクシ', subName: 'にしのうみ', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0422.png', rate: 30 },
+  { id: 'p0422h', name: 'カラナクシ', subName: 'ひがしのうみ', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0422h.png', rate: 30 },
+  { id: 'p0423', name: 'トリトドン', subName: 'にしのうみ', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0423.png', rate: 20 },
+  { id: 'p0423h', name: 'トリトドン', subName: 'ひがしのうみ', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0423h.png', rate: 20 },
 
   // 424 エテボース
   { id: 'p0424', name: 'エテボース', subName: '', type: 'ノーマル', size: 'M', rarity: 'SR', img: 'images/gacha/p0424.png', rate: 12 },
@@ -1142,9 +1145,15 @@ const POKEMON_DATA = [
 
   // 478 ユキメノコ
   { id: 'p0478', name: 'ユキメノコ', subName: '', type: 'こおり', size: 'M', rarity: 'SR', img: 'images/gacha/p0478.png', rate: 12 },
+  { id: 'p0478-m', name: 'ユキメノコ', subName: 'メガシンカ', type: 'こおり', size: 'M', rarity: 'SSR', img: 'images/gacha/p0478-m.png', rate: 7 },
 
   // 479 ロトム
   { id: 'p0479', name: 'ロトム', subName: '', type: 'でんき', size: 'S', rarity: 'R', img: 'images/gacha/p0479.png', rate: 20 },
+  { id: 'p0479h', name: 'ロトム', subName: 'ヒートロトム', type: 'ほのお', size: 'S', rarity: 'R', img: 'images/gacha/p0479h.png', rate: 20 },
+  { id: 'p0479w', name: 'ロトム', subName: 'ウォッシュロトム', type: 'みず', size: 'S', rarity: 'R', img: 'images/gacha/p0479w.png', rate: 20 },
+  { id: 'p0479f', name: 'ロトム', subName: 'フロストロトム', type: 'こおり', size: 'S', rarity: 'R', img: 'images/gacha/p0479f.png', rate: 20 },
+  { id: 'p0479s', name: 'ロトム', subName: 'スピンロトム', type: 'ひこう', size: 'S', rarity: 'R', img: 'images/gacha/p0479s.png', rate: 20 },
+  { id: 'p0479k', name: 'ロトム', subName: 'カットロトム', type: 'くさ', size: 'S', rarity: 'R', img: 'images/gacha/p0479k.png', rate: 20 },
 
   // 480 - 482 ユクシー・エムリット・アグノム
   { id: 'p0480', name: 'ユクシー', subName: '', type: 'エスパー', size: 'S', rarity: 'SSR', img: 'images/gacha/p0480.png', rate: 7 },
@@ -1159,6 +1168,7 @@ const POKEMON_DATA = [
 
   // 485 ヒードラン
   { id: 'p0485', name: 'ヒードラン', subName: '', type: 'ほのお', size: 'L', rarity: 'SSR', img: 'images/gacha/p0485.png', rate: 7 },
+  { id: 'p0485-m', name: 'ヒードラン', subName: 'メガシンカ', type: 'ほのお', size: 'L', rarity: 'UR', img: 'images/gacha/p0485-m.png', rate: 3 },
 
   // 486 レジギガス
   { id: 'p0486', name: 'レジギガス', subName: '', type: 'ノーマル', size: 'L', rarity: 'UR', img: 'images/gacha/p0486.png', rate: 3 },
@@ -1176,10 +1186,12 @@ const POKEMON_DATA = [
 
   // 491 ダークライ
   { id: 'p0491', name: 'ダークライ', subName: '', type: 'あく', size: 'M', rarity: 'UR', img: 'images/gacha/p0491.png', rate: 3 },
+  { id: 'p0491-m', name: 'ダークライ', subName: 'メガシンカ', type: 'あく', size: 'M', rarity: 'UR', img: 'images/gacha/p0491-m.png', rate: 3 },
 
   // 492 シェイミ
-  { id: 'p0492', name: 'シェイミ', subName: '', type: 'くさ', size: 'S', rarity: 'UR', img: 'images/gacha/p0492.png', rate: 3 },
+  { id: 'p0492', name: 'シェイミ', subName: 'ランドフォルム', type: 'くさ', size: 'S', rarity: 'UR', img: 'images/gacha/p0492.png', rate: 3 },
+  { id: 'p0492s', name: 'シェイミ', subName: 'スカイフォルム', type: 'くさ', size: 'S', rarity: 'UR', img: 'images/gacha/p0492s.png', rate: 3 },
 
   // 493 アルセウス
-  { id: 'p0493', name: 'アルセウス', subName: '', type: 'ノーマル', size: 'L', rarity: 'UR', img: 'images/gacha/p0493.png', rate: 3 }
+  { id: 'p0493', name: 'アルセウス', subName: '', type: 'ノーマル', size: 'L', rarity: 'UR', img: 'images/gacha/p0493.png', rate: 0.5 }
 ];
