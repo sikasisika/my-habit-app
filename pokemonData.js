@@ -1409,8 +1409,10 @@ const POKEMON_DATA = [
   { id: 'p0591', name: 'モロバレル', subName: '', type: 'くさ', size: 'M', rarity: 'SR', img: 'images/gacha/p0591.png', rate: 12 },
 
   // 592 - 593 プルリル系統
-  { id: 'p0592', name: 'プルリル', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0592.png', rate: 30 },
-  { id: 'p0593', name: 'ブルンゲル', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0593.png', rate: 12 },
+  { id: 'p0592', name: 'プルリル', subName: 'オスのすがた', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0592.png', rate: 30 },
+  { id: 'p0592m', name: 'プルリル', subName: 'メスのすがた', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0592m.png', rate: 30 },
+  { id: 'p0593', name: 'ブルンゲル', subName: 'オスのすがた', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0593.png', rate: 12 },
+  { id: 'p0593m', name: 'ブルンゲル', subName: 'メスのすがた', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0593m.png', rate: 12 },
 
   // 594 ママンボウ
   { id: 'p0594', name: 'ママンボウ', subName: '', type: 'みず', size: 'L', rarity: 'R', img: 'images/gacha/p0594.png', rate: 20 },
@@ -1432,6 +1434,7 @@ const POKEMON_DATA = [
   { id: 'p0602', name: 'シビシラス', subName: '', type: 'でんき', size: 'S', rarity: 'N', img: 'images/gacha/p0602.png', rate: 30 },
   { id: 'p0603', name: 'シビビール', subName: '', type: 'でんき', size: 'M', rarity: 'R', img: 'images/gacha/p0603.png', rate: 20 },
   { id: 'p0604', name: 'シビルドン', subName: '', type: 'でんき', size: 'L', rarity: 'SR', img: 'images/gacha/p0604.png', rate: 12 },
+  { id: 'p0604-m', name: 'シビルドン', subName: 'メガシンカ', type: 'でんき', size: 'L', rarity: 'SSR', img: 'images/gacha/p0604-m.png', rate: 7 },
 
   // 605 - 606 リグレー系統
   { id: 'p0605', name: 'リグレー', subName: '', type: 'エスパー', size: 'S', rarity: 'N', img: 'images/gacha/p0605.png', rate: 30 },
@@ -1441,6 +1444,7 @@ const POKEMON_DATA = [
   { id: 'p0607', name: 'ヒトモシ', subName: '', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0607.png', rate: 30 },
   { id: 'p0608', name: 'ランプラー', subName: '', type: 'ゴースト', size: 'M', rarity: 'R', img: 'images/gacha/p0608.png', rate: 20 },
   { id: 'p0609', name: 'シャンデラ', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0609.png', rate: 12 },
+  { id: 'p0609-m', name: 'シャンデラ', subName: 'メガシンカ', type: 'ゴースト', size: 'L', rarity: 'SSR', img: 'images/gacha/p0609-m.png', rate: 7 },
 
   // 610 - 612 キバゴ系統
   { id: 'p0610', name: 'キバゴ', subName: '', type: 'ドラゴン', size: 'S', rarity: 'N', img: 'images/gacha/p0610.png', rate: 30 },
@@ -1472,6 +1476,7 @@ const POKEMON_DATA = [
   // 622 - 623 ゴビット系統
   { id: 'p0622', name: 'ゴビット', subName: '', type: 'じめん', size: 'S', rarity: 'N', img: 'images/gacha/p0622.png', rate: 30 },
   { id: 'p0623', name: 'ゴルーグ', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0623.png', rate: 12 },
+  { id: 'p0623-m', name: 'ゴルーグ', subName: 'メガシンカ', type: 'ゴースト', size: 'L', rarity: 'SSR', img: 'images/gacha/p0623-m.png', rate: 7 },
 
   // 624 - 625 コマタナ系統
   { id: 'p0624', name: 'コマタナ', subName: '', type: 'あく', size: 'S', rarity: 'N', img: 'images/gacha/p0624.png', rate: 30 },
@@ -1510,18 +1515,18 @@ const POKEMON_DATA = [
   { id: 'p0640', name: 'ビリジオン', subName: '', type: 'くさ', size: 'L', rarity: 'SSR', img: 'images/gacha/p0640.png', rate: 7 },
 
   // 641 - 642 トルネロス・ボルトロス
-  { id: 'p0641', name: 'トルネロス', subName: '', type: 'ひこう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0641.png', rate: 7 },
-  { id: 'p0641-t', name: 'トルネロス', subName: 'れいじゅうフォルム', type: 'ひこう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0641-t.png', rate: 7 },
-  { id: 'p0642', name: 'ボルトロス', subName: '', type: 'でんき', size: 'L', rarity: 'SSR', img: 'images/gacha/p0642.png', rate: 7 },
-  { id: 'p0642-t', name: 'ボルトロス', subName: 'れいじゅうフォルム', type: 'でんき', size: 'L', rarity: 'SSR', img: 'images/gacha/p0642-t.png', rate: 7 },
+  { id: 'p0641', name: 'トルネロス', subName: 'けしんフォルム', type: 'ひこう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0641.png', rate: 7 },
+  { id: 'p0641r', name: 'トルネロス', subName: 'れいじゅうフォルム', type: 'ひこう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0641r.png', rate: 7 },
+  { id: 'p0642', name: 'ボルトロス', subName: 'けしんフォルム', type: 'でんき', size: 'L', rarity: 'SSR', img: 'images/gacha/p0642.png', rate: 7 },
+  { id: 'p0642r', name: 'ボルトロス', subName: 'れいじゅうフォルム', type: 'でんき', size: 'L', rarity: 'SSR', img: 'images/gacha/p0642r.png', rate: 7 },
 
   // 643 - 644 レシラム・ゼクロム
   { id: 'p0643', name: 'レシラム', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0643.png', rate: 3 },
   { id: 'p0644', name: 'ゼクロム', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0644.png', rate: 3 },
 
   // 645 ランドロス
-  { id: 'p0645', name: 'ランドロス', subName: '', type: 'じめん', size: 'L', rarity: 'SSR', img: 'images/gacha/p0645.png', rate: 7 },
-  { id: 'p0645-t', name: 'ランドロス', subName: 'れいじゅうフォルム', type: 'じめん', size: 'L', rarity: 'SSR', img: 'images/gacha/p0645-t.png', rate: 7 },
+  { id: 'p0645', name: 'ランドロス', subName: 'けしんフォルム', type: 'じめん', size: 'L', rarity: 'SSR', img: 'images/gacha/p0645.png', rate: 7 },
+  { id: 'p0645r', name: 'ランドロス', subName: 'れいじゅうフォルム', type: 'じめん', size: 'L', rarity: 'SSR', img: 'images/gacha/p0645r.png', rate: 7 },
 
   // 646 キュレム
   { id: 'p0646', name: 'キュレム', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0646.png', rate: 3 },
@@ -1530,9 +1535,11 @@ const POKEMON_DATA = [
 
   // 647 ケルディオ
   { id: 'p0647', name: 'ケルディオ', subName: '', type: 'みず', size: 'M', rarity: 'UR', img: 'images/gacha/p0647.png', rate: 3 },
+  { id: 'p0647k', name: 'ケルディオ', subName: 'かくごのすがた', type: 'みず', size: 'M', rarity: 'UR', img: 'images/gacha/p0647k.png', rate: 3 },
 
   // 648 メロエッタ
-  { id: 'p0648', name: 'メロエッタ', subName: '', type: 'ノーマル', size: 'S', rarity: 'UR', img: 'images/gacha/p0648.png', rate: 3 },
+  { id: 'p0648', name: 'メロエッタ', subName: 'ボイスフォルム', type: 'ノーマル', size: 'S', rarity: 'UR', img: 'images/gacha/p0648.png', rate: 3 },
+  { id: 'p0648s', name: 'メロエッタ', subName: 'ステップフォルム', type: 'かくとう', size: 'S', rarity: 'UR', img: 'images/gacha/p0648s.png', rate: 3 },
 
   // 649 ゲノセクト
   { id: 'p0649', name: 'ゲノセクト', subName: '', type: 'むし', size: 'M', rarity: 'UR', img: 'images/gacha/p0649.png', rate: 3 }
