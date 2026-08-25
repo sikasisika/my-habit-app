@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>トランプスタジオ | ソリティア＆カジノ</title>
 
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -67,7 +71,7 @@
     }
     .top-btn:active { transform: scale(0.95); }
 
-    /* コイン・ステータスバー（ガチャ・スロット共通） */
+    /* コイン・ステータスバー */
     .status-bar {
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(8px);
@@ -480,6 +484,9 @@
 
   </div>
 
+  <!-- 外部データ ＆ クラウド同期モジュール -->
+  <script src="cloudSync.js"></script>
+
   <script>
     const SUITS = ['♠', '♥', '♣', '♦'];
     const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -494,6 +501,7 @@
     let tableau = [[], [], [], [], [], [], []];
     let historyState = [];
     let dragState = null;
+    let isAutoCompleting = false;
 
     // ブラックジャック状態
     let bjDeck = [];
@@ -506,9 +514,14 @@
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
 
     function updateCoinUI() {
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
       document.getElementById('coin-display').textContent = coins.toLocaleString();
-      localStorage.setItem('my_casino_coins', coins);
     }
+
+    // クラウド側更新時の自動反映
+    window.onCloudSyncUpdated = function() {
+      updateCoinUI();
+    };
 
     function switchGame(mode) {
       document.getElementById('view-sol').style.display = mode === 'sol' ? 'flex' : 'none';
@@ -549,6 +562,7 @@
     // 👑 ソリティア（クロンダイク）
     // ==========================================
     function initSolitaire() {
+      isAutoCompleting = false;
       const deck = createDeck();
       foundations = [[], [], [], []];
       tableau = [[], [], [], [], [], [], []];
@@ -577,7 +591,7 @@
         const el = document.createElement('div');
         el.innerHTML = renderCardHTML(topWaste);
         const cardNode = el.firstElementChild;
-        attachDragAndClick(cardNode, { type: 'waste' });
+        if (!isAutoCompleting) attachDragAndClick(cardNode, { type: 'waste' });
         wasteSlot.appendChild(cardNode);
       }
 
@@ -600,13 +614,64 @@
           el.innerHTML = renderCardHTML(card);
           const cardNode = el.firstElementChild;
           cardNode.style.top = `${r * 15}px`;
-          if (card.faceUp) {
+          if (card.faceUp && !isAutoCompleting) {
             attachDragAndClick(cardNode, { type: 'tableau', col: c, idx: r });
           }
           colEl.appendChild(cardNode);
         });
       }
+
+      checkAutoComplete();
       checkWin();
+    }
+
+    // ★ 自動回収（オートコンプリート）判定＆実行
+    function checkAutoComplete() {
+      if (isAutoCompleting) return;
+
+      // 1. 山札・めくり札が両方ゼロ
+      if (stock.length > 0 || waste.length > 0) return;
+
+      // 2. 場にあるすべてのカードが表向きかチェック
+      for (let c = 0; c < 7; c++) {
+        for (let r = 0; r < tableau[c].length; r++) {
+          if (!tableau[c][r].faceUp) return;
+        }
+      }
+
+      // 条件クリア：自動回収開始
+      const remainingCount = tableau.reduce((acc, col) => acc + col.length, 0);
+      if (remainingCount > 0) {
+        isAutoCompleting = true;
+        autoCollectStep();
+      }
+    }
+
+    function autoCollectStep() {
+      let moved = false;
+
+      for (let c = 0; c < 7; c++) {
+        const col = tableau[c];
+        if (col.length === 0) continue;
+
+        const card = col[col.length - 1];
+        for (let i = 0; i < 4; i++) {
+          const fStack = foundations[i];
+          if ((fStack.length === 0 && card.val === 1 && card.suit === SUITS[i]) ||
+              (fStack.length > 0 && fStack[fStack.length - 1].suit === card.suit && fStack[fStack.length - 1].val + 1 === card.val)) {
+            fStack.push(col.pop());
+            moved = true;
+            renderSolitaire();
+            setTimeout(autoCollectStep, 80);
+            return;
+          }
+        }
+      }
+
+      if (!moved) {
+        isAutoCompleting = false;
+        checkWin();
+      }
     }
 
     function attachDragAndClick(el, info) {
@@ -615,6 +680,7 @@
       let startTime = 0;
 
       const onStart = (e) => {
+        if (isAutoCompleting) return;
         e.stopPropagation();
         const touch = e.touches ? e.touches[0] : e;
         startX = touch.clientX;
@@ -764,6 +830,7 @@
     }
 
     function drawStock() {
+      if (isAutoCompleting) return;
       saveHistory();
       const drawCount = difficulty === 'easy' ? 1 : 3;
       if (stock.length === 0) {
@@ -869,7 +936,7 @@
     }
 
     function undoMove() {
-      if (historyState.length === 0) return;
+      if (historyState.length === 0 || isAutoCompleting) return;
       const state = JSON.parse(historyState.pop());
       stock = state.stock;
       waste = state.waste;
@@ -881,9 +948,14 @@
     function checkWin() {
       const totalF = foundations.reduce((acc, cur) => acc + cur.length, 0);
       if (totalF === 52) {
-        alert('🎉 ソリティア完全クリア！ 500コイン獲得！');
         coins += 500;
+        localStorage.setItem('my_casino_coins', coins);
         updateCoinUI();
+        if (typeof window.saveGameDataToCloud === 'function') {
+          window.saveGameDataToCloud();
+        }
+        alert('🎉 ソリティア完全クリア！ 500コイン獲得！');
+        initSolitaire();
       }
     }
 
@@ -898,7 +970,7 @@
     }
 
     // ==========================================
-    // 🎰 カジノ・ブラックジャック（修正版）
+    // 🎰 カジノ・ブラックジャック
     // ==========================================
     function setBJBet(amount) {
       if (bjPlaying) return;
@@ -915,7 +987,12 @@
         return;
       }
       coins -= bjBet;
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinUI();
+
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
 
       bjDeck = createDeck().map(c => { c.faceUp = true; return c; });
       dealerHand = [bjDeck.pop(), bjDeck.pop()];
@@ -930,7 +1007,6 @@
 
       renderBJ();
 
-      // ナチュラルブラックジャック（初期21）チェック
       if (calcScore(playerHand) === 21) {
         setTimeout(() => bjStand(), 400);
       }
@@ -970,10 +1046,8 @@
 
       const pScore = calcScore(playerHand);
       if (pScore > 21) {
-        // バースト確定
         endBJ('bust');
       } else if (pScore === 21) {
-        // 21到達で自動スタンド
         setTimeout(() => bjStand(), 300);
       }
     }
@@ -1024,7 +1098,12 @@
         msgEl.innerHTML = `<span style="color:#ef4444;">💀 ディーラーの勝ち……！次は勝とうぜ！</span>`;
       }
 
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinUI();
+
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
