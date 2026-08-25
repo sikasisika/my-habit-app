@@ -927,5 +927,8 @@ const POKEMON_DATA = [
   { id: 'p0385', name: 'ジラーチ', subName: '', type: 'はがね', size: 'S', rarity: 'UR', img: 'images/gacha/p0385.png', rate: 3 },
 
   // 386 デオキシス
-  { id: 'p0386', name: 'デオキシス', subName: '', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386.png', rate: 3 }
+  { id: 'p0386', name: 'デオキシス', subName: '', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386.png', rate: 3 },
+  { id: 'p0386a', name: 'デオキシス', subName: 'アタックフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386a.png', rate: 3 },
+  { id: 'p0386d', name: 'デオキシス', subName: 'ディフェンスフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386d.png', rate: 3 },
+  { id: 'p0386s', name: 'デオキシス', subName: 'スピードフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386s.png', rate: 3 }
 ];
