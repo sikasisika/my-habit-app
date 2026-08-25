@@ -453,14 +453,22 @@
       if (bgm.paused) bgm.play().catch(() => {});
     }, { once: true });
 
-    function updateCoinDisplay() {
-      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    function renderCoinOnly() {
       document.getElementById('coin-display').textContent = coins.toLocaleString();
+    }
+
+    function saveAndSyncCoins() {
+      localStorage.setItem('my_casino_coins', coins);
+      renderCoinOnly();
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
     }
 
     // クラウド側データ更新時の自動同期
     window.onCloudSyncUpdated = function() {
-      updateCoinDisplay();
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+      renderCoinOnly();
     };
 
     function toggleBgm() {
@@ -476,11 +484,7 @@
 
     function addDailyBonus() {
       coins += 500;
-      localStorage.setItem('my_casino_coins', coins);
-      updateCoinDisplay();
-      if (typeof window.saveGameDataToCloud === 'function') {
-        window.saveGameDataToCloud();
-      }
+      saveAndSyncCoins();
       alert('🎁 ボーナスコイン 500枚 ゲット！');
     }
 
@@ -493,11 +497,7 @@
       }
 
       coins -= 100;
-      localStorage.setItem('my_casino_coins', coins);
-      updateCoinDisplay();
-      if (typeof window.saveGameDataToCloud === 'function') {
-        window.saveGameDataToCloud();
-      }
+      saveAndSyncCoins();
 
       document.getElementById('btn-spin').disabled = true;
       document.getElementById('slot-msg').textContent = '目押しで狙いを定めてストップ！';
@@ -581,17 +581,11 @@
 
       if (totalWin > 0) {
         coins += totalWin;
-        localStorage.setItem('my_casino_coins', coins);
-        updateCoinDisplay();
-        if (typeof window.saveGameDataToCloud === 'function') {
-          window.saveGameDataToCloud();
-        }
+        saveAndSyncCoins();
         msgEl.innerHTML = `🎉 <strong style="color:#fbbf24;">目押し成功！ ${winningLines.join(' + ')} 成立！ +${totalWin.toLocaleString()} コイン！</strong>`;
       } else {
         msgEl.textContent = '惜しい……！タイミングを見極めて目押ししよう！';
       }
-
-      updateCoinDisplay();
     }
 
     // 設定メニュー
@@ -631,7 +625,7 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-      updateCoinDisplay();
+      renderCoinOnly();
       renderReelCol(0, 0);
       renderReelCol(1, 1);
       renderReelCol(2, 2);
