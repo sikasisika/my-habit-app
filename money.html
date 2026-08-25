@@ -10,10 +10,17 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #f7f9fa;
-      margin: 0;
       padding: 16px;
       color: #333;
     }
@@ -61,6 +68,18 @@
       background: #fffbeb;
       border-color: #fde68a;
     }
+
+    .top-action-btn {
+      font-size: 11px;
+      color: #555;
+      background: #fff;
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .top-action-btn:active { opacity: 0.7; }
 
     /* 確認通知トグルスイッチ */
     .confirm-toggle-label {
@@ -306,19 +325,130 @@
       font-size: 11px;
       cursor: pointer;
     }
+
+    /* ========================================================= */
+    /* 🔒 PINコード（暗証番号）ロック画面オーバーレイ */
+    /* ========================================================= */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+    .lock-icon {
+      font-size: 44px;
+      margin-bottom: 10px;
+    }
+    .lock-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .lock-subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+    }
+    .pin-dots {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .pin-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #38bdf8;
+      background: transparent;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .pin-dot.filled {
+      background: #38bdf8;
+      transform: scale(1.15);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 24px;
+      width: 100%;
+      max-width: 280px;
+    }
+    .key-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 auto;
+      transition: transform 0.08s ease, background 0.08s ease;
+    }
+    .key-btn:active {
+      transform: scale(0.9);
+      background: rgba(56, 189, 248, 0.4);
+    }
+    .key-btn.action-key {
+      font-size: 13px;
+      background: transparent;
+      border-color: transparent;
+      color: #94a3b8;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <!-- 🔒 ロック画面オーバーレイ -->
+  <div class="lock-overlay" id="lock-screen" style="display: none;">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title" id="lock-msg-title">暗証番号を入力</div>
+    <div class="lock-subtitle" id="lock-msg-sub">4桁のパスコードを入力してください</div>
     
-    <!-- ナビ ＆ 同期ステータス ＆ 確認トグル -->
+    <div class="pin-dots">
+      <div class="pin-dot" id="dot-0"></div>
+      <div class="pin-dot" id="dot-1"></div>
+      <div class="pin-dot" id="dot-2"></div>
+      <div class="pin-dot" id="dot-3"></div>
+    </div>
+
+    <div class="keypad">
+      <button class="key-btn" onclick="pressKey('1')">1</button>
+      <button class="key-btn" onclick="pressKey('2')">2</button>
+      <button class="key-btn" onclick="pressKey('3')">3</button>
+      <button class="key-btn" onclick="pressKey('4')">4</button>
+      <button class="key-btn" onclick="pressKey('5')">5</button>
+      <button class="key-btn" onclick="pressKey('6')">6</button>
+      <button class="key-btn" onclick="pressKey('7')">7</button>
+      <button class="key-btn" onclick="pressKey('8')">8</button>
+      <button class="key-btn" onclick="pressKey('9')">9</button>
+      <button class="key-btn action-key" onclick="location.href='index.html'">◀ 戻る</button>
+      <button class="key-btn" onclick="pressKey('0')">0</button>
+      <button class="key-btn action-key" onclick="deleteKey()">⌫ 消す</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-content">
+    
+    <!-- ナビ ＆ 同期ステータス ＆ 設定 -->
     <div class="top-bar">
       <div class="back-nav">
         <a href="index.html">◀ ポータルへ戻る</a>
       </div>
       <div class="top-right-group">
         <span id="sync-status" class="sync-status-badge">☁️ クラウド同期中...</span>
+        <button class="top-action-btn" onclick="openLockSettings()">🔒 PIN設定</button>
         <label class="confirm-toggle-label">
           <input type="checkbox" id="confirm-toggle" onchange="toggleConfirmSetting()">
           <span>🔔 確認</span>
@@ -480,7 +610,138 @@
       }
     }
 
+    // =========================================================
+    // 🔒 暗証番号（PIN）ロック機能
+    // =========================================================
+    let enteredPin = '';
+    let isSettingMode = false;
+    let tempNewPin = '';
+
+    function checkLockOnLoad() {
+      const savedPin = localStorage.getItem('my_money_pin');
+      const isLockEnabled = localStorage.getItem('my_money_lock_enabled') !== 'false';
+
+      if (!savedPin) {
+        // 初回：PIN設定案内
+        isSettingMode = true;
+        document.getElementById('lock-msg-title').textContent = '暗証番号を登録';
+        document.getElementById('lock-msg-sub').textContent = '新しい4桁の暗証番号を入力してください';
+        document.getElementById('lock-screen').style.display = 'flex';
+      } else if (isLockEnabled) {
+        // ロック起動
+        isSettingMode = false;
+        document.getElementById('lock-msg-title').textContent = '暗証番号を入力';
+        document.getElementById('lock-msg-sub').textContent = '4桁のパスコードを入力してください';
+        document.getElementById('lock-screen').style.display = 'flex';
+      } else {
+        document.getElementById('lock-screen').style.display = 'none';
+      }
+    }
+
+    function updateDots() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i < enteredPin.length) dot.classList.add('filled');
+        else dot.classList.remove('filled');
+      }
+    }
+
+    function pressKey(num) {
+      if (enteredPin.length >= 4) return;
+      enteredPin += num;
+      updateDots();
+
+      if (enteredPin.length === 4) {
+        setTimeout(handlePinComplete, 120);
+      }
+    }
+
+    function deleteKey() {
+      if (enteredPin.length > 0) {
+        enteredPin = enteredPin.slice(0, -1);
+        updateDots();
+      }
+    }
+
+    function handlePinComplete() {
+      const savedPin = localStorage.getItem('my_money_pin');
+
+      if (isSettingMode) {
+        if (!tempNewPin) {
+          // 1回目の入力完了 ➔ 確認のため再入力
+          tempNewPin = enteredPin;
+          enteredPin = '';
+          updateDots();
+          document.getElementById('lock-msg-title').textContent = 'もう一度入力';
+          document.getElementById('lock-msg-sub').textContent = '確認のため同じ暗証番号を入力してください';
+        } else {
+          // 2回目の入力完了 ➔ 一致チェック
+          if (enteredPin === tempNewPin) {
+            localStorage.setItem('my_money_pin', enteredPin);
+            localStorage.setItem('my_money_lock_enabled', 'true');
+            syncToFirebaseAndLocal();
+            alert('🔐 暗証番号を登録・設定したぜ！');
+            document.getElementById('lock-screen').style.display = 'none';
+          } else {
+            alert('暗証番号が一致しなかったぜ。最初からやり直してくれ！');
+            tempNewPin = '';
+            enteredPin = '';
+            updateDots();
+            checkLockOnLoad();
+          }
+        }
+      } else {
+        // ロック解除判定
+        if (enteredPin === savedPin) {
+          enteredPin = '';
+          updateDots();
+          document.getElementById('lock-screen').style.display = 'none';
+        } else {
+          alert('❌ 暗証番号が違います！');
+          enteredPin = '';
+          updateDots();
+        }
+      }
+    }
+
+    function openLockSettings() {
+      const currentPin = localStorage.getItem('my_money_pin');
+      const isEnabled = localStorage.getItem('my_money_lock_enabled') !== 'false';
+
+      const action = confirm(
+        `【暗証番号（PIN）ロック設定】\n\n現在の状態: ${isEnabled ? '🔒 有効' : '🔓 無効'}\n\n[OK] ➔ 暗証番号を変更・新規登録\n[キャンセル] ➔ ロック機能のON/OFF切り替え`
+      );
+
+      if (action) {
+        // PIN変更
+        if (currentPin) {
+          const input = prompt('現在の4桁の暗証番号を入力してください:');
+          if (input !== currentPin) {
+            alert('暗証番号が違います！');
+            return;
+          }
+        }
+        isSettingMode = true;
+        tempNewPin = '';
+        enteredPin = '';
+        updateDots();
+        document.getElementById('lock-msg-title').textContent = '新しい暗証番号';
+        document.getElementById('lock-msg-sub').textContent = '新しい4桁の暗証番号を入力してください';
+        document.getElementById('lock-screen').style.display = 'flex';
+      } else {
+        // ON/OFF切り替え
+        const toggle = confirm(`暗証番号ロックを【${isEnabled ? '無効（次回からスキップ）' : '有効（毎回要求）'}】にしますか？`);
+        if (toggle) {
+          localStorage.setItem('my_money_lock_enabled', (!isEnabled).toString());
+          syncToFirebaseAndLocal();
+          alert(`ロックを【${!isEnabled ? '有効' : '無効'}】にしたぜ！`);
+        }
+      }
+    }
+
+    // =========================================================
     // Firebase への安全保存（Firestore ＋ LocalStorage）
+    // =========================================================
     async function syncToFirebaseAndLocal() {
       setSyncStatus(true);
       const data = {
@@ -492,6 +753,8 @@
         fares: getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 }),
         currentRoute: localStorage.getItem('myCurrentRoute') || 'A',
         confirmSetting: localStorage.getItem('myConfirmSetting') !== 'false',
+        moneyPin: localStorage.getItem('my_money_pin') || '',
+        lockEnabled: localStorage.getItem('my_money_lock_enabled') !== 'false',
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
@@ -517,11 +780,12 @@
           if (d.fares !== undefined) localStorage.setItem('myCommuteFares', JSON.stringify(d.fares));
           if (d.currentRoute !== undefined) localStorage.setItem('myCurrentRoute', d.currentRoute);
           if (d.confirmSetting !== undefined) localStorage.setItem('myConfirmSetting', d.confirmSetting);
+          if (d.moneyPin !== undefined && d.moneyPin !== '') localStorage.setItem('my_money_pin', d.moneyPin);
+          if (d.lockEnabled !== undefined) localStorage.setItem('my_money_lock_enabled', d.lockEnabled);
           
           updateDisplay();
           setSyncStatus(false);
         } else {
-          // 初回ドキュメント作成
           syncToFirebaseAndLocal();
         }
       }, (error) => {
@@ -823,6 +1087,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      checkLockOnLoad();
       updateDisplay();
       listenToFirebase();
     });
