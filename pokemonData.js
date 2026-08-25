@@ -942,6 +942,7 @@ const POKEMON_DATA = [
   { id: 'p0396', name: 'ムックル', subName: '', type: 'ひこう', size: 'S', rarity: 'N', img: 'images/gacha/p0396.png', rate: 30 },
   { id: 'p0397', name: 'ムクバード', subName: '', type: 'ひこう', size: 'M', rarity: 'R', img: 'images/gacha/p0397.png', rate: 20 },
   { id: 'p0398', name: 'ムクホーク', subName: '', type: 'ひこう', size: 'L', rarity: 'SR', img: 'images/gacha/p0398.png', rate: 12 },
+  { id: 'p0398-m', name: 'ムクホーク', subName: 'メガシンカ', type: 'ひこう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0398-m.png', rate: 12 },
 
   // 399 - 400 ビッパ系統
   { id: 'p0399', name: 'ビッパ', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0399.png', rate: 30 },
@@ -969,8 +970,12 @@ const POKEMON_DATA = [
   { id: 'p0411', name: 'トリデプス', subName: '', type: 'いわ', size: 'L', rarity: 'SR', img: 'images/gacha/p0411.png', rate: 12 },
 
   // 412 - 414 ミノムッチ系統
-  { id: 'p0412', name: 'ミノムッチ', subName: '', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0412.png', rate: 30 },
-  { id: 'p0413', name: 'ミノマダム', subName: '', type: 'むし', size: 'S', rarity: 'R', img: 'images/gacha/p0413.png', rate: 20 },
+  { id: 'p0412', name: 'ミノムッチ', subName: 'くさきのミノ', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0412.png', rate: 30 },
+  { id: 'p0412s', name: 'ミノムッチ', subName: 'すなちのミノ', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0412s.png', rate: 30 },
+  { id: 'p0412g', name: 'ミノムッチ', subName: 'ゴミのミノ', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0412g.png', rate: 30 },
+  { id: 'p0413', name: 'ミノマダム', subName: 'くさきのミノ', type: 'むし', size: 'S', rarity: 'R', img: 'images/gacha/p0413.png', rate: 20 },
+  { id: 'p0413s', name: 'ミノマダム', subName: 'すなちのミノ', type: 'むし', size: 'S', rarity: 'R', img: 'images/gacha/p0413s.png', rate: 20 },
+  { id: 'p0413g', name: 'ミノマダム', subName: 'ゴミのミノ', type: 'むし', size: 'S', rarity: 'R', img: 'images/gacha/p0413g.png', rate: 20 },
   { id: 'p0414', name: 'ガーメイル', subName: '', type: 'むし', size: 'M', rarity: 'R', img: 'images/gacha/p0414.png', rate: 20 },
 
   // 415 - 416 ミツハニー系統
