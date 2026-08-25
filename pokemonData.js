@@ -1211,6 +1211,7 @@ const POKEMON_DATA = [
   { id: 'p0498', name: 'ポカブ', subName: '', type: 'ほのお', size: 'S', rarity: 'N', img: 'images/gacha/p0498.png', rate: 30 },
   { id: 'p0499', name: 'チャオブー', subName: '', type: 'ほのお', size: 'M', rarity: 'R', img: 'images/gacha/p0499.png', rate: 20 },
   { id: 'p0500', name: 'エンブオー', subName: '', type: 'ほのお', size: 'L', rarity: 'SR', img: 'images/gacha/p0500.png', rate: 12 },
+  { id: 'p0500-m', name: 'エンブオー', subName: 'メガシンカ', type: 'ほのお', size: 'L', rarity: 'SSR', img: 'images/gacha/p0500-m.png', rate: 7 },
 
   // 501 - 503 ミジュマル系統
   { id: 'p0501', name: 'ミジュマル', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0501.png', rate: 30 },
@@ -1246,7 +1247,8 @@ const POKEMON_DATA = [
   // 519 - 521 マメパト系統
   { id: 'p0519', name: 'マメパト', subName: '', type: 'ひこう', size: 'S', rarity: 'N', img: 'images/gacha/p0519.png', rate: 30 },
   { id: 'p0520', name: 'ハトーボー', subName: '', type: 'ひこう', size: 'M', rarity: 'R', img: 'images/gacha/p0520.png', rate: 20 },
-  { id: 'p0521', name: 'ケンホロウ', subName: '', type: 'ひこう', size: 'L', rarity: 'SR', img: 'images/gacha/p0521.png', rate: 12 },
+  { id: 'p0521', name: 'ケンホロウ', subName: 'オスのすがた', type: 'ひこう', size: 'L', rarity: 'SR', img: 'images/gacha/p0521.png', rate: 12 },
+  { id: 'p0521m', name: 'ケンホロウ', subName: 'メスのすがた', type: 'ひこう', size: 'L', rarity: 'SR', img: 'images/gacha/p0521m.png', rate: 12 },
 
   // 522 - 523 シママ系統
   { id: 'p0522', name: 'シママ', subName: '', type: 'でんき', size: 'S', rarity: 'N', img: 'images/gacha/p0522.png', rate: 30 },
@@ -1264,6 +1266,8 @@ const POKEMON_DATA = [
   // 529 - 530 モグリュー系統
   { id: 'p0529', name: 'モグリュー', subName: '', type: 'じめん', size: 'S', rarity: 'N', img: 'images/gacha/p0529.png', rate: 30 },
   { id: 'p0530', name: 'ドリュウズ', subName: '', type: 'じめん', size: 'M', rarity: 'SR', img: 'images/gacha/p0530.png', rate: 12 },
+  { id: 'p0530-m', name: 'ドリュウズ', subName: 'メガシンカ', type: 'じめん', size: 'M', rarity: 'SSR', img: 'images/gacha/p0530-m.png', rate: 7 },
+
 
   // 531 タブンネ
   { id: 'p0531', name: 'タブンネ', subName: '', type: 'ノーマル', size: 'M', rarity: 'R', img: 'images/gacha/p0531.png', rate: 20 },
