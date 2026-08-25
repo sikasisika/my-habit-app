@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>お小遣い＆資産管理</title>
+
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -32,15 +37,40 @@
       font-weight: bold;
     }
 
-    /* 確認通知トグルスイッチ */
-    .confirm-toggle-label {
-      font-size: 12px;
-      color: #555;
+    .top-right-group {
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    /* 同期ステータスバッジ */
+    .sync-status-badge {
+      font-size: 10px;
+      font-weight: bold;
+      color: #059669;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 3px 6px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .sync-status-badge.syncing {
+      color: #d97706;
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+
+    /* 確認通知トグルスイッチ */
+    .confirm-toggle-label {
+      font-size: 11px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 4px;
       background: #fff;
-      padding: 4px 8px;
+      padding: 3px 8px;
       border-radius: 20px;
       border: 1px solid #ddd;
       cursor: pointer;
@@ -282,15 +312,18 @@
 
   <div class="container">
     
-    <!-- ナビ ＆ 確認通知トグル -->
+    <!-- ナビ ＆ 同期ステータス ＆ 確認トグル -->
     <div class="top-bar">
       <div class="back-nav">
         <a href="index.html">◀ ポータルへ戻る</a>
       </div>
-      <label class="confirm-toggle-label">
-        <input type="checkbox" id="confirm-toggle" onchange="toggleConfirmSetting()">
-        <span>🔔 記録前の確認</span>
-      </label>
+      <div class="top-right-group">
+        <span id="sync-status" class="sync-status-badge">☁️ クラウド同期中...</span>
+        <label class="confirm-toggle-label">
+          <input type="checkbox" id="confirm-toggle" onchange="toggleConfirmSetting()">
+          <span>🔔 確認</span>
+        </label>
+      </div>
     </div>
 
     <h1>💰 お小遣い・資産管理</h1>
@@ -401,7 +434,38 @@
   </div>
 
   <script>
-    // 安全にLocalStorageから値を取得するヘルパー
+    // =========================================================
+    // 🔥 Firebase 初期化 ＆ Firestore連携
+    // =========================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDe2qsA9wEb1z3993Cz2EBJR2LY4GzUibk",
+      authDomain: "my-private-chat-d5464.firebaseapp.com",
+      projectId: "my-private-chat-d5464",
+      storageBucket: "my-private-chat-d5464.firebasestorage.app",
+      messagingSenderId: "272901563642",
+      appId: "1:272901563642:web:af2c6f6d57572e33c61543"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const moneyDocRef = db.collection('app_data').doc('money_assets');
+
+    function setSyncStatus(isSyncing) {
+      const badge = document.getElementById('sync-status');
+      if (badge) {
+        if (isSyncing) {
+          badge.className = 'sync-status-badge syncing';
+          badge.textContent = '☁️ 同期中...';
+        } else {
+          badge.className = 'sync-status-badge';
+          badge.textContent = '☁️ クラウド同期済';
+        }
+      }
+    }
+
+    // LocalStorageヘルパー
     function getStoredNumber(key) {
       const val = localStorage.getItem(key);
       return (val !== null && val !== '') ? Number(val) : 0;
@@ -416,8 +480,57 @@
       }
     }
 
+    // Firebase への安全保存（Firestore ＋ LocalStorage）
+    async function syncToFirebaseAndLocal() {
+      setSyncStatus(true);
+      const data = {
+        cash: getStoredNumber('myCashBalance'),
+        bank: getStoredNumber('myBankBalance'),
+        suica: getStoredNumber('mySuicaBalance'),
+        mainLogs: getStoredJSON('myMainLogs', []),
+        suicaLogs: getStoredJSON('mySuicaLogs', []),
+        fares: getStoredJSON('myCommuteFares', { aGo: 220, aBack: 220, bGo: 350, bBack: 350 }),
+        currentRoute: localStorage.getItem('myCurrentRoute') || 'A',
+        confirmSetting: localStorage.getItem('myConfirmSetting') !== 'false',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await moneyDocRef.set(data, { merge: true });
+        setSyncStatus(false);
+      } catch (err) {
+        console.error('Firebase save error:', err);
+        setSyncStatus(false);
+      }
+    }
+
+    // Firebase からの自動読み込み＆リアルタイム同期
+    function listenToFirebase() {
+      moneyDocRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          const d = doc.data();
+          if (d.cash !== undefined) localStorage.setItem('myCashBalance', d.cash);
+          if (d.bank !== undefined) localStorage.setItem('myBankBalance', d.bank);
+          if (d.suica !== undefined) localStorage.setItem('mySuicaBalance', d.suica);
+          if (d.mainLogs !== undefined) localStorage.setItem('myMainLogs', JSON.stringify(d.mainLogs));
+          if (d.suicaLogs !== undefined) localStorage.setItem('mySuicaLogs', JSON.stringify(d.suicaLogs));
+          if (d.fares !== undefined) localStorage.setItem('myCommuteFares', JSON.stringify(d.fares));
+          if (d.currentRoute !== undefined) localStorage.setItem('myCurrentRoute', d.currentRoute);
+          if (d.confirmSetting !== undefined) localStorage.setItem('myConfirmSetting', d.confirmSetting);
+          
+          updateDisplay();
+          setSyncStatus(false);
+        } else {
+          // 初回ドキュメント作成
+          syncToFirebaseAndLocal();
+        }
+      }, (error) => {
+        console.error('Firebase listen error:', error);
+        setSyncStatus(false);
+      });
+    }
+
     function updateDisplay() {
-      // 画面表示のたびにLocalStorageから最新値を取得
       const cash = getStoredNumber('myCashBalance');
       const bank = getStoredNumber('myBankBalance');
       const suica = getStoredNumber('mySuicaBalance');
@@ -425,10 +538,8 @@
       const suicaLogs = getStoredJSON('mySuicaLogs', []);
       const isConfirmEnabled = localStorage.getItem('myConfirmSetting') !== 'false';
 
-      // 確認トグルの状態反映
       document.getElementById('confirm-toggle').checked = isConfirmEnabled;
 
-      // メイン ＆ 総資産
       document.getElementById('cash-balance').textContent = cash.toLocaleString();
       document.getElementById('bank-balance').textContent = bank.toLocaleString();
       document.getElementById('top-suica-balance').textContent = suica.toLocaleString();
@@ -466,7 +577,7 @@
         }
       }
 
-      // Suica専用カード側
+      // Suica履歴
       document.getElementById('suica-balance').textContent = suica.toLocaleString();
       const suicaList = document.getElementById('suica-log-list');
       suicaList.innerHTML = '';
@@ -500,6 +611,7 @@
     function toggleConfirmSetting() {
       const isChecked = document.getElementById('confirm-toggle').checked;
       localStorage.setItem('myConfirmSetting', isChecked);
+      syncToFirebaseAndLocal();
     }
 
     function updateCommuteButtonLabels() {
@@ -518,6 +630,7 @@
       const currentRoute = document.getElementById('route-select').value;
       localStorage.setItem('myCurrentRoute', currentRoute);
       updateCommuteButtonLabels();
+      syncToFirebaseAndLocal();
     }
 
     function toggleCommuteSettings() {
@@ -545,7 +658,8 @@
       localStorage.setItem('myCommuteFares', JSON.stringify(fares));
       document.getElementById('commute-settings-panel').style.display = 'none';
       updateCommuteButtonLabels();
-      alert('運賃設定を更新したぜ！');
+      syncToFirebaseAndLocal();
+      alert('運賃設定をクラウドに保存したぜ！');
     }
 
     // 通勤ワンタップ
@@ -581,6 +695,7 @@
       localStorage.setItem('mySuicaLogs', JSON.stringify(suicaLogs));
 
       updateDisplay();
+      syncToFirebaseAndLocal();
     }
 
     // メイン記録
@@ -627,6 +742,7 @@
       amountInput.value = '';
       memoInput.value = '';
       updateDisplay();
+      syncToFirebaseAndLocal();
     }
 
     // Suica手動記録
@@ -665,6 +781,7 @@
       amountInput.value = '';
       memoInput.value = '';
       updateDisplay();
+      syncToFirebaseAndLocal();
     }
 
     function deleteMainLog(index) {
@@ -685,6 +802,7 @@
         mainLogs.splice(index, 1);
         localStorage.setItem('myMainLogs', JSON.stringify(mainLogs));
         updateDisplay();
+        syncToFirebaseAndLocal();
       }
     }
 
@@ -700,10 +818,14 @@
         suicaLogs.splice(index, 1);
         localStorage.setItem('mySuicaLogs', JSON.stringify(suicaLogs));
         updateDisplay();
+        syncToFirebaseAndLocal();
       }
     }
 
-    window.addEventListener('DOMContentLoaded', updateDisplay);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDisplay();
+      listenToFirebase();
+    });
   </script>
 
 </body>
