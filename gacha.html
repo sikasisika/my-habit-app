@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>プレミアムガチャ | ポケモンスタジオ</title>
 
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -296,9 +300,7 @@
     }
     .btn-modal-back:active, .btn-modal-retry:active { transform: scale(0.96); }
 
-    /* ========================================================= */
     /* 🔍 ポップアップ拡大＆詳細モーダル */
-    /* ========================================================= */
     .detail-overlay {
       position: absolute;
       inset: 0;
@@ -474,8 +476,9 @@
 
   </div>
 
-  <!-- 外部データファイルを読み込み -->
+  <!-- 外部データ ＆ クラウド同期モジュール -->
   <script src="pokemonData.js"></script>
+  <script src="cloudSync.js"></script>
 
   <script>
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
@@ -483,13 +486,23 @@
     let lastDrawCount = 1;
 
     function updateCoinDisplay() {
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
       document.getElementById('coin-display').textContent = coins.toLocaleString();
-      localStorage.setItem('my_casino_coins', coins);
     }
+
+    // クラウド側でデータが更新された際の自動再描画
+    window.onCloudSyncUpdated = function() {
+      inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{}');
+      updateCoinDisplay();
+    };
 
     function addBonus() {
       coins += 500;
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinDisplay();
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       alert('🎁 500 コイン獲得！');
     }
 
@@ -502,11 +515,17 @@
 
       lastDrawCount = times;
       coins -= cost;
+      localStorage.setItem('my_casino_coins', coins);
       updateCoinDisplay();
 
       const results = [];
       for (let i = 0; i < times; i++) {
         results.push(pickRandom(times === 10 && i === 9));
+      }
+
+      // クラウドへ即時二重保存
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
       }
 
       showResults(results, times);
@@ -563,7 +582,6 @@
           <img src="${card.img}" alt="" onerror="this.src='images/slot1.png'">
           <span style="font-size:11px; font-weight:900; text-align:center;">${card.name}</span>
         `;
-        // タップで特大拡大モーダルを開く
         el.onclick = () => openDetailModal(card);
         grid.appendChild(el);
       });
@@ -574,7 +592,6 @@
       document.getElementById('gacha-modal').style.display = 'flex';
     }
 
-    // 🔍 特大拡大表示
     function openDetailModal(card) {
       const modal = document.getElementById('detail-modal');
       const content = document.getElementById('detail-card-content');
@@ -585,7 +602,6 @@
       document.getElementById('detail-img').src = card.img;
       document.getElementById('detail-name').textContent = card.name;
       
-      // 説明文（pokemonData.js に desc があれば表示、なければデフォルト文言）
       const count = inventory[card.id] || 1;
       document.getElementById('detail-desc').textContent = card.desc 
         ? `${card.desc}\n(現在の所持数: ${count}体)`
