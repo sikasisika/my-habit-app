@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ポケモンタワー | エントランス</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'DotGothic16', sans-serif !important;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #090d16;
+    }
+
+    body {
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px;
+      padding-top: calc(8px + env(safe-area-inset-top));
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* ヘッダー */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 32px;
+    }
+    .btn-portal {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* タイトルロゴ */
+    .title-banner {
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      border: 2px solid #fbbf24;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .title-banner h1 {
+      font-size: 19px;
+      color: #fbbf24;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+    }
+
+    /* メインコンテンツエリア */
+    .content-card {
+      flex: 1;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* パーティ一覧（6枠） */
+    .party-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .party-slot {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .party-slot img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    /* 道具袋 */
+    .item-bag-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    /* 階層選択 */
+    .floor-list-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .floor-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 6px 0;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .floor-btn.active {
+      background: #38bdf8;
+      color: #000;
+      border-color: #fff;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+    .floor-btn.locked {
+      opacity: 0.25;
+      cursor: not-allowed;
+      border-color: #475569;
+    }
+
+    /* 最下部アクションバー */
+    .action-bottom {
+      display: flex;
+      gap: 8px;
+      height: 48px;
+    }
+    .btn-train {
+      flex: 1;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1.5px solid #34d399;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-start {
+      flex: 2;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: 2px solid #fff;
+      color: #000;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    }
+    .btn-start:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.4); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ヘッダー -->
+    <div class="header-bar">
+      <button class="btn-portal" onclick="location.href='index.html'">◀ ポータルへ</button>
+      <span style="font-size: 11px; color:#cbd5e1;">所持: <b id="coin-txt" style="color:#fbbf24;">0</b> G</span>
+    </div>
+
+    <!-- タイトル -->
+    <div class="title-banner">
+      <h1>🏰 ポケモン バトルタワー</h1>
+      <p style="font-size: 10px; color:#cbd5e1; margin-top: 2px;">頂上を目指し、進化と覚醒で勝ち進め！</p>
+    </div>
+
+    <!-- メインカード -->
+    <div class="content-card">
+      
+      <!-- 手持ちパーティ -->
+      <div class="section-title">
+        <span>👥 出撃パーティ</span>
+        <button class="btn-portal" style="font-size:9px; padding:2px 6px;" onclick="location.href='train.html'">ジムで編成</button>
+      </div>
+      <div class="party-grid" id="party-container"></div>
+
+      <!-- 道具袋 -->
+      <div class="section-title">
+        <span>🎒 持ち込みアイテム</span>
+      </div>
+      <div class="item-bag-box">
+        <div>🌱 進化の種: <b id="seed-count" style="color:#4ade80;">0 / 3</b></div>
+        <div>✨ 超進化の種: <b id="super-seed-status" style="color:#ec4899;">なし</b></div>
+      </div>
+
+      <!-- 階層選択 -->
+      <div class="section-title">
+        <span>🚀 出発階層を選択 (10F区切り)</span>
+        <span style="font-size:9px; color:#fbbf24;" id="max-stage-txt">最高到達: 1F</span>
+      </div>
+      <div class="floor-list-grid" id="floor-list"></div>
+
+    </div>
+
+    <!-- 最下部アクション -->
+    <div class="action-bottom">
+      <button class="btn-train" onclick="location.href='train.html'">🌱 育成ジム</button>
+      <button class="btn-start" id="btn-start-battle" onclick="startBattle()">⚔️ 出撃する！</button>
+    </div>
+
+  </div>
+
+  <script src="pokemonData.js"></script>
+  <script>
+    let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+    let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+    let levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+    let maxCleared = parseInt(localStorage.getItem('my_tower_max_stage') || '1');
+    let seedStock = parseInt(localStorage.getItem('my_battle_seeds') || '0');
+    let superSeed = localStorage.getItem('my_super_seed') === 'true';
+
+    let selectedFloor = 1;
+
+    function getPoke(id) {
+      if (typeof POKEMON_DATA !== 'undefined') {
+        const found = POKEMON_DATA.find(p => p.id === id);
+        if (found) return found;
+      }
+      return { id, name: 'ポケモン', type: 'ノーマル', img: 'images/gacha/' + id + '.png' };
+    }
+
+    function initHome() {
+      document.getElementById('coin-txt').textContent = coins;
+      document.getElementById('seed-count').textContent = `${seedStock} / 3`;
+      document.getElementById('super-seed-status').textContent = superSeed ? '所持中 ✨' : 'なし';
+      document.getElementById('max-stage-txt').textContent = `最高到達: ${maxCleared}F`;
+
+      // パーティ描画
+      const pGrid = document.getElementById('party-container');
+      pGrid.innerHTML = '';
+      for (let i = 0; i < 6; i++) {
+        const id = party[i];
+        const slot = document.createElement('div');
+        slot.className = 'party-slot';
+        if (id) {
+          const p = getPoke(id);
+          const lv = levels[id] || 1;
+          slot.innerHTML = `
+            <img src="${p.img}" onerror="this.src='images/slot1.png'">
+            <div style="font-size:9px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; text-align:center;">${p.name}</div>
+            <div style="font-size:8px; color:#38bdf8;">Lv.${lv}</div>
+          `;
+        } else {
+          slot.innerHTML = `<span style="font-size:9px; color:#64748b; line-height:55px;">(あき)</span>`;
+        }
+        pGrid.appendChild(slot);
+      }
+
+      // 階層ボタン描画
+      const fGrid = document.getElementById('floor-list');
+      fGrid.innerHTML = '';
+      for (let f = 1; f <= 101; f += 10) {
+        const btn = document.createElement('button');
+        const isUnlocked = (f === 1 || f <= maxCleared);
+        btn.className = `floor-btn ${isUnlocked ? '' : 'locked'} ${f === selectedFloor ? 'active' : ''}`;
+        btn.textContent = `${f}F`;
+        if (isUnlocked) {
+          btn.onclick = () => {
+            selectedFloor = f;
+            initHome();
+          };
+        }
+        fGrid.appendChild(btn);
+      }
+
+      document.getElementById('btn-start-battle').textContent = `⚔️ ${selectedFloor}Fへ出撃！`;
+    }
+
+    function startBattle() {
+      localStorage.setItem('my_tower_stage', selectedFloor);
+      localStorage.removeItem('my_current_enemy');
+      window.location.href = 'battle.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', initHome);
+  </script>
+</body>
+</html>
