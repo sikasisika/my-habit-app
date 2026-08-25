@@ -568,6 +568,7 @@ const POKEMON_DATA = [
 
   // 227 エアームド
   { id: 'p0227', name: 'エアームド', subName: '', type: 'はがね', size: 'M', rarity: 'SR', img: 'images/gacha/p0227.png', rate: 12 },
+  { id: 'p0227-m', name: 'エアームド', subName: 'メガシンカ', シンカe: 'はがね', size: 'M', rarity: 'UR', img: 'images/gacha/p0227-m.png', rate: 3 },
 
   // 228 - 229 デルビル系統
   { id: 'p0228', name: 'デルビル', subName: '', type: 'あく', size: 'S', rarity: 'N', img: 'images/gacha/p0228.png', rate: 30 },
