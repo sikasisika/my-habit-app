@@ -366,19 +366,6 @@ const POKEMON_DATA = [
   { id: 'p0150-y', name: 'ミュウツー', subName: 'メガシンカ Y', type: 'エスパー', size: 'G', rarity: 'UR', img: 'images/gacha/p0150-y.png', rate: 3 },
   { id: 'p0151', name: 'ミュウ', subName: '', type: 'エスパー', size: 'S', rarity: 'UR', img: 'images/gacha/p0151.png', rate: 3 },
 
-  // 443 - 445 フカマル系統（シンオウ地方・メガ・メガZ）
-  { id: 'p0443', name: 'フカマル', subName: '', type: 'ドラゴン', size: 'S', rarity: 'N', img: 'images/gacha/p0443.png', rate: 30 },
-  { id: 'p0444', name: 'ガバイト', subName: '', type: 'ドラゴン', size: 'M', rarity: 'R', img: 'images/gacha/p0444.png', rate: 20 },
-  { id: 'p0445', name: 'ガブリアス', subName: '', type: 'ドラゴン', size: 'L', rarity: 'SR', img: 'images/gacha/p0445.png', rate: 12 },
-  { id: 'p0445-m', name: 'ガブリアス', subName: 'メガシンカ', type: 'ドラゴン', size: 'G', rarity: 'SSR', img: 'images/gacha/p0445-m.png', rate: 7 },
-  { id: 'p0445-z', name: 'ガブリアス', subName: 'メガシンカ Z', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0445-z.png', rate: 3 },
-
-  // 447 - 448 リオル系統（シンオウ地方・メガ・メガZ）
-  { id: 'p0447', name: 'リオル', subName: '', type: 'かくとう', size: 'S', rarity: 'N', img: 'images/gacha/p0447.png', rate: 30 },
-  { id: 'p0448', name: 'ルカリオ', subName: '', type: 'かくとう', size: 'M', rarity: 'SR', img: 'images/gacha/p0448.png', rate: 12 },
-  { id: 'p0448-m', name: 'ルカリオ', subName: 'メガシンカ', type: 'かくとう', size: 'G', rarity: 'SSR', img: 'images/gacha/p0448-m.png', rate: 7 },
-  { id: 'p0448-z', name: 'ルカリオ', subName: 'メガシンカ Z', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0448-z.png', rate: 3 },
-
   // ==========================================
   // ジョウト地方（No.152 - 251）
   // ==========================================
@@ -930,5 +917,264 @@ const POKEMON_DATA = [
   { id: 'p0386', name: 'デオキシス', subName: '', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386.png', rate: 3 },
   { id: 'p0386a', name: 'デオキシス', subName: 'アタックフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386a.png', rate: 3 },
   { id: 'p0386d', name: 'デオキシス', subName: 'ディフェンスフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386d.png', rate: 3 },
-  { id: 'p0386s', name: 'デオキシス', subName: 'スピードフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386s.png', rate: 3 }
+  { id: 'p0386s', name: 'デオキシス', subName: 'スピードフォルム', type: 'エスパー', size: 'M', rarity: 'UR', img: 'images/gacha/p0386s.png', rate: 3 },
+
+  // ==========================================
+  // シンオウ地方（No.387 - 493）
+  // ==========================================
+
+  // 387 - 389 ナエトル系統
+  { id: 'p0387', name: 'ナエトル', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0387.png', rate: 30 },
+  { id: 'p0388', name: 'ハヤシガメ', subName: '', type: 'くさ', size: 'M', rarity: 'R', img: 'images/gacha/p0388.png', rate: 20 },
+  { id: 'p0389', name: 'ドダイトス', subName: '', type: 'くさ', size: 'L', rarity: 'SR', img: 'images/gacha/p0389.png', rate: 12 },
+
+  // 390 - 392 ヒコザル系統
+  { id: 'p0390', name: 'ヒコザル', subName: '', type: 'ほのお', size: 'S', rarity: 'N', img: 'images/gacha/p0390.png', rate: 30 },
+  { id: 'p0391', name: 'モウカザル', subName: '', type: 'ほのお', size: 'M', rarity: 'R', img: 'images/gacha/p0391.png', rate: 20 },
+  { id: 'p0392', name: 'ゴウカザル', subName: '', type: 'ほのお', size: 'L', rarity: 'SR', img: 'images/gacha/p0392.png', rate: 12 },
+
+  // 393 - 395 ポッチャマ系統
+  { id: 'p0393', name: 'ポッチャマ', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0393.png', rate: 30 },
+  { id: 'p0394', name: 'ポッタイシ', subName: '', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0394.png', rate: 20 },
+  { id: 'p0395', name: 'エンペルト', subName: '', type: 'みず', size: 'L', rarity: 'SR', img: 'images/gacha/p0395.png', rate: 12 },
+
+  // 396 - 398 ムックル系統
+  { id: 'p0396', name: 'ムックル', subName: '', type: 'ひこう', size: 'S', rarity: 'N', img: 'images/gacha/p0396.png', rate: 30 },
+  { id: 'p0397', name: 'ムクバード', subName: '', type: 'ひこう', size: 'M', rarity: 'R', img: 'images/gacha/p0397.png', rate: 20 },
+  { id: 'p0398', name: 'ムクホーク', subName: '', type: 'ひこう', size: 'L', rarity: 'SR', img: 'images/gacha/p0398.png', rate: 12 },
+
+  // 399 - 400 ビッパ系統
+  { id: 'p0399', name: 'ビッパ', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0399.png', rate: 30 },
+  { id: 'p0400', name: 'ビーダル', subName: '', type: 'ノーマル', size: 'M', rarity: 'R', img: 'images/gacha/p0400.png', rate: 20 },
+
+  // 401 - 402 コロボーシ系統
+  { id: 'p0401', name: 'コロボーシ', subName: '', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0401.png', rate: 30 },
+  { id: 'p0402', name: 'コロトック', subName: '', type: 'むし', size: 'M', rarity: 'R', img: 'images/gacha/p0402.png', rate: 20 },
+
+  // 403 - 405 コリンク系統
+  { id: 'p0403', name: 'コリンク', subName: '', type: 'でんき', size: 'S', rarity: 'N', img: 'images/gacha/p0403.png', rate: 30 },
+  { id: 'p0404', name: 'ルクシオ', subName: '', type: 'でんき', size: 'M', rarity: 'R', img: 'images/gacha/p0404.png', rate: 20 },
+  { id: 'p0405', name: 'レントラー', subName: '', type: 'でんき', size: 'L', rarity: 'SR', img: 'images/gacha/p0405.png', rate: 12 },
+
+  // 406 - 407 スボミー・ロズレイド
+  { id: 'p0406', name: 'スボミー', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0406.png', rate: 30 },
+  { id: 'p0407', name: 'ロズレイド', subName: '', type: 'くさ', size: 'M', rarity: 'SR', img: 'images/gacha/p0407.png', rate: 12 },
+
+  // 408 - 409 ズガイドス系統
+  { id: 'p0408', name: 'ズガイドス', subName: '', type: 'いわ', size: 'S', rarity: 'N', img: 'images/gacha/p0408.png', rate: 30 },
+  { id: 'p0409', name: 'ラムパルド', subName: '', type: 'いわ', size: 'L', rarity: 'SR', img: 'images/gacha/p0409.png', rate: 12 },
+
+  // 410 - 411 タテトプス系統
+  { id: 'p0410', name: 'タテトプス', subName: '', type: 'いわ', size: 'S', rarity: 'N', img: 'images/gacha/p0410.png', rate: 30 },
+  { id: 'p0411', name: 'トリデプス', subName: '', type: 'いわ', size: 'L', rarity: 'SR', img: 'images/gacha/p0411.png', rate: 12 },
+
+  // 412 - 414 ミノムッチ系統
+  { id: 'p0412', name: 'ミノムッチ', subName: '', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0412.png', rate: 30 },
+  { id: 'p0413', name: 'ミノマダム', subName: '', type: 'むし', size: 'S', rarity: 'R', img: 'images/gacha/p0413.png', rate: 20 },
+  { id: 'p0414', name: 'ガーメイル', subName: '', type: 'むし', size: 'M', rarity: 'R', img: 'images/gacha/p0414.png', rate: 20 },
+
+  // 415 - 416 ミツハニー系統
+  { id: 'p0415', name: 'ミツハニー', subName: '', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0415.png', rate: 30 },
+  { id: 'p0416', name: 'ビークイン', subName: '', type: 'むし', size: 'M', rarity: 'SR', img: 'images/gacha/p0416.png', rate: 12 },
+
+  // 417 パチリス
+  { id: 'p0417', name: 'パチリス', subName: '', type: 'でんき', size: 'S', rarity: 'N', img: 'images/gacha/p0417.png', rate: 30 },
+
+  // 418 - 419 ブイゼル系統
+  { id: 'p0418', name: 'ブイゼル', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0418.png', rate: 30 },
+  { id: 'p0419', name: 'フローゼル', subName: '', type: 'みず', size: 'M', rarity: 'SR', img: 'images/gacha/p0419.png', rate: 12 },
+
+  // 420 - 421 チェリンボ系統
+  { id: 'p0420', name: 'チェリンボ', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0420.png', rate: 30 },
+  { id: 'p0421', name: 'チェリム', subName: '', type: 'くさ', size: 'S', rarity: 'R', img: 'images/gacha/p0421.png', rate: 20 },
+
+  // 422 - 423 カラナクシ系統
+  { id: 'p0422', name: 'カラナクシ', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0422.png', rate: 30 },
+  { id: 'p0423', name: 'トリトドン', subName: '', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0423.png', rate: 20 },
+
+  // 424 エテボース
+  { id: 'p0424', name: 'エテボース', subName: '', type: 'ノーマル', size: 'M', rarity: 'SR', img: 'images/gacha/p0424.png', rate: 12 },
+
+  // 425 - 426 フワンテ系統
+  { id: 'p0425', name: 'フワンテ', subName: '', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0425.png', rate: 30 },
+  { id: 'p0426', name: 'フワライド', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0426.png', rate: 12 },
+
+  // 427 - 428 ミミロル系統
+  { id: 'p0427', name: 'ミミロル', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0427.png', rate: 30 },
+  { id: 'p0428', name: 'ミミロップ', subName: '', type: 'ノーマル', size: 'M', rarity: 'SR', img: 'images/gacha/p0428.png', rate: 12 },
+  { id: 'p0428-m', name: 'ミミロップ', subName: 'メガシンカ', type: 'ノーマル', size: 'G', rarity: 'SSR', img: 'images/gacha/p0428-m.png', rate: 7 },
+
+  // 429 ムウマージ
+  { id: 'p0429', name: 'ムウマージ', subName: '', type: 'ゴースト', size: 'M', rarity: 'SR', img: 'images/gacha/p0429.png', rate: 12 },
+
+  // 430 ドンカラス
+  { id: 'p0430', name: 'ドンカラス', subName: '', type: 'あく', size: 'M', rarity: 'SR', img: 'images/gacha/p0430.png', rate: 12 },
+
+  // 431 - 432 ニャルマー系統
+  { id: 'p0431', name: 'ニャルマー', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0431.png', rate: 30 },
+  { id: 'p0432', name: 'ブニャット', subName: '', type: 'ノーマル', size: 'M', rarity: 'R', img: 'images/gacha/p0432.png', rate: 20 },
+
+  // 433 リーシャン
+  { id: 'p0433', name: 'リーシャン', subName: '', type: 'エスパー', size: 'S', rarity: 'N', img: 'images/gacha/p0433.png', rate: 30 },
+
+  // 434 - 435 スカンプー系統
+  { id: 'p0434', name: 'スカンプー', subName: '', type: 'どく', size: 'S', rarity: 'N', img: 'images/gacha/p0434.png', rate: 30 },
+  { id: 'p0435', name: 'スカタンク', subName: '', type: 'どく', size: 'M', rarity: 'R', img: 'images/gacha/p0435.png', rate: 20 },
+
+  // 436 - 437 ドーミラー系統
+  { id: 'p0436', name: 'ドーミラー', subName: '', type: 'はがね', size: 'S', rarity: 'N', img: 'images/gacha/p0436.png', rate: 30 },
+  { id: 'p0437', name: 'ドータクン', subName: '', type: 'はがね', size: 'L', rarity: 'SR', img: 'images/gacha/p0437.png', rate: 12 },
+
+  // 438 ウソハチ
+  { id: 'p0438', name: 'ウソハチ', subName: '', type: 'いわ', size: 'S', rarity: 'N', img: 'images/gacha/p0438.png', rate: 30 },
+
+  // 439 マネネ
+  { id: 'p0439', name: 'マネネ', subName: '', type: 'エスパー', size: 'S', rarity: 'N', img: 'images/gacha/p0439.png', rate: 30 },
+
+  // 440 ピンプク
+  { id: 'p0440', name: 'ピンプク', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0440.png', rate: 30 },
+
+  // 441 ペラップ
+  { id: 'p0441', name: 'ペラップ', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0441.png', rate: 30 },
+
+  // 442 ミカルゲ
+  { id: 'p0442', name: 'ミカルゲ', subName: '', type: 'ゴースト', size: 'M', rarity: 'SR', img: 'images/gacha/p0442.png', rate: 12 },
+
+  // 443 - 445 フカマル系統
+  { id: 'p0443', name: 'フカマル', subName: '', type: 'ドラゴン', size: 'S', rarity: 'N', img: 'images/gacha/p0443.png', rate: 30 },
+  { id: 'p0444', name: 'ガバイト', subName: '', type: 'ドラゴン', size: 'M', rarity: 'R', img: 'images/gacha/p0444.png', rate: 20 },
+  { id: 'p0445', name: 'ガブリアス', subName: '', type: 'ドラゴン', size: 'L', rarity: 'SR', img: 'images/gacha/p0445.png', rate: 12 },
+  { id: 'p0445-m', name: 'ガブリアス', subName: 'メガシンカ', type: 'ドラゴン', size: 'G', rarity: 'SSR', img: 'images/gacha/p0445-m.png', rate: 7 },
+  { id: 'p0445-z', name: 'ガブリアス', subName: 'メガシンカ Z', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0445-z.png', rate: 3 },
+
+  // 446 ゴンベ
+  { id: 'p0446', name: 'ゴンベ', subName: '', type: 'ノーマル', size: 'S', rarity: 'N', img: 'images/gacha/p0446.png', rate: 30 },
+
+  // 447 - 448 リオル系統
+  { id: 'p0447', name: 'リオル', subName: '', type: 'かくとう', size: 'S', rarity: 'N', img: 'images/gacha/p0447.png', rate: 30 },
+  { id: 'p0448', name: 'ルカリオ', subName: '', type: 'かくとう', size: 'M', rarity: 'SR', img: 'images/gacha/p0448.png', rate: 12 },
+  { id: 'p0448-m', name: 'ルカリオ', subName: 'メガシンカ', type: 'かくとう', size: 'G', rarity: 'SSR', img: 'images/gacha/p0448-m.png', rate: 7 },
+  { id: 'p0448-z', name: 'ルカリオ', subName: 'メガシンカ Z', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0448-z.png', rate: 3 },
+
+  // 449 - 450 ヒポポタス系統
+  { id: 'p0449', name: 'ヒポポタス', subName: '', type: 'じめん', size: 'S', rarity: 'N', img: 'images/gacha/p0449.png', rate: 30 },
+  { id: 'p0450', name: 'カバルドン', subName: '', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0450.png', rate: 12 },
+
+  // 451 - 452 スコルピ系統
+  { id: 'p0451', name: 'スコルピ', subName: '', type: 'どく', size: 'S', rarity: 'N', img: 'images/gacha/p0451.png', rate: 30 },
+  { id: 'p0452', name: 'ドラピオン', subName: '', type: 'どく', size: 'L', rarity: 'SR', img: 'images/gacha/p0452.png', rate: 12 },
+
+  // 453 - 454 グレッグル系統
+  { id: 'p0453', name: 'グレッグル', subName: '', type: 'どく', size: 'S', rarity: 'N', img: 'images/gacha/p0453.png', rate: 30 },
+  { id: 'p0454', name: 'ドクロッグ', subName: '', type: 'どく', size: 'M', rarity: 'SR', img: 'images/gacha/p0454.png', rate: 12 },
+
+  // 455 マスキッパ
+  { id: 'p0455', name: 'マスキッパ', subName: '', type: 'くさ', size: 'M', rarity: 'R', img: 'images/gacha/p0455.png', rate: 20 },
+
+  // 456 - 457 ケイコウオ系統
+  { id: 'p0456', name: 'ケイコウオ', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0456.png', rate: 30 },
+  { id: 'p0457', name: 'ネオラント', subName: '', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0457.png', rate: 20 },
+
+  // 458 タマンタ
+  { id: 'p0458', name: 'タマンタ', subName: '', type: 'みず', size: 'S', rarity: 'N', img: 'images/gacha/p0458.png', rate: 30 },
+
+  // 459 - 460 ユキカブリ系統
+  { id: 'p0459', name: 'ユキカブリ', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0459.png', rate: 30 },
+  { id: 'p0460', name: 'ユキノオー', subName: '', type: 'くさ', size: 'L', rarity: 'SR', img: 'images/gacha/p0460.png', rate: 12 },
+  { id: 'p0460-m', name: 'ユキノオー', subName: 'メガシンカ', type: 'くさ', size: 'G', rarity: 'SSR', img: 'images/gacha/p0460-m.png', rate: 7 },
+
+  // 461 マニューラ
+  { id: 'p0461', name: 'マニューラ', subName: '', type: 'あく', size: 'M', rarity: 'SR', img: 'images/gacha/p0461.png', rate: 12 },
+
+  // 462 ジバコイル
+  { id: 'p0462', name: 'ジバコイル', subName: '', type: 'でんき', size: 'L', rarity: 'SR', img: 'images/gacha/p0462.png', rate: 12 },
+
+  // 463 ベロベルト
+  { id: 'p0463', name: 'ベロベルト', subName: '', type: 'ノーマル', size: 'L', rarity: 'SR', img: 'images/gacha/p0463.png', rate: 12 },
+
+  // 464 ドサイドン
+  { id: 'p0464', name: 'ドサイドン', subName: '', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0464.png', rate: 12 },
+
+  // 465 モジャンボ
+  { id: 'p0465', name: 'モジャンボ', subName: '', type: 'くさ', size: 'L', rarity: 'SR', img: 'images/gacha/p0465.png', rate: 12 },
+
+  // 466 エレキブル
+  { id: 'p0466', name: 'エレキブル', subName: '', type: 'でんき', size: 'L', rarity: 'SR', img: 'images/gacha/p0466.png', rate: 12 },
+
+  // 467 ブーバーン
+  { id: 'p0467', name: 'ブーバーン', subName: '', type: 'ほのお', size: 'L', rarity: 'SR', img: 'images/gacha/p0467.png', rate: 12 },
+
+  // 468 トゲキッス
+  { id: 'p0468', name: 'トゲキッス', subName: '', type: 'フェアリー', size: 'L', rarity: 'SR', img: 'images/gacha/p0468.png', rate: 12 },
+
+  // 469 メガヤンマ
+  { id: 'p0469', name: 'メガヤンマ', subName: '', type: 'むし', size: 'L', rarity: 'SR', img: 'images/gacha/p0469.png', rate: 12 },
+
+  // 470 リーフィア
+  { id: 'p0470', name: 'リーフィア', subName: '', type: 'くさ', size: 'M', rarity: 'SR', img: 'images/gacha/p0470.png', rate: 12 },
+
+  // 471 グレイシア
+  { id: 'p0471', name: 'グレイシア', subName: '', type: 'こおり', size: 'M', rarity: 'SR', img: 'images/gacha/p0471.png', rate: 12 },
+
+  // 472 グライオン
+  { id: 'p0472', name: 'グライオン', subName: '', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0472.png', rate: 12 },
+
+  // 473 マンムー
+  { id: 'p0473', name: 'マンムー', subName: '', type: 'こおり', size: 'L', rarity: 'SR', img: 'images/gacha/p0473.png', rate: 12 },
+
+  // 474 ポリゴンZ
+  { id: 'p0474', name: 'ポリゴンZ', subName: '', type: 'ノーマル', size: 'M', rarity: 'SR', img: 'images/gacha/p0474.png', rate: 12 },
+
+  // 475 エルコンドル（エルレイド）
+  { id: 'p0475', name: 'エルレイド', subName: '', type: 'かくとう', size: 'L', rarity: 'SR', img: 'images/gacha/p0475.png', rate: 12 },
+  { id: 'p0475-m', name: 'エルレイド', subName: 'メガシンカ', type: 'かくとう', size: 'G', rarity: 'SSR', img: 'images/gacha/p0475-m.png', rate: 7 },
+
+  // 476 ダイノーズ
+  { id: 'p0476', name: 'ダイノーズ', subName: '', type: 'いわ', size: 'L', rarity: 'SR', img: 'images/gacha/p0476.png', rate: 12 },
+
+  // 477 ヨノワール
+  { id: 'p0477', name: 'ヨノワール', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0477.png', rate: 12 },
+
+  // 478 ユキメノコ
+  { id: 'p0478', name: 'ユキメノコ', subName: '', type: 'こおり', size: 'M', rarity: 'SR', img: 'images/gacha/p0478.png', rate: 12 },
+
+  // 479 ロトム
+  { id: 'p0479', name: 'ロトム', subName: '', type: 'でんき', size: 'S', rarity: 'R', img: 'images/gacha/p0479.png', rate: 20 },
+
+  // 480 - 482 ユクシー・エムリット・アグノム
+  { id: 'p0480', name: 'ユクシー', subName: '', type: 'エスパー', size: 'S', rarity: 'SSR', img: 'images/gacha/p0480.png', rate: 7 },
+  { id: 'p0481', name: 'エムリット', subName: '', type: 'エスパー', size: 'S', rarity: 'SSR', img: 'images/gacha/p0481.png', rate: 7 },
+  { id: 'p0482', name: 'アグノム', subName: '', type: 'エスパー', size: 'S', rarity: 'SSR', img: 'images/gacha/p0482.png', rate: 7 },
+
+  // 483 - 484 ディアルガ・パルキア
+  { id: 'p0483', name: 'ディアルガ', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0483.png', rate: 3 },
+  { id: 'p0483-o', name: 'ディアルガ', subName: 'オリジンフォルム', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0483-o.png', rate: 3 },
+  { id: 'p0484', name: 'パルキア', subName: '', type: 'ドラゴン', size: 'L', rarity: 'UR', img: 'images/gacha/p0484.png', rate: 3 },
+  { id: 'p0484-o', name: 'パルキア', subName: 'オリジンフォルム', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0484-o.png', rate: 3 },
+
+  // 485 ヒードラン
+  { id: 'p0485', name: 'ヒードラン', subName: '', type: 'ほのお', size: 'L', rarity: 'SSR', img: 'images/gacha/p0485.png', rate: 7 },
+
+  // 486 レジギガス
+  { id: 'p0486', name: 'レジギガス', subName: '', type: 'ノーマル', size: 'L', rarity: 'UR', img: 'images/gacha/p0486.png', rate: 3 },
+
+  // 487 ギラティナ
+  { id: 'p0487', name: 'ギラティナ', subName: '', type: 'ゴースト', size: 'L', rarity: 'UR', img: 'images/gacha/p0487.png', rate: 3 },
+  { id: 'p0487-o', name: 'ギラティナ', subName: 'オリジンフォルム', type: 'ゴースト', size: 'G', rarity: 'UR', img: 'images/gacha/p0487-o.png', rate: 3 },
+
+  // 488 クレセリア
+  { id: 'p0488', name: 'クレセリア', subName: '', type: 'エスパー', size: 'L', rarity: 'SSR', img: 'images/gacha/p0488.png', rate: 7 },
+
+  // 489 - 490 フィオネ・マナフィ
+  { id: 'p0489', name: 'フィオネ', subName: '', type: 'みず', size: 'S', rarity: 'SSR', img: 'images/gacha/p0489.png', rate: 7 },
+  { id: 'p0490', name: 'マナフィ', subName: '', type: 'みず', size: 'S', rarity: 'UR', img: 'images/gacha/p0490.png', rate: 3 },
+
+  // 491 ダークライ
+  { id: 'p0491', name: 'ダークライ', subName: '', type: 'あく', size: 'M', rarity: 'UR', img: 'images/gacha/p0491.png', rate: 3 },
+
+  // 492 シェイミ
+  { id: 'p0492', name: 'シェイミ', subName: '', type: 'くさ', size: 'S', rarity: 'UR', img: 'images/gacha/p0492.png', rate: 3 },
+
+  // 493 アルセウス
+  { id: 'p0493', name: 'アルセウス', subName: '', type: 'ノーマル', size: 'L', rarity: 'UR', img: 'images/gacha/p0493.png', rate: 3 }
 ];
