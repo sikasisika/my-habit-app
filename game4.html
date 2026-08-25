@@ -50,7 +50,6 @@
       position: relative;
     }
 
-    /* ヘッダー */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -71,7 +70,6 @@
     }
     .top-btn:active { transform: scale(0.95); }
 
-    /* コイン・ステータスバー */
     .status-bar {
       background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(8px);
@@ -97,10 +95,10 @@
       text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
     }
 
-    /* モード切替タブ */
+    /* モード切替タブ（3列） */
     .tab-group {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       background: rgba(0, 0, 0, 0.35);
       padding: 3px;
       border-radius: 10px;
@@ -108,15 +106,16 @@
     }
     .tab-btn {
       flex: 1;
-      padding: 6px;
+      padding: 6px 2px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       border: none;
       background: transparent;
       color: #a7f3d0;
       cursor: pointer;
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
     .tab-btn.active {
       background: linear-gradient(135deg, #10b981, #059669);
@@ -124,7 +123,6 @@
       box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
     }
 
-    /* メインゲーム枠 */
     .game-card {
       flex: 1 1 0%;
       min-height: 0;
@@ -140,7 +138,7 @@
       touch-action: none;
     }
 
-    /* ================= トランプカード汎用デザイン ================= */
+    /* トランプカード */
     .card {
       width: 44px;
       height: 62px;
@@ -185,7 +183,7 @@
       position: relative;
     }
 
-    /* ================= 1. ソリティア（クロンダイク）画面 ================= */
+    /* 1. ソリティア */
     .sol-top-row {
       display: flex;
       justify-content: space-between;
@@ -210,9 +208,7 @@
       position: relative;
       min-height: 100%;
     }
-    .tableau-col .card {
-      position: absolute;
-    }
+    .tableau-col .card { position: absolute; }
 
     .sol-ctrl-bar {
       display: flex;
@@ -236,7 +232,6 @@
     }
     .btn-action:active { transform: scale(0.95); }
 
-    /* ドラッグ追従用コンテナ */
     #drag-container {
       position: fixed;
       pointer-events: none;
@@ -249,15 +244,15 @@
       transform: scale(1.06);
     }
 
-    /* ================= 2. ブラックジャック画面 ================= */
-    .bj-view {
+    /* 2. ブラックジャック ＆ 3. ハイ＆ロー 共通 */
+    .casino-view {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
       padding: 8px;
     }
-    .bj-area {
+    .casino-area {
       background: rgba(0, 0, 0, 0.25);
       border-radius: 10px;
       padding: 8px;
@@ -265,21 +260,21 @@
       flex-direction: column;
       gap: 6px;
     }
-    .bj-area-header {
+    .casino-header {
       display: flex;
       justify-content: space-between;
       font-size: 12px;
       font-weight: bold;
     }
-    .bj-cards-row {
+    .casino-cards-row {
       display: flex;
       gap: 6px;
       min-height: 64px;
       align-items: center;
+      justify-content: center;
       overflow-x: auto;
     }
 
-    /* BET切り替えボタン群 */
     .bet-selector {
       display: flex;
       gap: 6px;
@@ -302,12 +297,12 @@
       color: #000;
     }
 
-    .bj-ctrls {
+    .ctrl-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 6px;
     }
-    .btn-bj {
+    .btn-game-act {
       padding: 10px 0;
       border-radius: 10px;
       font-size: 13px;
@@ -316,9 +311,10 @@
       border: none;
       cursor: pointer;
     }
-    .btn-bj:disabled { opacity: 0.35; cursor: not-allowed; }
-    .btn-hit { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-    .btn-stand { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .btn-game-act:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .btn-red  { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .btn-green { background: linear-gradient(135deg, #10b981, #059669); }
     .btn-start {
       width: 100%;
       padding: 11px;
@@ -332,6 +328,23 @@
       box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
     }
     .btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ハイ＆ロー特大カード */
+    .hl-card-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+    .hl-card-box .card {
+      width: 72px;
+      height: 102px;
+      border-radius: 8px;
+    }
+    .hl-card-box .card .corner-top span,
+    .hl-card-box .card .corner-btm span { font-size: 13px; }
+    .hl-card-box .card .center-suit { font-size: 26px; }
 
     /* 難易度設定モーダル */
     .modal-overlay {
@@ -353,7 +366,6 @@
 
   <div class="container">
     
-    <!-- ヘッダー -->
     <div class="top-bar">
       <a href="index.html" class="top-btn">◀ ポータル</a>
       <span style="font-size: 11px; font-weight: bold; color: #a7f3d0;">CARD STUDIO</span>
@@ -372,10 +384,11 @@
       </div>
     </div>
 
-    <!-- モードタブ -->
+    <!-- モードタブ（3種） -->
     <div class="tab-group">
       <button class="tab-btn active" id="tab-sol" onclick="switchGame('sol')">👑 ソリティア</button>
       <button class="tab-btn" id="tab-bj" onclick="switchGame('bj')">🎰 ブラックジャック</button>
+      <button class="tab-btn" id="tab-hl" onclick="switchGame('hl')">🔥 ハイ＆ロー</button>
     </div>
 
     <!-- メインゲーム枠 -->
@@ -383,7 +396,6 @@
 
       <!-- 1. ソリティア画面 -->
       <div id="view-sol" style="display: flex; flex-direction: column; height: 100%;">
-        
         <div class="sol-top-row">
           <div class="sol-deck-group">
             <div class="card-slot" id="stock" onclick="drawStock()">🔄</div>
@@ -418,48 +430,92 @@
       </div>
 
       <!-- 2. ブラックジャック画面 -->
-      <div id="view-bj" class="bj-view" style="display: none;">
-        
-        <!-- ディーラー -->
-        <div class="bj-area">
-          <div class="bj-area-header">
+      <div id="view-bj" class="casino-view" style="display: none;">
+        <div class="casino-area">
+          <div class="casino-header">
             <span>🎩 ディーラー</span>
             <span id="dealer-score">スコア: ?</span>
           </div>
-          <div class="bj-cards-row" id="dealer-cards"></div>
+          <div class="casino-cards-row" id="dealer-cards"></div>
         </div>
 
-        <!-- アナウンス＆BET選択 -->
         <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div id="bj-streak-badge" style="font-size: 11px; font-weight: 900; color: #34d399;">🔥 連勝ボーナス: 0連勝 (倍率 x1.0)</div>
           <div id="bj-msg" style="font-size: 13px; font-weight: 900; color: #fbbf24; text-align: center; min-height: 20px;">
             BETして勝負スタート！
           </div>
-          <div class="bet-selector" id="bet-selector-area">
+          <div class="bet-selector" id="bj-bet-selector-area">
             <span style="font-size:10px; color:#cbd5e1;">BET額:</span>
-            <button class="btn-bet active" id="bet-100" onclick="setBJBet(100)">100</button>
-            <button class="btn-bet" id="bet-500" onclick="setBJBet(500)">500</button>
-            <button class="btn-bet" id="bet-1000" onclick="setBJBet(1000)">1,000</button>
+            <button class="btn-bet active" id="bj-bet-100" onclick="setBJBet(100)">100</button>
+            <button class="btn-bet" id="bj-bet-500" onclick="setBJBet(500)">500</button>
+            <button class="btn-bet" id="bj-bet-1000" onclick="setBJBet(1000)">1,000</button>
           </div>
         </div>
 
-        <!-- プレイヤー -->
-        <div class="bj-area">
-          <div class="bj-area-header">
+        <div class="casino-area">
+          <div class="casino-header">
             <span>🧑 あなた (BET: <span id="bj-bet-display" style="color:#fbbf24;">100</span> コイン)</span>
             <span id="player-score">スコア: 0</span>
           </div>
-          <div class="bj-cards-row" id="player-cards"></div>
+          <div class="casino-cards-row" id="player-cards"></div>
         </div>
 
-        <!-- ボタン操作 -->
-        <div id="bj-action-group" style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
           <button class="btn-start" id="btn-start-bj" onclick="startBJGame()">🪙 BETして勝負開始！</button>
-          <div class="bj-ctrls" id="play-btns" style="display: none;">
-            <button class="btn-bj btn-hit" id="btn-hit" onclick="bjHit()">HIT (引く)</button>
-            <button class="btn-bj btn-stand" id="btn-stand" onclick="bjStand()">STAND (勝負)</button>
+          <div class="ctrl-grid-2" id="bj-play-btns" style="display: none;">
+            <button class="btn-game-act btn-blue" onclick="bjHit()">HIT (引く)</button>
+            <button class="btn-game-act btn-red" onclick="bjStand()">STAND (勝負)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. ハイ＆ロー画面 -->
+      <div id="view-hl" class="casino-view" style="display: none;">
+        <div class="casino-area" style="text-align: center;">
+          <div class="casino-header">
+            <span>🔥 HIGH & LOW</span>
+            <span id="hl-streak-info" style="color:#f59e0b;">0連勝 (現在: x1.0)</span>
+          </div>
+          <div style="font-size: 11px; color: #cbd5e1; margin-top: 2px;">
+            次のカードの数字は「現在」より高い？低い？
           </div>
         </div>
 
+        <!-- 特大カード対比エリア -->
+        <div class="hl-card-box">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <span style="font-size: 10px; color: #a7f3d0; font-weight: bold;">[現在のカード]</span>
+            <div id="hl-cur-card"></div>
+          </div>
+          <div style="font-size: 20px; font-weight: 900; color: #fbbf24;">VS</div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <span style="font-size: 10px; color: #94a3b8; font-weight: bold;">[次のカード]</span>
+            <div id="hl-next-card"><div class="card back"></div></div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div id="hl-msg" style="font-size: 13px; font-weight: 900; color: #fbbf24; text-align: center; min-height: 20px;">
+            BET額を選んでスタート！
+          </div>
+          <div class="bet-selector" id="hl-bet-selector-area">
+            <span style="font-size:10px; color:#cbd5e1;">BET額:</span>
+            <button class="btn-bet active" id="hl-bet-100" onclick="setHLBet(100)">100</button>
+            <button class="btn-bet" id="hl-bet-500" onclick="setHLBet(500)">500</button>
+            <button class="btn-bet" id="hl-bet-1000" onclick="setHLBet(1000)">1,000</button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <button class="btn-start" id="btn-start-hl" onclick="startHLGame()">🪙 BETしてゲーム開始！</button>
+          <div id="hl-play-btns" style="display: none; flex-direction: column; gap: 6px;">
+            <div class="ctrl-grid-2">
+              <button class="btn-game-act btn-red" onclick="guessHL('high')">▲ HIGH (高い)</button>
+              <button class="btn-game-act btn-blue" onclick="guessHL('low')">▼ LOW (低い)</button>
+            </div>
+            <button class="btn-game-act btn-green" id="btn-hl-cashout" onclick="cashoutHL()">💰 確定して引き出す (<span id="hl-pot-val">0</span>G)</button>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -509,6 +565,15 @@
     let playerHand = [];
     let bjBet = 100;
     let bjPlaying = false;
+    let bjStreak = 0;
+
+    // ハイ＆ロー状態
+    let hlDeck = [];
+    let hlCurCard = null;
+    let hlBet = 100;
+    let hlStreak = 0;
+    let hlPlaying = false;
+    const HL_MULTIPLIERS = [1.0, 1.5, 2.2, 3.5, 5.5, 9.0, 15.0, 25.0];
 
     // 共通コイン管理
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
@@ -518,7 +583,6 @@
       document.getElementById('coin-display').textContent = coins.toLocaleString();
     }
 
-    // クラウド側更新時の自動反映
     window.onCloudSyncUpdated = function() {
       updateCoinUI();
     };
@@ -526,8 +590,10 @@
     function switchGame(mode) {
       document.getElementById('view-sol').style.display = mode === 'sol' ? 'flex' : 'none';
       document.getElementById('view-bj').style.display = mode === 'bj' ? 'flex' : 'none';
+      document.getElementById('view-hl').style.display = mode === 'hl' ? 'flex' : 'none';
       document.getElementById('tab-sol').classList.toggle('active', mode === 'sol');
       document.getElementById('tab-bj').classList.toggle('active', mode === 'bj');
+      document.getElementById('tab-hl').classList.toggle('active', mode === 'hl');
     }
 
     function createDeck() {
@@ -559,7 +625,7 @@
     }
 
     // ==========================================
-    // 👑 ソリティア（クロンダイク）
+    // 👑 ソリティア（オートコンプリート付き）
     // ==========================================
     function initSolitaire() {
       isAutoCompleting = false;
@@ -598,18 +664,13 @@
       for (let i = 0; i < 4; i++) {
         const fSlot = document.getElementById(`f-${i}`);
         const fStack = foundations[i];
-        if (fStack.length > 0) {
-          fSlot.innerHTML = renderCardHTML(fStack[fStack.length - 1]);
-        } else {
-          fSlot.innerHTML = SUITS[i];
-        }
+        fSlot.innerHTML = fStack.length > 0 ? renderCardHTML(fStack[fStack.length - 1]) : SUITS[i];
       }
 
       for (let c = 0; c < 7; c++) {
         const colEl = document.getElementById(`col-${c}`);
         colEl.innerHTML = '';
-        const cards = tableau[c];
-        cards.forEach((card, r) => {
+        tableau[c].forEach((card, r) => {
           const el = document.createElement('div');
           el.innerHTML = renderCardHTML(card);
           const cardNode = el.firstElementChild;
@@ -625,21 +686,15 @@
       checkWin();
     }
 
-    // ★ 自動回収（オートコンプリート）判定＆実行
     function checkAutoComplete() {
-      if (isAutoCompleting) return;
+      if (isAutoCompleting || stock.length > 0 || waste.length > 0) return;
 
-      // 1. 山札・めくり札が両方ゼロ
-      if (stock.length > 0 || waste.length > 0) return;
-
-      // 2. 場にあるすべてのカードが表向きかチェック
       for (let c = 0; c < 7; c++) {
         for (let r = 0; r < tableau[c].length; r++) {
           if (!tableau[c][r].faceUp) return;
         }
       }
 
-      // 条件クリア：自動回収開始
       const remainingCount = tableau.reduce((acc, col) => acc + col.length, 0);
       if (remainingCount > 0) {
         isAutoCompleting = true;
@@ -649,7 +704,6 @@
 
     function autoCollectStep() {
       let moved = false;
-
       for (let c = 0; c < 7; c++) {
         const col = tableau[c];
         if (col.length === 0) continue;
@@ -662,7 +716,7 @@
             fStack.push(col.pop());
             moved = true;
             renderSolitaire();
-            setTimeout(autoCollectStep, 80);
+            setTimeout(autoCollectStep, 70);
             return;
           }
         }
@@ -675,9 +729,7 @@
     }
 
     function attachDragAndClick(el, info) {
-      let startX = 0, startY = 0;
-      let isDragging = false;
-      let startTime = 0;
+      let startX = 0, startY = 0, isDragging = false, startTime = 0;
 
       const onStart = (e) => {
         if (isAutoCompleting) return;
@@ -779,7 +831,6 @@
       if (!elBelow) { renderSolitaire(); return; }
 
       const leadCard = dragState.cards[0];
-
       const fSlot = elBelow.closest('[data-f]');
       if (fSlot && dragState.cards.length === 1) {
         const fIdx = parseInt(fSlot.getAttribute('data-f'));
@@ -970,29 +1021,26 @@
     }
 
     // ==========================================
-    // 🎰 カジノ・ブラックジャック
+    // 🎰 ブラックジャック（連勝ボーナス付き）
     // ==========================================
     function setBJBet(amount) {
       if (bjPlaying) return;
       bjBet = amount;
       document.getElementById('bj-bet-display').textContent = amount;
       ['100', '500', '1000'].forEach(b => {
-        document.getElementById(`bet-${b}`).classList.toggle('active', parseInt(b) === amount);
+        document.getElementById(`bj-bet-${b}`).classList.toggle('active', parseInt(b) === amount);
       });
     }
 
     function startBJGame() {
       if (coins < bjBet) {
-        alert('コインが足りないぜ！ソリティアかスロットで増やしてこよう！');
+        alert('コインが足りないぜ！');
         return;
       }
       coins -= bjBet;
       localStorage.setItem('my_casino_coins', coins);
       updateCoinUI();
-
-      if (typeof window.saveGameDataToCloud === 'function') {
-        window.saveGameDataToCloud();
-      }
+      if (typeof window.saveGameDataToCloud === 'function') window.saveGameDataToCloud();
 
       bjDeck = createDeck().map(c => { c.faceUp = true; return c; });
       dealerHand = [bjDeck.pop(), bjDeck.pop()];
@@ -1001,8 +1049,8 @@
 
       bjPlaying = true;
       document.getElementById('btn-start-bj').style.display = 'none';
-      document.getElementById('play-btns').style.display = 'grid';
-      document.getElementById('bet-selector-area').style.opacity = '0.4';
+      document.getElementById('bj-play-btns').style.display = 'grid';
+      document.getElementById('bj-bet-selector-area').style.opacity = '0.4';
       document.getElementById('bj-msg').textContent = 'HIT（もう1枚）か STAND（勝負）を選ぼう！';
 
       renderBJ();
@@ -1013,8 +1061,7 @@
     }
 
     function calcScore(hand) {
-      let score = 0;
-      let aces = 0;
+      let score = 0, aces = 0;
       hand.forEach(c => {
         if (!c.faceUp) return;
         if (c.val === 1) { aces++; score += 11; }
@@ -1034,8 +1081,7 @@
       pCards.innerHTML = '';
       playerHand.forEach(c => pCards.innerHTML += renderCardHTML(c));
 
-      const pScore = calcScore(playerHand);
-      document.getElementById('player-score').textContent = `スコア: ${pScore}`;
+      document.getElementById('player-score').textContent = `スコア: ${calcScore(playerHand)}`;
       document.getElementById('dealer-score').textContent = `スコア: ${dealerHand[1].faceUp ? calcScore(dealerHand) : '?'}`;
     }
 
@@ -1045,17 +1091,13 @@
       renderBJ();
 
       const pScore = calcScore(playerHand);
-      if (pScore > 21) {
-        endBJ('bust');
-      } else if (pScore === 21) {
-        setTimeout(() => bjStand(), 300);
-      }
+      if (pScore > 21) endBJ('bust');
+      else if (pScore === 21) setTimeout(() => bjStand(), 300);
     }
 
     function bjStand() {
       if (!bjPlaying) return;
       dealerHand[1].faceUp = true;
-      
       while (calcScore(dealerHand) < 17) {
         dealerHand.push(bjDeck.pop());
       }
@@ -1064,15 +1106,10 @@
       const pScore = calcScore(playerHand);
       const dScore = calcScore(dealerHand);
 
-      if (dScore > 21) {
-        endBJ('dealer_bust');
-      } else if (pScore > dScore) {
-        endBJ('win');
-      } else if (pScore === dScore) {
-        endBJ('push');
-      } else {
-        endBJ('lose');
-      }
+      if (dScore > 21) endBJ('dealer_bust');
+      else if (pScore > dScore) endBJ('win');
+      else if (pScore === dScore) endBJ('push');
+      else endBJ('lose');
     }
 
     function endBJ(result) {
@@ -1081,29 +1118,129 @@
       renderBJ();
 
       document.getElementById('btn-start-bj').style.display = 'block';
-      document.getElementById('play-btns').style.display = 'none';
-      document.getElementById('bet-selector-area').style.opacity = '1';
+      document.getElementById('bj-play-btns').style.display = 'none';
+      document.getElementById('bj-bet-selector-area').style.opacity = '1';
 
       const msgEl = document.getElementById('bj-msg');
       if (result === 'win' || result === 'dealer_bust') {
-        const winAmount = bjBet * 2;
+        bjStreak++;
+        const multi = 2.0 + Math.min(bjStreak * 0.3, 3.0);
+        const winAmount = Math.floor(bjBet * multi);
         coins += winAmount;
-        msgEl.innerHTML = `🎉 勝利！ +${winAmount.toLocaleString()} コイン獲得！`;
+        msgEl.innerHTML = `🎉 ${bjStreak}連勝！ +${winAmount.toLocaleString()}G (x${multi.toFixed(1)})`;
       } else if (result === 'push') {
         coins += bjBet;
         msgEl.textContent = '🤝 引き分け！BETコインが返却されたぞ。';
-      } else if (result === 'bust') {
-        msgEl.innerHTML = `<span style="color:#ef4444;">💥 バースト（21オーバー）！負けだ……！</span>`;
       } else {
-        msgEl.innerHTML = `<span style="color:#ef4444;">💀 ディーラーの勝ち……！次は勝とうぜ！</span>`;
+        bjStreak = 0;
+        msgEl.innerHTML = result === 'bust' ? `<span style="color:#ef4444;">💥 バースト！負けだ……！</span>` : `<span style="color:#ef4444;">💀 ディーラーの勝ち！</span>`;
       }
 
+      document.getElementById('bj-streak-badge').textContent = `🔥 連勝ボーナス: ${bjStreak}連勝 (次倍率: x${(2.0 + Math.min(bjStreak * 0.3, 3.0)).toFixed(1)})`;
       localStorage.setItem('my_casino_coins', coins);
       updateCoinUI();
+      if (typeof window.saveGameDataToCloud === 'function') window.saveGameDataToCloud();
+    }
 
-      if (typeof window.saveGameDataToCloud === 'function') {
-        window.saveGameDataToCloud();
+    // ==========================================
+    // 🔥 ハイ＆ロー（High & Low 連勝倍率制）
+    // ==========================================
+    function setHLBet(amount) {
+      if (hlPlaying) return;
+      hlBet = amount;
+      ['100', '500', '1000'].forEach(b => {
+        document.getElementById(`hl-bet-${b}`).classList.toggle('active', parseInt(b) === amount);
+      });
+    }
+
+    function startHLGame() {
+      if (coins < hlBet) {
+        alert('コインが足りないぜ！');
+        return;
       }
+      coins -= hlBet;
+      localStorage.setItem('my_casino_coins', coins);
+      updateCoinUI();
+      if (typeof window.saveGameDataToCloud === 'function') window.saveGameDataToCloud();
+
+      hlDeck = createDeck().map(c => { c.faceUp = true; return c; });
+      hlCurCard = hlDeck.pop();
+      hlStreak = 0;
+      hlPlaying = true;
+
+      document.getElementById('btn-start-hl').style.display = 'none';
+      document.getElementById('hl-play-btns').style.display = 'flex';
+      document.getElementById('hl-bet-selector-area').style.opacity = '0.4';
+      document.getElementById('hl-next-card').innerHTML = '<div class="card back"></div>';
+      document.getElementById('hl-msg').textContent = '次のカードはHIGHかLOWか？';
+
+      renderHL();
+    }
+
+    function renderHL() {
+      document.getElementById('hl-cur-card').innerHTML = renderCardHTML(hlCurCard);
+      const multi = HL_MULTIPLIERS[Math.min(hlStreak, HL_MULTIPLIERS.length - 1)];
+      const currentPot = Math.floor(hlBet * multi);
+
+      document.getElementById('hl-streak-info').textContent = `${hlStreak}連勝 (配当倍率: x${multi.toFixed(1)})`;
+      document.getElementById('hl-pot-val').textContent = currentPot.toLocaleString();
+    }
+
+    function guessHL(choice) {
+      if (!hlPlaying) return;
+
+      const nextCard = hlDeck.pop();
+      document.getElementById('hl-next-card').innerHTML = renderCardHTML(nextCard);
+
+      const isHigh = nextCard.val > hlCurCard.val;
+      const isLow  = nextCard.val < hlCurCard.val;
+      const isEqual = nextCard.val === hlCurCard.val;
+
+      let isWin = false;
+      if (isEqual) {
+        isWin = true; // 引き分けは勝ち扱い
+      } else if (choice === 'high' && isHigh) {
+        isWin = true;
+      } else if (choice === 'low' && isLow) {
+        isWin = true;
+      }
+
+      if (isWin) {
+        hlStreak++;
+        renderHL();
+        const multi = HL_MULTIPLIERS[Math.min(hlStreak, HL_MULTIPLIERS.length - 1)];
+        const currentPot = Math.floor(hlBet * multi);
+        document.getElementById('hl-msg').innerHTML = `🎯 正解！【${hlStreak}連勝中】 現在 ${currentPot.toLocaleString()}G！`;
+
+        setTimeout(() => {
+          hlCurCard = nextCard;
+          document.getElementById('hl-next-card').innerHTML = '<div class="card back"></div>';
+          renderHL();
+        }, 800);
+      } else {
+        document.getElementById('hl-msg').innerHTML = `<span style="color:#ef4444;">💥 はずれ！ コインを失った……！</span>`;
+        endHL(false);
+      }
+    }
+
+    function cashoutHL() {
+      if (!hlPlaying) return;
+      const multi = HL_MULTIPLIERS[Math.min(hlStreak, HL_MULTIPLIERS.length - 1)];
+      const winAmount = Math.floor(hlBet * multi);
+      coins += winAmount;
+      localStorage.setItem('my_casino_coins', coins);
+      updateCoinUI();
+      if (typeof window.saveGameDataToCloud === 'function') window.saveGameDataToCloud();
+
+      document.getElementById('hl-msg').innerHTML = `💰 引き出し成功！ +${winAmount.toLocaleString()}G を獲得したぜ！`;
+      endHL(true);
+    }
+
+    function endHL(isSuccess) {
+      hlPlaying = false;
+      document.getElementById('btn-start-hl').style.display = 'block';
+      document.getElementById('hl-play-btns').style.display = 'none';
+      document.getElementById('hl-bet-selector-area').style.opacity = '1';
     }
 
     window.addEventListener('DOMContentLoaded', () => {
