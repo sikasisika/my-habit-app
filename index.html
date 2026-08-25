@@ -195,6 +195,73 @@
       box-shadow: 0 1px 0 #591026;
     }
 
+    /* ========================================================= */
+    /* 🏰 タワーバトル専用・横長ワイドバナーボタン */
+    /* ========================================================= */
+    .tower-banner-card {
+      width: 100%;
+      height: 76px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 4px 14px rgba(67, 56, 202, 0.35);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+    .tower-banner-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at right, rgba(251, 191, 36, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+    /* 自作画像バナーを使う時のimgタグスタイル */
+    .tower-banner-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none; /* 自作画像を設定した時はここを block に変更 */
+    }
+    .tower-banner-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .tower-banner-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fbbf24;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tower-banner-sub {
+      font-size: 10px;
+      color: #cbd5e1;
+    }
+    .tower-banner-arrow {
+      position: relative;
+      z-index: 2;
+      background: #fbbf24;
+      color: #1e1b4b;
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
     /* クイックステータス枠 */
     .status-panel {
       background: rgba(255, 255, 255, 0.7);
@@ -321,7 +388,6 @@
     .icon-game2 { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
     .icon-game3 { background: linear-gradient(135deg, #8b5cf6, #4f46e5); color: #fff; }
     .icon-game4 { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
-    .icon-game-tower { background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff; }
 
     .game-icon-label {
       font-size: 9px;
@@ -348,7 +414,7 @@
           <div>DOT MATRIX WITH STEREO SOUND</div>
         </div>
 
-        <div class="gb-lcd" onclick="petPartner()" title="タップして触れ合う！">
+        <div class="gb-lcd" onclick="petPartner()" title="タップしてスキンシップ！">
           <div class="gb-pet-box">
             <img id="gb-partner-img" class="gb-pet-img" src="images/gacha/p0004.png" alt="" onerror="this.src='images/slot1.png'">
           </div>
@@ -367,12 +433,28 @@
             </div>
           </div>
 
-          <a href="battle.html" class="gb-battle-btn" onclick="event.stopPropagation()">
+          <a href="tower_home.html" class="gb-battle-btn" onclick="event.stopPropagation()">
             <span>⚔️ 塔へ</span>
           </a>
         </div>
       </div>
     </div>
+
+    <!-- 🏰 タワーバトル専用 横長ワイドバナーボタン（自作看板差し替え対応） -->
+    <a href="tower_home.html" class="tower-banner-card press-effect">
+      <!-- 自作バナー画像を設定する場合は下行の src に画像パスを入れ、display:block にしてください -->
+      <img src="images/tower_banner.png" alt="バトルタワー" class="tower-banner-img" onerror="this.style.display='none'">
+      
+      <div class="tower-banner-content">
+        <div class="tower-banner-title">
+          <span>🏰</span> ポケモン バトルタワー
+        </div>
+        <div class="tower-banner-sub">
+          頂上を目指せ！ 進化・覚醒ローグライク
+        </div>
+      </div>
+      <div class="tower-banner-arrow">挑戦する ❯</div>
+    </a>
 
     <!-- クイックサマリー（タップでぼかし切り替え） -->
     <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
@@ -421,16 +503,11 @@
 
     </div>
 
-    <!-- ミニゲーム＆バトル一覧 -->
+    <!-- ミニゲーム＆カジノ一覧 -->
     <div class="game-section">
       <div class="game-section-title">🎮 MINI GAMES & CASINO</div>
       <div class="game-icon-grid">
         
-        <a href="battle.html" class="game-icon-item press-effect">
-          <div class="game-circle-icon icon-game-tower">⚔️</div>
-          <span class="game-icon-label">タワーバトル</span>
-        </a>
-
         <a href="gacha.html" class="game-icon-item press-effect">
           <div class="game-circle-icon icon-game2">✨</div>
           <span class="game-icon-label">ガチャ</span>
@@ -492,11 +569,12 @@
 
     // ゲームボーイ風ウィジェットの相棒データ読み込み
     function loadPartnerWidget() {
-      const partnerId = localStorage.getItem('my_battle_partner') || 'p0004';
+      const party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+      const partnerId = party[0] || 'p0004';
       const partnerLevels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
       const lv = partnerLevels[partnerId] || 1;
 
-      const base = (typeof POKEMON_DATA !== 'undefined' ? POKEMON_DATA.find(p => p.id === partnerId) : null) || { name: 'ヒトカゲ', img: 'images/gacha/p0004.png' };
+      const base = (typeof POKEMON_DATA !== 'undefined' ? POKEMON_DATA.find(p => p.id === partnerId) : null) || { name: 'ヒトカゲ', img: 'images/gacha/' + partnerId + '.png' };
 
       const hp = 100 + (lv * 20);
       const atk = 20 + (lv * 6);
@@ -508,11 +586,10 @@
       document.getElementById('gb-partner-img').src = base.img;
     }
 
-    // タップ時のリアクションメッセージ
     const PET_MESSAGES = [
       '▶ ごきげんの ようすだ！',
       '▶ うれしそうに めを ほそめた！',
-      '▶ バトルに いきたそうに している！',
+      '▶ バトルタワーに いきたそうに している！',
       '▶ なつき度が あがった きがする！',
       '▶ げんき いっぱいに はねた！'
     ];
