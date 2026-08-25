@@ -50,14 +50,14 @@
       position: relative;
     }
 
-    /* 最上部ヘッダー（ポータルボタンを確実にクリック可能に） */
+    /* 最上部ヘッダー */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
       padding: 0 4px;
-      height: 32px;
+      height: 30px;
       position: relative;
       z-index: 99999 !important;
       pointer-events: auto !important;
@@ -96,11 +96,11 @@
     }
 
     /* ------------------------------------ */
-    /* 📺 上画面：バトルフィールド */
+    /* 📺 上画面：バトルフィールド（完全1:1） */
     /* ------------------------------------ */
     .ds-top-screen {
-      height: 235px;
-      flex-shrink: 0;
+      flex: 1 1 0%;
+      min-height: 0;
       background: linear-gradient(180deg, #38bdf8 0%, #6366f1 45%, #1e1b4b 85%, #0f172a 100%);
       border-radius: 8px;
       border: 2px solid #0f172a;
@@ -124,10 +124,8 @@
     /* 相手スプライト枠（右上・中央寄り） */
     .enemy-sprite-box {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 130px;
-      height: 130px;
+      top: 15px;
+      right: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -137,10 +135,8 @@
     /* 相棒スプライト枠（左下・中央寄り） */
     .player-sprite-box {
       position: absolute;
-      bottom: 20px;
-      left: 25px;
-      width: 130px;
-      height: 130px;
+      bottom: 15px;
+      left: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -202,17 +198,13 @@
     .hp-gauge-fill.warning { background: #eab308; }
     .hp-gauge-fill.danger { background: #ef4444; }
 
-    /* ポケモン画像（影削除・鮮明表示） */
+    /* ポケモン画像（直接JSでpx指定＋ドロップシャドウで自然な立体感） */
     .poke-sprite {
-      max-width: 105px !important;
-      max-height: 105px !important;
       object-fit: contain !important;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.65));
       transition: transform 0.1s ease;
+      display: block;
     }
-    .size-M .poke-sprite { max-width: 125px !important; max-height: 125px !important; }
-    .size-L .poke-sprite { max-width: 145px !important; max-height: 145px !important; }
-    .size-G .poke-sprite { max-width: 175px !important; max-height: 175px !important; }
 
     /* 💥 攻撃＆被弾アニメ */
     .anim-atk-player { animation: pAtkAnim 0.35s ease forwards; }
@@ -256,7 +248,7 @@
     }
 
     /* ------------------------------------ */
-    /* 📱 下画面：コマンド（余白なし・ボタン大型化） */
+    /* 📱 下画面：コマンド（完全1:1・余白ゼロ） */
     /* ------------------------------------ */
     .ds-bottom-screen {
       flex: 1 1 0%;
@@ -306,7 +298,7 @@
       100% { transform: translateY(3px); }
     }
 
-    /* 上段：こうげき / ぼうぎょ（文字サイズ18px・特大化） */
+    /* 上段：こうげき / ぼうぎょ（特大ボタンスタイル） */
     .cmd-row-top {
       flex: 1.6;
       display: grid;
@@ -499,7 +491,7 @@
 
   <div class="container">
     
-    <!-- 最上部バー（index.htmlへの確実なリンク） -->
+    <!-- 最上部バー -->
     <div class="top-bar">
       <a href="index.html" class="top-btn" onclick="window.location.href='index.html'; return false;">◀ ポータル</a>
       <span style="font-size: 11px; color:#cbd5e1;">階層: <b id="stage-text" style="color:#fbbf24;">1F</b></span>
@@ -509,7 +501,7 @@
     <div class="ds-body">
 
       <!-- ========================================================= -->
-      <!-- 📺 上画面：バトルフィールド -->
+      <!-- 📺 上画面：バトルフィールド（50%） -->
       <!-- ========================================================= -->
       <div class="ds-top-screen">
         
@@ -526,13 +518,13 @@
         </div>
 
         <!-- 相手スプライト -->
-        <div class="enemy-sprite-box size-S" id="enemy-sprite-box">
+        <div class="enemy-sprite-box" id="enemy-sprite-box">
           <img id="enemy-img" class="poke-sprite" src="images/gacha/p0019.png" alt="" onerror="this.src='images/slot1.png'">
           <div id="enemy-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
         </div>
 
         <!-- 相棒スプライト -->
-        <div class="player-sprite-box size-S" id="player-sprite-box">
+        <div class="player-sprite-box" id="player-sprite-box">
           <img id="player-img" class="poke-sprite" src="images/gacha/p0004.png" alt="" onerror="this.src='images/slot1.png'">
           <div id="player-dmg-pop" class="dmg-indicator" style="display: none;">-0</div>
         </div>
@@ -555,7 +547,7 @@
       </div>
 
       <!-- ========================================================= -->
-      <!-- 📱 下画面：コマンド -->
+      <!-- 📱 下画面：コマンド（50%・手描き通り画面をフル活用） -->
       <!-- ========================================================= -->
       <div class="ds-bottom-screen">
         
@@ -566,7 +558,7 @@
             <span class="pixel-arrow">▾</span>
           </div>
 
-          <!-- 上段：こうげき / ぼうぎょ（文字サイズ18px） -->
+          <!-- 上段：こうげき / ぼうぎょ（大型ボタン） -->
           <div class="cmd-row-top">
             <button class="btn-main-act btn-atk" id="btn-atk" onclick="playerAction('atk')">⚔️ こうげき</button>
             <button class="btn-main-act btn-def" id="btn-def" onclick="playerAction('def')">🛡️ ぼうぎょ</button>
@@ -657,6 +649,14 @@
     let enemyMaxHp = 100, enemyHp = 100, enemyAtk = 15, enemyDef = 10;
     let isEnemyBoss = false;
 
+    // ★ ポケモンのサイズ（S/M/L/G）をピクセルで厳密指定
+    function getSizePx(size) {
+      if (size === 'G') return 175; // キョダイ・メガ進化
+      if (size === 'L') return 145; // 大型
+      if (size === 'M') return 120; // 中型
+      return 95;                    // 小型（ヒトカゲ・コラッタ等）
+    }
+
     function getPoke(id) {
       if (typeof POKEMON_DATA !== 'undefined') {
         const found = POKEMON_DATA.find(p => p.id === id);
@@ -700,12 +700,15 @@
       pTypeEl.textContent = poke.type;
       pTypeEl.className = `type-badge type-${poke.type}`;
 
-      document.getElementById('player-img').src = poke.img;
+      // ★ 画像サイズをJSで直接適用
+      const pImg = document.getElementById('player-img');
+      pImg.src = poke.img;
+      const px = getSizePx(poke.size || 'S');
+      pImg.style.width = px + 'px';
+      pImg.style.height = px + 'px';
+
       document.getElementById('player-atk-val').textContent = playerAtk;
       document.getElementById('player-def-val').textContent = playerDef;
-
-      const pBox = document.getElementById('player-sprite-box');
-      pBox.className = `player-sprite-box size-${poke.size || 'S'}`;
     }
 
     function loadOrSpawnEnemy() {
@@ -768,10 +771,12 @@
       eTypeEl.textContent = enemyPokemon.type;
       eTypeEl.className = `type-badge type-${enemyPokemon.type}`;
 
-      document.getElementById('enemy-img').src = enemyPokemon.img;
-
-      const eBox = document.getElementById('enemy-sprite-box');
-      eBox.className = `enemy-sprite-box size-${enemyPokemon.size || 'S'}`;
+      // ★ 相手画像サイズをJSで直接適用
+      const eImg = document.getElementById('enemy-img');
+      eImg.src = enemyPokemon.img;
+      const px = getSizePx(enemyPokemon.size || 'S');
+      eImg.style.width = px + 'px';
+      eImg.style.height = px + 'px';
     }
 
     function updateUI() {
