@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ハッピーMYライフ</title>
+  <title>ハッピーライフ</title>
   
   <!-- PWA設定 -->
   <link rel="manifest" href="manifest.json">
@@ -17,6 +17,11 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      outline: none !important;
     }
 
     body {
@@ -60,9 +65,7 @@
     /* タップエフェクト */
     .press-effect {
       transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
       text-decoration: none;
-      user-select: none;
     }
     .press-effect:active {
       transform: scale(0.96);
@@ -140,6 +143,7 @@
       object-fit: contain;
       filter: contrast(1.4) drop-shadow(0 2px 3px rgba(15, 56, 15, 0.4));
       transition: transform 0.15s ease;
+      pointer-events: none;
     }
     .gb-pet-box:active .gb-pet-img {
       transform: translateY(-6px) scale(1.08);
@@ -238,7 +242,6 @@
       filter: blur(6px);
       transition: filter 0.2s ease;
       cursor: pointer;
-      user-select: none;
     }
     .blur-value.revealed {
       filter: blur(0px);
@@ -373,14 +376,12 @@
       letter-spacing: 0.5px;
     }
 
-    /* 上段（3列：ガチャ / 図鑑 / 道具） */
     .game-grid-top {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
 
-    /* 下段（4列：トランプ / スロット / タップ / パズル） */
     .game-grid-bottom {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
