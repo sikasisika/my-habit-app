@@ -861,6 +861,7 @@ const POKEMON_DATA = [
 
   // 358 チリーン
   { id: 'p0358', name: 'チリーン', subName: '', type: 'エスパー', size: 'S', rarity: 'R', img: 'images/gacha/p0358.png', rate: 20 },
+  { id: 'p0358-m', name: 'チリーン', subName: 'メガシンカ', type: 'エスパー', size: 'M', rarity: 'SSR', img: 'images/gacha/p0358-m.png', rate: 7 },
 
   // 359 アブソル
   { id: 'p0359', name: 'アブソル', subName: '', type: 'あく', size: 'M', rarity: 'SR', img: 'images/gacha/p0359.png', rate: 12 },
