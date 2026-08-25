@@ -1,6 +1,6 @@
 // 全ポケモンマスターデータ
-// 通常: p0000 / メガ: -m (-x/-y) / キョダイ: -k / リージョン: -a, -g, -h, -p
-// size: S(小型: 95px), M(中型: 120px), L(大型: 145px), G(キョダイ・メガ: 175px)
+// 通常: p0000 / メガ: -m (-x/-y/-z) / キョダイ: -k / リージョン: -a, -g, -h, -p
+// size: S(小型: 95px), M(中型: 120px), L(大型: 145px), G(キョダイ・メガ: 175px/210px)
 const POKEMON_DATA = [
   // 001 - 003 フシギダネ系統
   { id: 'p0001', name: 'フシギダネ', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0001.png', rate: 30 },
@@ -366,9 +366,16 @@ const POKEMON_DATA = [
   { id: 'p0150-y', name: 'ミュウツー', subName: 'メガシンカ Y', type: 'エスパー', size: 'G', rarity: 'UR', img: 'images/gacha/p0150-y.png', rate: 3 },
   { id: 'p0151', name: 'ミュウ', subName: '', type: 'エスパー', size: 'S', rarity: 'UR', img: 'images/gacha/p0151.png', rate: 3 },
 
-  // 先行登録相棒枠（シンオウ地方）
+  // 443 - 445 フカマル系統（シンオウ地方・メガ・メガZ）
+  { id: 'p0443', name: 'フカマル', subName: '', type: 'ドラゴン', size: 'S', rarity: 'N', img: 'images/gacha/p0443.png', rate: 30 },
+  { id: 'p0444', name: 'ガバイト', subName: '', type: 'ドラゴン', size: 'M', rarity: 'R', img: 'images/gacha/p0444.png', rate: 20 },
   { id: 'p0445', name: 'ガブリアス', subName: '', type: 'ドラゴン', size: 'L', rarity: 'SR', img: 'images/gacha/p0445.png', rate: 12 },
   { id: 'p0445-m', name: 'ガブリアス', subName: 'メガシンカ', type: 'ドラゴン', size: 'G', rarity: 'SSR', img: 'images/gacha/p0445-m.png', rate: 7 },
+  { id: 'p0445-z', name: 'ガブリアス', subName: 'メガシンカ Z', type: 'ドラゴン', size: 'G', rarity: 'UR', img: 'images/gacha/p0445-z.png', rate: 3 },
+
+  // 447 - 448 リオル系統（シンオウ地方・メガ・メガZ）
+  { id: 'p0447', name: 'リオル', subName: '', type: 'かくとう', size: 'S', rarity: 'N', img: 'images/gacha/p0447.png', rate: 30 },
   { id: 'p0448', name: 'ルカリオ', subName: '', type: 'かくとう', size: 'M', rarity: 'SR', img: 'images/gacha/p0448.png', rate: 12 },
-  { id: 'p0448-m', name: 'ルカリオ', subName: 'メガシンカ', type: 'かくとう', size: 'G', rarity: 'SSR', img: 'images/gacha/p0448-m.png', rate: 7 }
+  { id: 'p0448-m', name: 'ルカリオ', subName: 'メガシンカ', type: 'かくとう', size: 'G', rarity: 'SSR', img: 'images/gacha/p0448-m.png', rate: 7 },
+  { id: 'p0448-z', name: 'ルカリオ', subName: 'メガシンカ Z', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0448-z.png', rate: 3 }
 ];
