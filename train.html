@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ポケモンジム＆センター | 育成スタジオ</title>
 
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -181,7 +185,7 @@
     </div>
 
     <div class="nav-links">
-      <a href="battle.html" class="nav-btn">⚔️ バトル</a>
+      <a href="tower_home.html" class="nav-btn">🏰 塔へ</a>
       <a href="train.html" class="nav-btn active">🌱 育成・回復</a>
       <a href="dex.html" class="nav-btn">📖 図鑑</a>
       <a href="gacha.html" class="nav-btn">✨ ガチャ</a>
@@ -189,7 +193,7 @@
 
     <div class="status-bar">
       <div>🪙 コイン: <b id="coin-disp" style="color:#fbbf24;">1,000</b></div>
-      <div>🌱 タネ: <b id="seed-disp" style="color:#4ade80;">1</b></div>
+      <div>🌱 タネ: <b id="seed-disp" style="color:#4ade80;">0</b></div>
       <div>💊 かけら: <b id="item-disp" style="color:#f472b6;">2</b></div>
     </div>
 
@@ -199,11 +203,13 @@
 
   </div>
 
+  <!-- 外部データ ＆ クラウド同期モジュール -->
   <script src="pokemonData.js"></script>
+  <script src="cloudSync.js"></script>
 
   <script>
     let coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
-    let seeds = parseInt(localStorage.getItem('my_evolve_seeds') || '1');
+    let seeds = parseInt(localStorage.getItem('my_battle_seeds') || '0');
     let revives = parseInt(localStorage.getItem('my_revive_items') || '2');
     let inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{"p0004":1}');
     let party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
@@ -226,7 +232,9 @@
       'p0092': { base: 'p0092', mid: 'p0093', final: 'p0094' },
       'p0129': { base: 'p0129', final: 'p0130' },
       'p0133': { base: 'p0133', final: 'p0134' },
-      'p0147': { base: 'p0147', mid: 'p0148', final: 'p0149' }
+      'p0147': { base: 'p0147', mid: 'p0148', final: 'p0149' },
+      'p0443': { base: 'p0443', mid: 'p0444', final: 'p0445' },
+      'p0447': { base: 'p0447', final: 'p0448' }
     };
 
     function getPoke(id) {
@@ -237,7 +245,19 @@
       return { id, name: 'ポケモン', img: 'images/gacha/' + id + '.png' };
     }
 
+    // クラウド側でデータ更新時の自動同期
+    window.onCloudSyncUpdated = function() {
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+      seeds = parseInt(localStorage.getItem('my_battle_seeds') || '0');
+      inventory = JSON.parse(localStorage.getItem('my_gacha_inventory') || '{"p0004":1}');
+      party = JSON.parse(localStorage.getItem('my_battle_party') || '["p0004"]');
+      levels = JSON.parse(localStorage.getItem('my_partner_levels') || '{}');
+      renderGym();
+    };
+
     function renderGym() {
+      coins = parseInt(localStorage.getItem('my_casino_coins') || '1000');
+      seeds = parseInt(localStorage.getItem('my_battle_seeds') || '0');
       document.getElementById('coin-disp').textContent = coins.toLocaleString();
       document.getElementById('seed-disp').textContent = seeds;
       document.getElementById('item-disp').textContent = revives;
@@ -301,6 +321,10 @@
       levels[baseId] = (levels[baseId] || 1) + 1;
       localStorage.setItem('my_partner_levels', JSON.stringify(levels));
       localStorage.setItem('my_casino_coins', coins);
+      
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       renderGym();
     }
 
@@ -308,8 +332,12 @@
       if (seeds < 1 || !inventory[nextId]) return;
       seeds--;
       forms[baseId] = nextId;
-      localStorage.setItem('my_evolve_seeds', seeds);
+      localStorage.setItem('my_battle_seeds', seeds);
       localStorage.setItem('my_pokemon_forms', JSON.stringify(forms));
+
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       alert(`🎉 おめでとう！【${getPoke(nextId).name}】に進化したぞ！`);
       renderGym();
     }
@@ -320,6 +348,10 @@
       delete fainted[baseId];
       localStorage.setItem('my_revive_items', revives);
       localStorage.setItem('my_fainted_pokemon', JSON.stringify(fainted));
+
+      if (typeof window.saveGameDataToCloud === 'function') {
+        window.saveGameDataToCloud();
+      }
       renderGym();
     }
 
