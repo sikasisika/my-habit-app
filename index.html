@@ -208,7 +208,7 @@
     .btn-dex-link { background: #2563eb; box-shadow: 0 2px 0 #1d4ed8; }
 
     /* ========================================================= */
-    /* 2. 💰 クイックステータス枠（総資産 / Suica） */
+    /* 2. 💰 クイックステータス枠（手持ち現金 / Suica） */
     /* ========================================================= */
     .status-panel {
       background: rgba(255, 255, 255, 0.7);
@@ -220,6 +220,7 @@
       align-items: center;
       border: 1px solid rgba(255, 255, 255, 0.4);
       cursor: pointer;
+      position: relative;
     }
     .status-item {
       text-align: center;
@@ -245,6 +246,83 @@
     }
     .blur-value.revealed {
       filter: blur(0px);
+    }
+
+    /* 🔒 コンパクトPIN入力ポップアップモーダル */
+    .portal-pin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .portal-pin-card {
+      width: 100%;
+      max-width: 290px;
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      color: #fff;
+    }
+    .portal-pin-dots {
+      display: flex;
+      gap: 12px;
+      margin-top: 2px;
+    }
+    .portal-pin-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #38bdf8;
+      background: transparent;
+      transition: all 0.15s ease;
+    }
+    .portal-pin-dot.filled {
+      background: #38bdf8;
+      transform: scale(1.2);
+      box-shadow: 0 0 8px #38bdf8;
+    }
+    .portal-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px 14px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .portal-key-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+    .portal-key-btn:active {
+      transform: scale(0.92);
+      background: rgba(56, 189, 248, 0.4);
+    }
+    .portal-key-btn.action-btn {
+      font-size: 11px;
+      background: transparent;
+      border-color: transparent;
+      color: #94a3b8;
     }
 
     /* ========================================================= */
@@ -472,14 +550,14 @@
       </div>
     </div>
 
-    <!-- 2. 総資産 / Suica（クイックサマリー） -->
-    <div class="status-panel press-effect" onclick="toggleBlur()" title="タップで表示/非表示">
+    <!-- 2. 💵 手持ち現金 / 🐧 Suica（暗証番号認証サマリー） -->
+    <div class="status-panel press-effect" onclick="handleAssetClick()" title="タップして暗証番号で解除">
       <div class="status-item">
-        <span>💰 総資産 <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
-        <strong id="dash-total-assets" class="blur-value">--- 円</strong>
+        <span>💵 手持ち現金 <small style="font-size:8px; color:#94a3b8;">(🔒 タップ)</small></span>
+        <strong id="dash-cash-assets" class="blur-value">--- 円</strong>
       </div>
       <div class="status-item">
-        <span>🐧 Suica <small style="font-size:8px; color:#94a3b8;">(タップ)</small></span>
+        <span>🐧 Suica残高 <small style="font-size:8px; color:#94a3b8;">(🔒 タップ)</small></span>
         <strong id="dash-suica-assets" class="blur-value">--- 円</strong>
       </div>
     </div>
@@ -583,27 +661,128 @@
 
   </div>
 
+  <!-- 🔒 暗証番号入力ポップアップモーダル -->
+  <div class="portal-pin-overlay" id="portal-pin-modal" style="display: none;" onclick="closePinModal()">
+    <div class="portal-pin-card" onclick="event.stopPropagation()">
+      <div style="font-size:13px; font-weight:bold; color:#38bdf8;">🔐 暗証番号を入力</div>
+      <div style="font-size:10px; color:#94a3b8;">4桁のPINを入力して残高を表示</div>
+
+      <div class="portal-pin-dots">
+        <div class="portal-pin-dot" id="pdot-0"></div>
+        <div class="portal-pin-dot" id="pdot-1"></div>
+        <div class="portal-pin-dot" id="pdot-2"></div>
+        <div class="portal-pin-dot" id="pdot-3"></div>
+      </div>
+
+      <div class="portal-keypad">
+        <button class="portal-key-btn" onclick="pressPortalPin('1')">1</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('2')">2</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('3')">3</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('4')">4</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('5')">5</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('6')">6</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('7')">7</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('8')">8</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('9')">9</button>
+        <button class="portal-key-btn action-btn" onclick="closePinModal()">✕ 閉じる</button>
+        <button class="portal-key-btn" onclick="pressPortalPin('0')">0</button>
+        <button class="portal-key-btn action-btn" onclick="deletePortalPin()">⌫ 消す</button>
+      </div>
+    </div>
+  </div>
+
   <script src="pokemonData.js"></script>
 
   <script>
+    let isRevealed = false;
+    let portalPin = '';
+
     function loadQuickData() {
       const cash = Number(localStorage.getItem('myCashBalance')) || 0;
-      const bank = Number(localStorage.getItem('myBankBalance')) || 0;
       const suica = Number(localStorage.getItem('mySuicaBalance')) || 0;
       
-      const total = cash + bank + suica;
-      document.getElementById('dash-total-assets').textContent = total.toLocaleString() + ' 円';
+      document.getElementById('dash-cash-assets').textContent = cash.toLocaleString() + ' 円';
       document.getElementById('dash-suica-assets').textContent = suica.toLocaleString() + ' 円';
 
       loadPartnerWidget();
     }
 
-    function toggleBlur() {
-      const totalEl = document.getElementById('dash-total-assets');
-      const suicaEl = document.getElementById('dash-suica-assets');
+    function handleAssetClick() {
+      const savedPin = localStorage.getItem('my_money_pin');
+      const isLockEnabled = localStorage.getItem('my_money_lock_enabled') !== 'false';
 
-      totalEl.classList.toggle('revealed');
-      suicaEl.classList.toggle('revealed');
+      // 既に表示されている状態ならタップで再び隠す
+      if (isRevealed) {
+        hideAssets();
+        return;
+      }
+
+      // PINが設定されていないか、ロック無効の場合はそのまま表示
+      if (!savedPin || !isLockEnabled) {
+        showAssets();
+        return;
+      }
+
+      // 暗証番号ポップアップを開く
+      portalPin = '';
+      updatePortalPinDots();
+      document.getElementById('portal-pin-modal').style.display = 'flex';
+    }
+
+    function showAssets() {
+      isRevealed = true;
+      document.getElementById('dash-cash-assets').classList.add('revealed');
+      document.getElementById('dash-suica-assets').classList.add('revealed');
+    }
+
+    function hideAssets() {
+      isRevealed = false;
+      document.getElementById('dash-cash-assets').classList.remove('revealed');
+      document.getElementById('dash-suica-assets').classList.remove('revealed');
+    }
+
+    function updatePortalPinDots() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`pdot-${i}`);
+        if (dot) {
+          if (i < portalPin.length) dot.classList.add('filled');
+          else dot.classList.remove('filled');
+        }
+      }
+    }
+
+    function pressPortalPin(num) {
+      if (portalPin.length >= 4) return;
+      portalPin += num;
+      updatePortalPinDots();
+
+      if (portalPin.length === 4) {
+        setTimeout(verifyPortalPin, 120);
+      }
+    }
+
+    function deletePortalPin() {
+      if (portalPin.length > 0) {
+        portalPin = portalPin.slice(0, -1);
+        updatePortalPinDots();
+      }
+    }
+
+    function verifyPortalPin() {
+      const savedPin = localStorage.getItem('my_money_pin');
+      if (portalPin === savedPin) {
+        closePinModal();
+        showAssets();
+      } else {
+        alert('❌ 暗証番号が違います！');
+        portalPin = '';
+        updatePortalPinDots();
+      }
+    }
+
+    function closePinModal() {
+      portalPin = '';
+      document.getElementById('portal-pin-modal').style.display = 'none';
     }
 
     function loadPartnerWidget() {
