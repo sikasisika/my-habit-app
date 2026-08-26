@@ -1744,7 +1744,8 @@ const POKEMON_DATA = [
   // 739 - 740 マケンカニ系統
   { id: 'p0739', name: 'マケンカニ', subName: '', type: 'かくとう', size: 'S', rarity: 'N', img: 'images/gacha/p0739.png', rate: 30 },
   { id: 'p0740', name: 'ケケンカニ', subName: '', type: 'かくとう', size: 'L', rarity: 'SR', img: 'images/gacha/p0740.png', rate: 12 },
-
+  { id: 'p0740-m', name: 'ケケンカニ', subName: 'メガシンカ', type: 'かくとう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0740.png', rate: 7 },
+  
   // 741 オドリドリ
   { id: 'p0741', name: 'オドリドリ', subName: 'めらめらスタイル', type: 'ほのお', size: 'S', rarity: 'R', img: 'images/gacha/p0741.png', rate: 20 },
   { id: 'p0741p', name: 'オドリドリ', subName: 'ぱちぱちスタイル', type: 'でんき', size: 'S', rarity: 'R', img: 'images/gacha/p0741p.png', rate: 20 },
@@ -1810,7 +1811,8 @@ const POKEMON_DATA = [
   // 767 - 768 コソクムシ系統
   { id: 'p0767', name: 'コソクムシ', subName: '', type: 'むし', size: 'S', rarity: 'N', img: 'images/gacha/p0767.png', rate: 30 },
   { id: 'p0768', name: 'グソクムシャ', subName: '', type: 'むし', size: 'L', rarity: 'SR', img: 'images/gacha/p0768.png', rate: 12 },
-
+  { id: 'p0768-m', name: 'グソクムシャ', subName: 'メガシンカ', type: 'むし', size: 'L', rarity: 'SSR', img: 'images/gacha/p0768-m.png', rate: 7 },
+  
   // 769 - 770 スナバァ系統
   { id: 'p0769', name: 'スナバァ', subName: '', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0769.png', rate: 30 },
   { id: 'p0770', name: 'シロデスナ', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0770.png', rate: 12 },
@@ -1824,7 +1826,7 @@ const POKEMON_DATA = [
 
   // 774 メテノ
   { id: 'p0774', name: 'メテノ', subName: 'りゅうせいのすがた', type: 'いわ', size: 'S', rarity: 'R', img: 'images/gacha/p0774.png', rate: 20 },
-  { id: 'p0774c', name: 'メテノ', subName: 'コア', type: 'いわ', size: 'S', rarity: 'R', img: 'images/gacha/p0774c.png', rate: 20 },
+  { id: 'p0774c', name: 'メテノ', subName: 'あかいろコア', type: 'いわ', size: 'S', rarity: 'R', img: 'images/gacha/p0774c.png', rate: 20 },
 
   // 775 ネッコアラ
   { id: 'p0775', name: 'ネッコアラ', subName: '', type: 'ノーマル', size: 'S', rarity: 'R', img: 'images/gacha/p0775.png', rate: 20 },
@@ -1837,14 +1839,14 @@ const POKEMON_DATA = [
 
   // 778 ミミッキュ
   { id: 'p0778', name: 'ミミッキュ', subName: 'ばけたすがた', type: 'ゴースト', size: 'S', rarity: 'SR', img: 'images/gacha/p0778.png', rate: 12 },
-  { id: 'p0778b', name: 'ミミッキュ', subName: 'ばれたすがた', type: 'ゴースト', size: 'S', rarity: 'SR', img: 'images/gacha/p0778b.png', rate: 12 },
 
   // 779 ハギギシリ
   { id: 'p0779', name: 'ハギギシリ', subName: '', type: 'みず', size: 'M', rarity: 'R', img: 'images/gacha/p0779.png', rate: 20 },
 
   // 780 ジジーロン
   { id: 'p0780', name: 'ジジーロン', subName: '', type: 'ノーマル', size: 'L', rarity: 'SR', img: 'images/gacha/p0780.png', rate: 12 },
-
+  { id: 'p0780-m', name: 'ジジーロン', subName: 'メガシンカ', type: 'ノーマル', size: 'L', rarity: 'SSR', img: 'images/gacha/p0780.png', rate: 7 },
+  
   // 781 ダダリン
   { id: 'p0781', name: 'ダダリン', subName: '', type: 'ゴースト', size: 'L', rarity: 'SR', img: 'images/gacha/p0781.png', rate: 12 },
 
@@ -1877,12 +1879,14 @@ const POKEMON_DATA = [
   // 800 ネクロズマ（伝説: LR / 合体・ウルトラネクロズマ: HR）
   { id: 'p0800', name: 'ネクロズマ', subName: '', type: 'エスパー', size: 'L', rarity: 'LR', img: 'images/gacha/p0800.png', rate: 0.5 },
   { id: 'p0800-s', name: '日食ネクロズマ', subName: 'たそがれのたてがみ', type: 'エスパー', size: 'G', rarity: 'HR', img: 'images/gacha/p0800-s.png', rate: 0.1 },
-  { id: 'p0800-l', name: '月食ネクロズマ', subName: 'あかつきのつばさ', type: 'ゴースト', size: 'G', rarity: 'HR', img: 'images/gacha/p0800-l.png', rate: 0.1 },
+  { id: 'p0800-r', name: '月食ネクロズマ', subName: 'あかつきのつばさ', type: 'ゴースト', size: 'G', rarity: 'HR', img: 'images/gacha/p0800-r.png', rate: 0.1 },
   { id: 'p0800-u', name: 'ウルトラネクロズマ', subName: '', type: 'ドラゴン', size: 'G', rarity: 'HR', img: 'images/gacha/p0800-u.png', rate: 0.1 },
 
   // 801 - 802 マギアナ・マーシャドー（幻: L / rate: 1.0）
   { id: 'p0801', name: 'マギアナ', subName: '', type: 'はがね', size: 'M', rarity: 'L', img: 'images/gacha/p0801.png', rate: 1 },
   { id: 'p0801o', name: 'マギアナ', subName: '500ねんまえのいろ', type: 'はがね', size: 'M', rarity: 'L', img: 'images/gacha/p0801o.png', rate: 1 },
+  { id: 'p0801-m', name: 'マギアナ', subName: 'メガシンカ', type: 'はがね', size: 'M', rarity: 'L', img: 'images/gacha/p0801-m.png', rate: 1 },
+  { id: 'p0801o', name: 'マギアナ', subName: 'メガシンカ・500ねんまえのいろ', type: 'はがね', size: 'M', rarity: 'L', img: 'images/gacha/p0801o-m.png', rate: 1 },
   { id: 'p0802', name: 'マーシャドー', subName: '', type: 'かくとう', size: 'S', rarity: 'L', img: 'images/gacha/p0802.png', rate: 1 },
 
   // 803 - 806 追加UB（UB: L / rate: 1.0）
@@ -1893,6 +1897,7 @@ const POKEMON_DATA = [
 
   // 807 ゼラオラ（幻: L / rate: 1.0）
   { id: 'p0807', name: 'ゼラオラ', subName: '', type: 'でんき', size: 'M', rarity: 'L', img: 'images/gacha/p0807.png', rate: 1 },
+  { id: 'p0807-m', name: 'ゼラオラ', subName: 'メガシンカ', type: 'でんき', size: 'M', rarity: 'L', img: 'images/gacha/p0807-m.png', rate: 1 },
 
   // 808 - 809 メルタン・メルメタル（幻: L / キョダイマックス: UR）
   { id: 'p0808', name: 'メルタン', subName: '', type: 'はがね', size: 'S', rarity: 'L', img: 'images/gacha/p0808.png', rate: 1 },
