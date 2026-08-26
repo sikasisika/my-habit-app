@@ -1,4 +1,6 @@
-// 001 - 003 フシギダネ系統
+// 全ポケモンマスターデータ
+const POKEMON_DATA = [
+  // 001 - 003 フシギダネ系統
   { id: 'p0001', name: 'フシギダネ', subName: '', type: 'くさ', size: 'S', rarity: 'N', img: 'images/gacha/p0001.png', rate: 30 },
   { id: 'p0002', name: 'フシギソウ', subName: '', type: 'くさ', size: 'M', rarity: 'R', img: 'images/gacha/p0002.png', rate: 20 },
   { id: 'p0003', name: 'フシギバナ', subName: '', type: 'くさ', size: 'L', rarity: 'SR', img: 'images/gacha/p0003.png', rate: 12 },
