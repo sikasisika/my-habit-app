@@ -1992,8 +1992,9 @@ const POKEMON_DATA = [
   { id: 'p0848', name: 'エレズン', subName: '', type: 'でんき', size: 'S', rarity: 'N', img: 'images/gacha/p0848.png', rate: 30 },
   { id: 'p0849', name: 'ストリンダー', subName: 'ハイなすがた', type: 'でんき', size: 'M', rarity: 'SR', img: 'images/gacha/p0849.png', rate: 12 },
   { id: 'p0849l', name: 'ストリンダー', subName: 'ローなすがた', type: 'でんき', size: 'M', rarity: 'SR', img: 'images/gacha/p0849l.png', rate: 12 },
-  { id: 'p0849-k', name: 'ストリンダー', subName: 'キョダイマックス', type: 'でんき', size: 'G', rarity: 'UR', img: 'images/gacha/p0849-k.png', rate: 3 },
-
+  { id: 'p0849-k', name: 'ストリンダー', subName: 'ハイなすがた・キョダイマックス', type: 'でんき', size: 'G', rarity: 'UR', img: 'images/gacha/p0849-k.png', rate: 3 },
+  { id: 'p0849l-k', name: 'ストリンダー', subName: 'ローなすがた・キョダイマックス', type: 'でんき', size: 'G', rarity: 'UR', img: 'images/gacha/p0849l-k.png', rate: 3 },
+  
   // 850 - 851 ヤクデ系統
   { id: 'p0850', name: 'ヤクデ', subName: '', type: 'ほのお', size: 'S', rarity: 'N', img: 'images/gacha/p0850.png', rate: 30 },
   { id: 'p0851', name: 'マルヤクデ', subName: '', type: 'ほのお', size: 'L', rarity: 'SR', img: 'images/gacha/p0851.png', rate: 12 },
@@ -2004,8 +2005,10 @@ const POKEMON_DATA = [
   { id: 'p0853', name: 'オトスパス', subName: '', type: 'かくとう', size: 'M', rarity: 'SR', img: 'images/gacha/p0853.png', rate: 12 },
 
   // 854 - 855 ヤバチャ系統
-  { id: 'p0854', name: 'ヤバチャ', subName: '', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0854.png', rate: 30 },
-  { id: 'p0855', name: 'ポットデス', subName: '', type: 'ゴースト', size: 'S', rarity: 'SR', img: 'images/gacha/p0855.png', rate: 12 },
+  { id: 'p0854', name: 'ヤバチャ', subName: 'がんさくフォルム', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0854.png', rate: 30 },
+  { id: 'p0854s', name: 'ヤバチャ', subName: 'しんさくフォルム', type: 'ゴースト', size: 'S', rarity: 'N', img: 'images/gacha/p0854s.png', rate: 30 },
+  { id: 'p0855', name: 'ポットデス', subName: 'がんさくフォルム', type: 'ゴースト', size: 'S', rarity: 'SR', img: 'images/gacha/p0855.png', rate: 12 },
+  { id: 'p0855s', name: 'ポットデス', subName: 'しんさくフォルム', type: 'ゴースト', size: 'S', rarity: 'SR', img: 'images/gacha/p0855s.png', rate: 12 },
 
   // 856 - 858 ミブリム系統
   { id: 'p0856', name: 'ミブリム', subName: '', type: 'エスパー', size: 'S', rarity: 'N', img: 'images/gacha/p0856.png', rate: 30 },
@@ -2044,6 +2047,7 @@ const POKEMON_DATA = [
 
   // 870 タイレーツ
   { id: 'p0870', name: 'タイレーツ', subName: '', type: 'かくとう', size: 'L', rarity: 'SR', img: 'images/gacha/p0870.png', rate: 12 },
+  { id: 'p0870-k', name: 'タイレーツ', subName: 'メガシンカ', type: 'かくとう', size: 'L', rarity: 'SSR', img: 'images/gacha/p0870-k.png', rate: 7 },
 
   // 871 バチンウニ
   { id: 'p0871', name: 'バチンウニ', subName: '', type: 'でんき', size: 'S', rarity: 'R', img: 'images/gacha/p0871.png', rate: 20 },
@@ -2089,18 +2093,17 @@ const POKEMON_DATA = [
 
   // 888 - 890 ガラル伝説トリオ（伝説: LR / フォルム・ムゲンダイマックス: HR）
   { id: 'p0888', name: 'ザシアン', subName: 'れきせんのゆうしゃ', type: 'フェアリー', size: 'L', rarity: 'LR', img: 'images/gacha/p0888.png', rate: 0.5 },
-  { id: 'p0888-k', name: 'ザシアン', subName: 'けんのおう', type: 'フェアリー', size: 'G', rarity: 'HR', img: 'images/gacha/p0888-k.png', rate: 0.1 },
+  { id: 'p0888k', name: 'ザシアン', subName: 'けんのおう', type: 'フェアリー', size: 'G', rarity: 'HR', img: 'images/gacha/p0888k.png', rate: 0.1 },
   { id: 'p0889', name: 'ザマゼンタ', subName: 'れきせんのゆうしゃ', type: 'かくとう', size: 'L', rarity: 'LR', img: 'images/gacha/p0889.png', rate: 0.5 },
-  { id: 'p0889-t', name: 'ザマゼンタ', subName: 'たてのおう', type: 'かくとう', size: 'G', rarity: 'HR', img: 'images/gacha/p0889-t.png', rate: 0.1 },
+  { id: 'p0889t', name: 'ザマゼンタ', subName: 'たてのおう', type: 'かくとう', size: 'G', rarity: 'HR', img: 'images/gacha/p0889t.png', rate: 0.1 },
   { id: 'p0890', name: 'ムゲンダイナ', subName: '', type: 'ドラゴン', size: 'G', rarity: 'LR', img: 'images/gacha/p0890.png', rate: 0.5 },
-  { id: 'p0890-m', name: 'ムゲンダイナ', subName: 'ムゲンダイマックス', type: 'ドラゴン', size: 'G', rarity: 'HR', img: 'images/gacha/p0890-m.png', rate: 0.1 },
 
   // 891 - 892 ダクマ・ウーラオス（準伝説: L / キョダイマックス: UR）
   { id: 'p0891', name: 'ダクマ', subName: '', type: 'かくとう', size: 'S', rarity: 'L', img: 'images/gacha/p0891.png', rate: 1 },
-  { id: 'p0892-i', name: 'ウーラオス', subName: 'いちげきのかた', type: 'かくとう', size: 'L', rarity: 'L', img: 'images/gacha/p0892-i.png', rate: 1 },
-  { id: 'p0892-ik', name: 'ウーラオス', subName: 'いちげき・キョダイ', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0892-ik.png', rate: 3 },
-  { id: 'p0892-r', name: 'ウーラオス', subName: 'れんげきのかた', type: 'かくとう', size: 'L', rarity: 'L', img: 'images/gacha/p0892-r.png', rate: 1 },
-  { id: 'p0892-rk', name: 'ウーラオス', subName: 'れんげき・キョダイ', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0892-rk.png', rate: 3 },
+  { id: 'p0892i', name: 'ウーラオス', subName: 'いちげきのかた', type: 'かくとう', size: 'L', rarity: 'L', img: 'images/gacha/p0892i.png', rate: 1 },
+  { id: 'p0892i-k', name: 'ウーラオス', subName: 'いちげき・キョダイ', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0892i-k.png', rate: 3 },
+  { id: 'p0892r', name: 'ウーラオス', subName: 'れんげきのかた', type: 'かくとう', size: 'L', rarity: 'L', img: 'images/gacha/p0892-r.png', rate: 1 },
+  { id: 'p0892r-k', name: 'ウーラオス', subName: 'れんげき・キョダイ', type: 'かくとう', size: 'G', rarity: 'UR', img: 'images/gacha/p0892r-k.png', rate: 3 },
 
   // 893 ザルード（幻: L / rate: 1.0）
   { id: 'p0893', name: 'ザルード', subName: '', type: 'あく', size: 'L', rarity: 'L', img: 'images/gacha/p0893.png', rate: 1 },
@@ -2113,14 +2116,14 @@ const POKEMON_DATA = [
   { id: 'p0896', name: 'ブリザポス', subName: '', type: 'こおり', size: 'L', rarity: 'L', img: 'images/gacha/p0896.png', rate: 1 },
   { id: 'p0897', name: 'レイスポス', subName: '', type: 'ゴースト', size: 'L', rarity: 'L', img: 'images/gacha/p0897.png', rate: 1 },
   { id: 'p0898', name: 'バドレックス', subName: '', type: 'エスパー', size: 'S', rarity: 'LR', img: 'images/gacha/p0898.png', rate: 0.5 },
-  { id: 'p0898-h', name: 'バドレックス', subName: 'はくばじょうのすがた', type: 'エスパー', size: 'G', rarity: 'HR', img: 'images/gacha/p0898-h.png', rate: 0.1 },
-  { id: 'p0898-k', name: 'バドレックス', subName: 'こくばじょうのすがた', type: 'エスパー', size: 'G', rarity: 'HR', img: 'images/gacha/p0898-k.png', rate: 0.1 },
+  { id: 'p0898h', name: 'バドレックス', subName: 'はくばじょうのすがた', type: 'エスパー', size: 'G', rarity: 'HR', img: 'images/gacha/p0898h.png', rate: 0.1 },
+  { id: 'p0898k', name: 'バドレックス', subName: 'こくばじょうのすがた', type: 'エスパー', size: 'G', rarity: 'HR', img: 'images/gacha/p0898k.png', rate: 0.1 },
 
   // 899 - 905 ヒスイ地方の進化・新種（準伝説: ラブトロス: L）
   { id: 'p0899', name: 'アヤシシ', subName: '', type: 'ノーマル', size: 'L', rarity: 'SR', img: 'images/gacha/p0899.png', rate: 12 },
   { id: 'p0900', name: 'バサギリ', subName: '', type: 'むし', size: 'L', rarity: 'SR', img: 'images/gacha/p0900.png', rate: 12 },
   { id: 'p0901', name: 'ガチグマ', subName: '', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0901.png', rate: 12 },
-  { id: 'p0901-a', name: 'ガチグマ', subName: 'あかつき', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0901-a.png', rate: 12 },
+  { id: 'p0901a', name: 'ガチグマ', subName: 'あかつき', type: 'じめん', size: 'L', rarity: 'SR', img: 'images/gacha/p0901a.png', rate: 12 },
   { id: 'p0902', name: 'イダイトウ', subName: 'オスのすがた', type: 'みず', size: 'L', rarity: 'SR', img: 'images/gacha/p0902.png', rate: 12 },
   { id: 'p0902f', name: 'イダイトウ', subName: 'メスのすがた', type: 'みず', size: 'L', rarity: 'SR', img: 'images/gacha/p0902f.png', rate: 12 },
   { id: 'p0903', name: 'オオニューラ', subName: '', type: 'かくとう', size: 'L', rarity: 'SR', img: 'images/gacha/p0903.png', rate: 12 },
