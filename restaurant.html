@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポケモンレストラン | クッキングフィーバー</title>
+  <style>
+    :root {
+      --bg-color: #1a1b26;
+      --card-bg: #24283b;
+      --panel-bg: #1f2335;
+      --text-main: #c0caf5;
+      --accent-color: #ff9e64;
+      --danger-color: #f7768e;
+      --success-color: #9ece6a;
+      --gold-color: #e0af68;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ヘッダー */
+    header {
+      background-color: var(--panel-bg);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #414868;
+    }
+
+    .nav-btn {
+      background: #414868;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav-btn:hover {
+      background: #565f89;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 16px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .stat-gold { color: var(--gold-color); }
+    .stat-timer { color: var(--accent-color); }
+    .stat-score { color: var(--success-color); }
+
+    /* メインコンテナ */
+    main {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* 注文オーダーレーン */
+    .order-section {
+      background: var(--panel-bg);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #414868;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #7aa2f7;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .order-lane {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      min-height: 85px;
+      align-items: center;
+      padding-bottom: 4px;
+    }
+
+    .order-card {
+      background: var(--card-bg);
+      border: 2px solid #565f89;
+      border-radius: 10px;
+      padding: 8px;
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+
+    .order-timer-bar {
+      width: 100%;
+      height: 6px;
+      background: #414868;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .order-timer-fill {
+      height: 100%;
+      width: 100%;
+      background: var(--success-color);
+      transition: width 0.2s linear, background-color 0.3s;
+    }
+
+    /* キッチン作業エリア */
+    .kitchen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+
+    .station-card {
+      background: var(--card-bg);
+      border: 2px solid #414868;
+      border-radius: 12px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.2s;
+      min-height: 110px;
+    }
+
+    .station-card:hover {
+      border-color: #7aa2f7;
+    }
+
+    .station-card:active {
+      transform: scale(0.96);
+    }
+
+    .station-icon {
+      font-size: 28px;
+    }
+
+    .station-name {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .station-status {
+      font-size: 11px;
+      color: #a9b1d6;
+      min-height: 14px;
+    }
+
+    /* プログレスバー */
+    .station-progress {
+      width: 80%;
+      height: 6px;
+      background: #1f2335;
+      border-radius: 3px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .station-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-color);
+    }
+
+    /* 現在持っているアイテムトレイ */
+    .hand-tray {
+      background: var(--panel-bg);
+      border: 2px dashed #7aa2f7;
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .hand-item-display {
+      color: var(--gold-color);
+    }
+
+    /* スタッフ配置枠 */
+    .staff-section {
+      background: var(--panel-bg);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #414868;
+    }
+
+    .staff-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .staff-slot {
+      background: var(--card-bg);
+      border: 1px solid #414868;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .staff-icon {
+      width: 36px;
+      height: 36px;
+      background: #1f2335;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .staff-info {
+      font-size: 11px;
+    }
+
+    .staff-role {
+      font-weight: bold;
+      color: #7aa2f7;
+    }
+
+    /* コントロール・スタートボタン */
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-start {
+      background: var(--success-color);
+      color: #1a1b26;
+    }
+    .btn-start:hover { background: #b9f27c; }
+
+    .btn-discard {
+      background: var(--danger-color);
+      color: #fff;
+    }
+    .btn-discard:hover { background: #ff9eaf; }
+
+    /* リザルトモーダル */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 2px solid var(--gold-color);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      color: var(--gold-color);
+      font-weight: bold;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      border-bottom: 1px solid #414868;
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <a href="index.html" class="nav-btn">ポータル</a>
+    <div class="header-stats">
+      <div class="stat-gold">所持金: <span id="display-gold">0</span> G</div>
+      <div class="stat-score">売上: <span id="display-score">0</span> G</div>
+      <div class="stat-timer">残り時間: <span id="display-timer">60</span>s</div>
+    </div>
+  </header>
+
+  <!-- メインゲーム画面 -->
+  <main>
+    <!-- 注文レーン -->
+    <section class="order-section">
+      <div class="section-title">
+        <span>来店中のポケモン＆オーダー</span>
+        <span id="order-count">注文数: 0</span>
+      </div>
+      <div class="order-lane" id="order-lane">
+        <!-- JSで注文カードが動的に挿入されます -->
+      </div>
+    </section>
+
+    <!-- プレイヤーの手元（持っているもの） -->
+    <div class="hand-tray">
+      <span>持っているもの:</span>
+      <span class="hand-item-display" id="hand-display">（なし）</span>
+    </div>
+
+    <!-- キッチン作業台 -->
+    <section class="kitchen-grid">
+      <!-- 1. 食材棚（オレンのみ） -->
+      <div class="station-card" id="st-oren" onclick="handleStation('oren')">
+        <div class="station-icon">🫐</div>
+        <div class="station-name">オレンのみ</div>
+        <div class="station-status">食材を取る</div>
+      </div>
+
+      <!-- 2. まな板（カット） -->
+      <div class="station-card" id="st-board" onclick="handleStation('board')">
+        <div class="station-icon">🔪</div>
+        <div class="station-name">まな板</div>
+        <div class="station-status" id="st-board-status">空き</div>
+        <div class="station-progress" id="st-board-progress">
+          <div class="station-progress-fill" id="st-board-fill"></div>
+        </div>
+      </div>
+
+      <!-- 3. フライパン/コンロ（加熱） -->
+      <div class="station-card" id="st-pan" onclick="handleStation('pan')">
+        <div class="station-icon">🍳</div>
+        <div class="station-name">フライパン</div>
+        <div class="station-status" id="st-pan-status">空き</div>
+        <div class="station-progress" id="st-pan-progress">
+          <div class="station-progress-fill" id="st-pan-fill"></div>
+        </div>
+      </div>
+
+      <!-- 4. お皿・盛り付け台 -->
+      <div class="station-card" id="st-plate" onclick="handleStation('plate')">
+        <div class="station-icon">🍽️</div>
+        <div class="station-name">お皿台</div>
+        <div class="station-status" id="st-plate-status">皿残数: 3</div>
+      </div>
+
+      <!-- 5. 提供カウンター -->
+      <div class="station-card" id="st-serve" onclick="handleStation('serve')">
+        <div class="station-icon">🛎️</div>
+        <div class="station-name">提供カウンター</div>
+        <div class="station-status">料理を出す</div>
+      </div>
+
+      <!-- 6. 流し台（皿洗い） -->
+      <div class="station-card" id="st-sink" onclick="handleStation('sink')">
+        <div class="station-icon">🧼</div>
+        <div class="station-name">流し台</div>
+        <div class="station-status" id="st-sink-status">汚れ皿: 0</div>
+      </div>
+
+      <!-- 7. ゴミ箱 -->
+      <div class="station-card" id="st-trash" onclick="handleStation('trash')">
+        <div class="station-icon">🗑️</div>
+        <div class="station-name">ゴミ箱</div>
+        <div class="station-status">手持ちを破棄</div>
+      </div>
+    </section>
+
+    <!-- スタッフポケモン配置枠 -->
+    <section class="staff-section">
+      <div class="section-title">キッチンスタッフ（得意スキル）</div>
+      <div class="staff-list">
+        <div class="staff-slot">
+          <div class="staff-icon">🌿</div>
+          <div class="staff-info">
+            <div class="staff-role">下ごしらえ係</div>
+            <div id="staff-grass">カット速度 UP</div>
+          </div>
+        </div>
+        <div class="staff-slot">
+          <div class="staff-icon">🔥</div>
+          <div class="staff-info">
+            <div class="staff-role">シェフ（焼き）</div>
+            <div id="staff-fire">加熱速度 UP</div>
+          </div>
+        </div>
+        <div class="staff-slot">
+          <div class="staff-icon">💧</div>
+          <div class="staff-info">
+            <div class="staff-role">洗い場係</div>
+            <div id="staff-water">皿洗い速度 UP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 操作ボタン -->
+    <div class="controls">
+      <button class="action-btn btn-start" id="btn-start" onclick="startGame()">営業開始！</button>
+    </div>
+  </main>
+
+  <!-- リザルトモーダル -->
+  <div class="modal-overlay" id="result-modal">
+    <div class="modal-card">
+      <div class="modal-title">営業終了！</div>
+      <div class="result-row">
+        <span>提供成功数:</span>
+        <span id="res-served">0 皿</span>
+      </div>
+      <div class="result-row">
+        <span>時間切れ（不満）:</span>
+        <span id="res-missed">0 人</span>
+      </div>
+      <div class="result-row">
+        <span>本日の売上:</span>
+        <span id="res-earnings" style="color: var(--gold-color); font-weight: bold;">+0 G</span>
+      </div>
+      <button class="action-btn btn-start" onclick="closeResultModal()">確認</button>
+    </div>
+  </div>
+
+  <!-- データ読み込み＆ロジックスクリプト -->
+  <script src="pokemonData.js"></script>
+  <script src="restaurant.js"></script>
+</body>
+</html>
