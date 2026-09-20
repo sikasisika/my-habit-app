@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT ARCHIVE - ゲーム開発仕様書・設定資料データベース</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --accent-color: #8b0000;
+            --accent-glow: #ff4d4d;
+            --text-main: #f0f6fc;
+            --text-sub: #8b949e;
+            --tag-bg: #21262d;
+            --btn-hover: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Courier New', 'Consolas', 'Segoe UI', monospace, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-title-area {
+            cursor: pointer;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: var(--accent-glow);
+            margin: 0;
+        }
+
+        .header-sub {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .header-btns button {
+            background-color: #21262d;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .header-btns button:hover {
+            background-color: var(--btn-hover);
+            border-color: var(--text-sub);
+        }
+
+        /* カテゴリタブ切替 */
+        .category-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cat-tab {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            padding: 6px 14px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .cat-tab.active {
+            background-color: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-glow);
+            font-weight: bold;
+        }
+
+        /* 一覧画面 */
+        .home-view h2 {
+            font-size: 1.05rem;
+            color: var(--text-sub);
+            margin: 0 0 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        .grid-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .grid-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-glow);
+            box-shadow: 0 4px 12px rgba(139, 0, 0, 0.25);
+        }
+
+        .card-tag {
+            align-self: flex-start;
+            font-size: 0.65rem;
+            color: var(--accent-glow);
+            border: 1px solid var(--accent-color);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            background: rgba(139, 0, 0, 0.1);
+        }
+
+        .thumb-box {
+            width: 100%;
+            height: 125px;
+            background-color: #0b0e14;
+            border: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .thumb-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin: 0 0 4px 0;
+            color: var(--text-main);
+        }
+
+        .card-sub {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            line-height: 1.3;
+        }
+
+        /* 詳細画面 */
+        .detail-view {
+            display: none;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-main);
+        }
+
+        .top-stamp-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .confidential-stamp {
+            display: inline-block;
+            border: 2px solid var(--accent-glow);
+            color: var(--accent-glow);
+            padding: 4px 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            transform: rotate(-1deg);
+            opacity: 0.9;
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+
+        .detail-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 6px;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 30px;
+            background-color: #21262d;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 130px;
+            z-index: 10;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+        }
+
+        .menu-dropdown.show {
+            display: block;
+        }
+
+        .menu-dropdown button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            padding: 9px 12px;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .menu-dropdown button:hover {
+            background-color: #30363d;
+        }
+
+        .menu-dropdown button.delete-text {
+            color: var(--accent-glow);
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-thumb {
+            width: 100%;
+            height: 200px;
+            background-color: #0b0e14;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .detail-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .profile-group {
+            background-color: #0d1117;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .profile-group.full {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 650px) {
+            .profile-group.full {
+                grid-column: span 1;
+            }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .label {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .value {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .secret-box {
+            border-left: 3px solid var(--accent-glow);
+            background-color: #1e1114;
+            padding: 12px;
+            margin-top: 4px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 6px;
+            width: 92%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: var(--accent-glow);
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            background-color: #0d1117;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 9px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-glow);
+        }
+
+        .form-group textarea {
+            height: 90px;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .modal-buttons button {
+            padding: 7px 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+
+        .btn-cancel {
+            background-color: #21262d;
+            color: var(--text-main);
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-title-area" onclick="filterCategory('all')">
+                <h1>PROJECT ARCHIVE</h1>
+                <div class="header-sub">GAME DESIGN DOCUMENT & SYSTEM SPEC</div>
+            </div>
+            <div class="header-btns">
+                <button onclick="openAddModal()">+ 新規データ登録</button>
+                <button onclick="exportData()">JSON出力</button>
+                <button onclick="document.getElementById('importFile').click()">読込</button>
+                <input type="file" id="importFile" style="display:none" onchange="importData(event)">
+            </div>
+        </header>
+
+        <!-- カテゴリ切り替えタブ -->
+        <div class="category-nav">
+            <button class="cat-tab active" data-cat="all" onclick="filterCategory('all')">すべて表示</button>
+            <button class="cat-tab" data-cat="char" onclick="filterCategory('char')">👥 キャラ・登場人物</button>
+            <button class="cat-tab" data-cat="world" onclick="filterCategory('world')">🏛️ 世界観・施設設定</button>
+            <button class="cat-tab" data-cat="system" onclick="filterCategory('system')">⚙️ ゲームシステム仕様</button>
+            <button class="cat-tab" data-cat="stage" onclick="filterCategory('stage')">🗺️ ステージ・エネミー</button>
+        </div>
+
+        <!-- 一覧画面 -->
+        <div id="homeView" class="home-view">
+            <h2>
+                <span id="currentViewTitle">全アーカイブ一覧</span>
+                <span id="itemCount" style="font-size: 0.8rem; font-weight: normal; color: var(--text-sub);"></span>
+            </h2>
+            <div id="gridList" class="grid-list">
+                <!-- 動的生成 -->
+            </div>
+        </div>
+
+        <!-- 詳細画面 -->
+        <div id="detailView" class="detail-view">
+            <a href="#" class="back-link" onclick="showHome(); return false;">&lt; 資料一覧に戻る</a>
+            
+            <div class="top-stamp-area">
+                <div class="confidential-stamp">CLASSIFIED // GAME SPEC ARCHIVE</div>
+            </div>
+
+            <div class="detail-header-row">
+                <div>
+                    <span id="detCategoryTag" class="card-tag"></span>
+                    <h2 id="detailTitle" style="margin: 6px 0 0 0; font-size: 1.3rem;"></h2>
+                </div>
+                <div class="menu-container">
+                    <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+                    <div id="detailMenu" class="menu-dropdown">
+                        <button onclick="openEditModal()">編集</button>
+                        <button class="delete-text" onclick="deleteCurrentItem()">クリア(削除)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-layout">
+                <div id="detailThumb" class="detail-thumb">No Image</div>
+                
+                <div class="profile-grid">
+                    <div class="profile-group">
+                        <span class="label" id="lblTitle">名称 / 項目名</span>
+                        <span id="detTitle" class="value"></span>
+                    </div>
+                    <div class="profile-group">
+                        <span class="label" id="lblBasic">基本情報・属性</span>
+                        <span id="detBasic" class="value"></span>
+                    </div>
+                    <div class="profile-group">
+                        <span class="label" id="lblPublic">表向きの役割 / 公開仕様</span>
+                        <span id="detPublic" class="value"></span>
+                    </div>
+                    <div class="profile-group">
+                        <span class="label" id="lblReason">導入背景 / ゲーム上の目的</span>
+                        <span id="detReason" class="value"></span>
+                    </div>
+                    <div class="profile-group full">
+                        <span class="label" id="lblSecret">【極秘裏設定・内部パラメーター・真の仕様】</span>
+                        <div class="secret-box">
+                            <span id="detSecret" class="value"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登録・編集モーダル -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">新規仕様データ登録</h3>
+            <form id="itemForm" onsubmit="saveItem(event)">
+                <input type="hidden" id="editIndex" value="">
+
+                <div class="form-group">
+                    <label>仕様カテゴリ</label>
+                    <select id="inputCategory" required onchange="updateFormPlaceholders()">
+                        <option value="char">👥 キャラ・登場人物（囚人/看守/NPC）</option>
+                        <option value="world">🏛️ 世界観・施設設定（収容区/研究施設）</option>
+                        <option value="system">⚙️ ゲームシステム（バトル/育成/脱獄ギミック）</option>
+                        <option value="stage">🗺️ ステージ・エネミー（ボス/ギミック室）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="formLblTitle">項目名（キャラ名・施設名など）</label>
+                    <input type="text" id="inputTitle" required placeholder="例：アリサ">
+                </div>
+                <div class="form-group">
+                    <label id="formLblBasic">基本情報（種族/年齢/規模/タイプなど）</label>
+                    <input type="text" id="inputBasic" placeholder="例：10代 / 人間 / 容姿端麗">
+                </div>
+                <div class="form-group">
+                    <label id="formLblPublic">表向きの役割 / 公開仕様</label>
+                    <input type="text" id="inputPublic" placeholder="例：祖父の罪を被せられた無実の少女">
+                </div>
+                <div class="form-group">
+                    <label id="formLblReason">導入背景 / 自認 / 実装目的</label>
+                    <input type="text" id="inputReason" placeholder="例：冤罪による不当投獄">
+                </div>
+                <div class="form-group">
+                    <label id="formLblSecret">【極秘】裏設定・詳細仕様・パラメータ</label>
+                    <textarea id="inputSecret" placeholder="例：両親を殺害した精神異常者..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>画像URL（任意・空欄ならNo Image）</label>
+                    <input type="text" id="inputImage" placeholder="https://...">
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">キャンセル</button>
+                    <button type="submit" class="btn-submit">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const CATEGORY_NAMES = {
+            char: "👥 キャラ・登場人物",
+            world: "🏛️ 世界観・施設設定",
+            system: "⚙️ ゲームシステム仕様",
+            stage: "🗺️ ステージ・エネミー"
+        };
+
+        // 初期サンプルデータ
+        let gameDocs = JSON.parse(localStorage.getItem('game_spec_docs')) || [
+            {
+                category: "char",
+                title: "アリサ",
+                basic: "10代 / 人間 / 容姿端麗（本人無頓着）",
+                publicRole: "祖父の罪を被せられた無実の少女",
+                reason: "冤罪による不当投獄（本人の自認）",
+                secret: "両親を殺害した後、その亡骸と数週間にわたって同じ家で過ごしていた精神異常者。現実逃避と強烈な思い込みにより、自らを「犠牲者」と思い込んでいる。周囲の凶悪犯に対しても無自覚に危うい狂気を見せる。",
+                image: ""
+            },
+            {
+                category: "world",
+                title: "特殊収容施設 第十三区画",
+                basic: "地下施設 / 完全遮蔽区画 / 深度300m",
+                publicRole: "更生不可能な凶悪犯を隔離する最終処分棟",
+                reason: "表社会の治安維持および極秘実験の実験体供給源",
+                secret: "施設そのものが異形の存在を抑え込む巨大な結界装置。収容者の精神負荷・狂気エネルギーを動力源として吸い上げている。",
+                image: ""
+            },
+            {
+                category: "system",
+                title: "狂気度（Sanity）システム",
+                basic: "バトル＆探索共通パラメーター / 最大値100",
+                publicRole: "探索の緊張感を演出するサバイバルゲージ",
+                reason: "時間経過や怪異との遭遇で上昇し、行動に制約を課す",
+                secret: "値が80を超えると「覚醒スキル」が使用可能になるが、毎ターンスリップダメージを受け、味方への誤射確率が25%発生するハイリスク仕様。",
+                image: ""
+            }
+        ];
+
+        let currentCategory = 'all';
+        let currentFilteredIndices = [];
+        let activeDocIndex = null;
+
+        function saveData() {
+            localStorage.setItem('game_spec_docs', JSON.stringify(gameDocs));
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.getAttribute('data-cat') === cat);
+            });
+
+            const viewTitle = cat === 'all' ? '全アーカイブ一覧' : CATEGORY_NAMES[cat];
+            document.getElementById('currentViewTitle').textContent = viewTitle;
+
+            showHome();
+        }
+
+        function renderHome() {
+            const grid = document.getElementById('gridList');
+            grid.innerHTML = '';
+            currentFilteredIndices = [];
+
+            gameDocs.forEach((doc, originalIndex) => {
+                if (currentCategory === 'all' || doc.category === currentCategory) {
+                    currentFilteredIndices.push(originalIndex);
+
+                    const card = document.createElement('div');
+                    card.className = 'grid-card';
+                    card.onclick = () => showDetail(originalIndex);
+
+                    const thumbHtml = doc.image 
+                        ? `<img src="${doc.image}" alt="${doc.title}">` 
+                        : `No Image`;
+
+                    const tagLabel = CATEGORY_NAMES[doc.category] || "設定";
+
+                    card.innerHTML = `
+                        <div class="card-tag">${tagLabel}</div>
+                        <div class="thumb-box">${thumbHtml}</div>
+                        <div class="card-name">${doc.title}</div>
+                        <div class="card-sub">${doc.basic.split('/')[0] || ''}</div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+
+            document.getElementById('itemCount').textContent = `(${currentFilteredIndices.length} 件)`;
+        }
+
+        function showHome() {
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
+            closeMenu();
+            renderHome();
+        }
+
+        function showDetail(index) {
+            activeDocIndex = index;
+            const doc = gameDocs[index];
+
+            document.getElementById('detailTitle').textContent = `ID: #${String(index + 1).padStart(3, '0')} - ${doc.title}`;
+            document.getElementById('detCategoryTag').textContent = CATEGORY_NAMES[doc.category] || "設定";
+            document.getElementById('detTitle').textContent = doc.title;
+            document.getElementById('detBasic').textContent = doc.basic;
+            document.getElementById('detPublic').textContent = doc.publicRole;
+            document.getElementById('detReason').textContent = doc.reason;
+            document.getElementById('detSecret').textContent = doc.secret;
+
+            const thumb = document.getElementById('detailThumb');
+            thumb.innerHTML = doc.image ? `<img src="${doc.image}" alt="${doc.title}">` : 'No Image';
+
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
+            closeMenu();
+        }
+
+        function toggleMenu() {
+            document.getElementById('detailMenu').classList.toggle('show');
+        }
+
+        function closeMenu() {
+            document.getElementById('detailMenu').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-btn')) {
+                closeMenu();
+            }
+        };
+
+        function updateFormPlaceholders() {
+            const cat = document.getElementById('inputCategory').value;
+            const tLbl = document.getElementById('formLblTitle');
+            const bLbl = document.getElementById('formLblBasic');
+            const pLbl = document.getElementById('formLblPublic');
+            const rLbl = document.getElementById('formLblReason');
+            const sLbl = document.getElementById('formLblSecret');
+
+            if (cat === 'char') {
+                tLbl.textContent = "氏名・キャラクター名";
+                bLbl.textContent = "基本情報（年齢・種族・所属・外見特徴など）";
+                pLbl.textContent = "表向きの立場・役割";
+                rLbl.textContent = "収監理由（自認） / 登場動機";
+                sLbl.textContent = "【極秘】裏設定・真の記録・本性";
+            } else if (cat === 'world') {
+                tLbl.textContent = "施設・エリア・地名";
+                bLbl.textContent = "規模・構造・深度・所在";
+                pLbl.textContent = "一般公開されている施設用途";
+                rLbl.textContent = "建設目的・存在理由";
+                sLbl.textContent = "【極秘】真の建造目的・隠された仕掛け";
+            } else if (cat === 'system') {
+                tLbl.textContent = "システム名称 / ルール名";
+                bLbl.textContent = "適用範囲（バトル/探索/UIなど）";
+                pLbl.textContent = "プレイヤー向けの説明仕様";
+                rLbl.textContent = "ゲームデザイン上の導入意図";
+                sLbl.textContent = "【内部仕様】計算式・確率・特殊フラグ";
+            } else {
+                tLbl.textContent = "ステージ名 / エネミー名";
+                bLbl.textContent = "危険度ランク / 出現階層 / 推奨Lv";
+                pLbl.textContent = "遭遇時の挙動・標準行動パターン";
+                rLbl.textContent = "出現ギミック・ドロップ報酬";
+                sLbl.textContent = "【攻略裏情報】隠し弱点・発狂行動パターン";
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = '新規仕様データ登録';
+            document.getElementById('editIndex').value = '';
+            document.getElementById('itemForm').reset();
+            if (currentCategory !== 'all') {
+                document.getElementById('inputCategory').value = currentCategory;
+            }
+            updateFormPlaceholders();
+            document.getElementById('itemModal').style.display = 'flex';
+        }
+
+        function openEditModal() {
+            closeMenu();
+            const doc = gameDocs[activeDocIndex];
+            document.getElementById('modalTitle').textContent = '仕様データ編集';
+            document.getElementById('editIndex').value = activeDocIndex;
+            document.getElementById('inputCategory').value = doc.category || 'char';
+            updateFormPlaceholders();
+
+            document.getElementById('inputTitle').value = doc.title;
+            document.getElementById('inputBasic').value = doc.basic;
+            document.getElementById('inputPublic').value = doc.publicRole;
+            document.getElementById('inputReason').value = doc.reason;
+            document.getElementById('inputSecret').value = doc.secret;
+            document.getElementById('inputImage').value = doc.image;
+            document.getElementById('itemModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').style.display = 'none';
+        }
+
+        function saveItem(e) {
+            e.preventDefault();
+            const editIndex = document.getElementById('editIndex').value;
+            const data = {
+                category: document.getElementById('inputCategory').value,
+                title: document.getElementById('inputTitle').value,
+                basic: document.getElementById('inputBasic').value,
+                publicRole: document.getElementById('inputPublic').value,
+                reason: document.getElementById('inputReason').value,
+                secret: document.getElementById('inputSecret').value,
+                image: document.getElementById('inputImage').value
+            };
+
+            if (editIndex === '') {
+                gameDocs.push(data);
+                activeDocIndex = gameDocs.length - 1;
+            } else {
+                gameDocs[editIndex] = data;
+                activeDocIndex = Number(editIndex);
+            }
+
+            saveData();
+            closeModal();
+            renderHome();
+            showDetail(activeDocIndex);
+        }
+
+        function deleteCurrentItem() {
+            closeMenu();
+            if (confirm(`「${gameDocs[activeDocIndex].title}」の記録を削除しますか？`)) {
+                gameDocs.splice(activeDocIndex, 1);
+                saveData();
+                showHome();
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameDocs, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "game_design_document.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    gameDocs = JSON.parse(e.target.result);
+                    saveData();
+                    showHome();
+                    alert("仕様書データを正常にインポートしました！");
+                } catch (err) {
+                    alert("JSONファイルの形式が正しくありません。");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 初回描画
+        showHome();
+    </script>
+</body>
+</html>
