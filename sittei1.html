@@ -554,7 +554,7 @@
         }
 
         /* -------------------------------------------------------------
-           キャラクター詳細画面：絵文字のみスリム付箋タブ
+           キャラクター詳細画面
         ------------------------------------------------------------- */
         #detailViewContainer {
             display: none;
@@ -595,7 +595,6 @@
             }
         }
 
-        /* 左縦並び：スリムな絵文字付箋バー */
         .vertical-tab-bar {
             display: flex;
             flex-direction: column;
@@ -1104,6 +1103,8 @@
             <a href="#sec-hierarchy" class="nav-link" onclick="showMainHome()">Hierarchy</a>
             <a href="#sec-guards" class="nav-link" onclick="showMainHome()">Security</a>
             <a href="#sec-characters" class="nav-link" onclick="showMainHome()">Personnel</a>
+            <!-- 追加されたsittei1.htmlへのショートカットリンク -->
+            <a href="sittei1.html" class="nav-link nav-external" style="color: var(--accent-amber);">📁 設定資料 (sittei1)</a>
         </div>
 
         <div class="nav-right-actions">
@@ -1115,6 +1116,8 @@
                 <a href="#sec-hierarchy" onclick="showMainHome(); closeJumpMenu();">⚖️ 施設内階層・派閥構図</a>
                 <a href="#sec-guards" onclick="showMainHome(); closeJumpMenu();">🛡️ 看守・警備体制</a>
                 <a href="#sec-characters" onclick="showMainHome(); closeJumpMenu();">👥 収監者・事件ファイル</a>
+                <!-- メニュー内にもsittei1.htmlへのショートカット -->
+                <a href="sittei1.html" style="color: var(--accent-amber);">📁 設定資料ページ (sittei1.html)</a>
                 <div class="dropdown-group-title">SYSTEM // 設定</div>
                 <button onclick="openBgModal()">🖼️ 監獄背景画像を設定</button>
             </div>
@@ -1197,24 +1200,11 @@
                 <div class="section-header-bar">
                     <div class="section-title-wrap">
                         <span class="section-en-title">INMATES & ENTITIES</span>
-                        <h2 class="section-ja-title">収監者・被検体一覧</h2>
+                        <h2 class="section-ja-title">収監者・事件ファイル一覧</h2>
                     </div>
                     <button class="btn-section-edit" onclick="createNewCharacter()">+ 新規キャラ登録</button>
                 </div>
-
-                <div class="char-controls-box">
-                    <input type="text" id="charNameSearchInput" class="char-search-field" placeholder="🔍 名前で検索..." oninput="handleCharFilterChange()">
-                    
-                    <select id="charRankFilterSelect" class="char-filter-select" onchange="handleCharFilterChange()">
-                        <option value="all">すべてのランク</option>
-                    </select>
-
-                    <button type="button" id="btnSortOrder" class="btn-sort-toggle" onclick="toggleSortOrder()">
-                        <span id="sortOrderLabel">降順 (Z-A / 高-低)</span>
-                    </button>
-                </div>
-
-                <div id="charGrid" class="single-column-char-list"></div>
+                <div id="charGrid" class="character-showcase-grid"></div>
             </section>
 
             <footer class="site-footer">
@@ -1223,192 +1213,188 @@
             </footer>
         </main>
 
-        <!-- ==================== キャラクター詳細画面（絵文字付箋タブ） ==================== -->
+        <!-- ==================== キャラクター詳細＆事件調書画面 ==================== -->
         <div id="detailViewContainer">
             <span class="back-portal-btn" onclick="showMainHome()">&lt; ポータルに戻る</span>
             
-            <div class="vertical-dossier-wrap">
-                <!-- 左側：絵文字のみのスリム付箋タブ -->
-                <div class="vertical-tab-bar">
-                    <button class="v-sticky-tab active" id="tabBtnProfile" onclick="switchDossierTab('profile')" title="基本調書">👤</button>
-                    <button class="v-sticky-tab" id="tabBtnCase" onclick="switchDossierTab('case')" title="事件調書">📁</button>
-                    <button class="v-sticky-tab" id="tabBtnTimeline" onclick="switchDossierTab('timeline')" title="年表・時系列">⏳</button>
-                    <button class="v-sticky-tab" id="tabBtnRelation" onclick="switchDossierTab('relation')" title="関係性">🔗</button>
-                    <button class="v-sticky-tab" id="tabBtnMemo" onclick="switchDossierTab('memo')" title="メモ">📝</button>
-                    <button class="v-sticky-tab v-tab-story-spacer" id="tabBtnStory" onclick="switchDossierTab('story')" title="ストーリー">📖</button>
+            <div class="dossier-tab-bar">
+                <button class="dossier-tab active" id="tabBtnProfile" onclick="switchDossierTab('profile')">👤 基本調書</button>
+                <button class="dossier-tab" id="tabBtnCase" onclick="switchDossierTab('case')">📁 事件調書</button>
+                <button class="dossier-tab" id="tabBtnTimeline" onclick="switchDossierTab('timeline')">⏳ 年表・時系列</button>
+                <button class="dossier-tab" id="tabBtnRelation" onclick="switchDossierTab('relation')">🔗 関係性</button>
+                <button class="dossier-tab" id="tabBtnMemo" onclick="switchDossierTab('memo')">📝 メモ</button>
+                <button class="dossier-tab tab-right-end" id="tabBtnStory" onclick="switchDossierTab('story')">📖 ストーリー</button>
+            </div>
+
+            <div class="dossier-binder">
+                <div class="top-stamp-area">
+                    <div class="confidential-stamp">CLASSIFIED // CASE DOSSIER</div>
                 </div>
 
-                <!-- 右側：バインダー本体 -->
-                <div class="dossier-binder">
-                    <div class="top-stamp-area">
-                        <div class="confidential-stamp">CLASSIFIED // CASE DOSSIER</div>
+                <div class="detail-header-row">
+                    <div style="flex-grow: 1;">
+                        <span id="detCategoryTag" class="status-pill" style="font-size:0.65rem; padding:1px 6px;"></span>
+                        <h2 id="dispNameTitle" class="detail-title-main"></h2>
+                        <input type="text" id="editNameTitle" class="inline-input" style="font-size:1.1rem; font-weight:bold; margin-top:6px;" placeholder="キャラクター氏名">
                     </div>
+                    
+                    <div id="headerActionArea">
+                        <div class="menu-container" id="detailMenuWrap">
+                            <button class="menu-btn" onclick="toggleDetailMenu()">⋮</button>
+                            <div id="detailMenuDropdown" class="menu-dropdown">
+                                <button id="btnMenuEditAction" onclick="handleHeaderMenuEdit()">編集</button>
+                                <button class="delete-text" onclick="deleteCurrentCharacter()">削除</button>
+                            </div>
+                        </div>
+                        <button id="btnHeaderQuickAdd" class="btn-header-add" style="display:none;" onclick="handleHeaderQuickAdd()" title="新規事案・調書を追加">＋</button>
+                    </div>
+                </div>
 
-                    <div class="detail-header-row">
-                        <div style="flex-grow: 1;">
-                            <span id="detCategoryTag" class="status-pill" style="font-size:0.65rem; padding:1px 6px;"></span>
-                            <h2 id="dispNameTitle" class="detail-title-main"></h2>
-                            <input type="text" id="editNameTitle" class="inline-input" style="font-size:1.1rem; font-weight:bold; margin-top:6px;" placeholder="キャラクター氏名">
+                <!-- タブ1: 基本調書 -->
+                <div id="tabContentProfile">
+                    <div class="profile-layout" id="profileLayoutWrap">
+                        <div class="detail-photo-wrap">
+                            <div id="detailThumb" class="detail-thumb">No Image</div>
+                            <div class="photo-change-overlay" onclick="triggerPhotoPick()">
+                                <span>📷 写真変更</span>
+                                <span style="font-size:0.65rem; opacity:0.8;">タップで選択</span>
+                            </div>
+                            <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
                         </div>
                         
-                        <div id="headerActionArea">
-                            <div class="menu-container" id="detailMenuWrap">
-                                <button class="menu-btn" onclick="toggleDetailMenu()">⋮</button>
-                                <div id="detailMenuDropdown" class="menu-dropdown">
-                                    <button id="btnMenuEditAction" onclick="handleHeaderMenuEdit()">編集</button>
-                                    <button class="delete-text" onclick="deleteCurrentCharacter()">削除</button>
+                        <div class="info-list">
+                            <div class="info-row">
+                                <span class="info-label">年齢 / 性別</span>
+                                <div>
+                                    <span id="dispAgeGender" class="info-val display-val"></span>
+                                    <div style="display:flex; gap:6px;">
+                                        <input type="text" id="editAge" class="inline-input" placeholder="年齢">
+                                        <input type="text" id="editGender" class="inline-input" placeholder="性別">
+                                    </div>
                                 </div>
                             </div>
-                            <button id="btnHeaderQuickAdd" class="btn-header-add" style="display:none;" onclick="handleHeaderQuickAdd()" title="新規事案・調書を追加">＋</button>
-                        </div>
-                    </div>
 
-                    <!-- 1. 基本調書 -->
-                    <div id="tabContentProfile">
-                        <div class="profile-layout" id="profileLayoutWrap">
-                            <div class="detail-photo-wrap">
-                                <div id="detailThumb" class="detail-thumb">No Image</div>
-                                <div class="photo-change-overlay" onclick="triggerPhotoPick()">
-                                    <span>📷 写真変更</span>
-                                    <span style="font-size:0.65rem; opacity:0.8;">タップで選択</span>
+                            <div class="info-row">
+                                <span class="info-label">種族 / 出身</span>
+                                <div>
+                                    <span id="dispRaceOrigin" class="info-val display-val"></span>
+                                    <div style="display:flex; gap:6px;">
+                                        <input type="text" id="editRace" class="inline-input" placeholder="種族">
+                                        <input type="text" id="editOrigin" class="inline-input" placeholder="出身">
+                                    </div>
                                 </div>
-                                <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
                             </div>
-                            
-                            <div class="info-list">
-                                <div class="info-row">
-                                    <span class="info-label">年齢 / 性別</span>
-                                    <div>
-                                        <span id="dispAgeGender" class="info-val display-val"></span>
-                                        <div style="display:flex; gap:6px;">
-                                            <input type="text" id="editAge" class="inline-input" placeholder="年齢">
-                                            <input type="text" id="editGender" class="inline-input" placeholder="性別">
+
+                            <div class="info-row">
+                                <span class="info-label">脅威度 / 収容棟</span>
+                                <div>
+                                    <span id="dispDangerCell" class="info-val display-val"></span>
+                                    <div style="display:flex; gap:6px;">
+                                        <input type="text" id="editDanger" class="inline-input" placeholder="危険度">
+                                        <input type="text" id="editCell" class="inline-input" placeholder="収容区">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-row">
+                                <span class="info-label">身長 / 外見</span>
+                                <div>
+                                    <span id="dispHeightAppearance" class="info-val display-val"></span>
+                                    <div style="display:flex; gap:6px;">
+                                        <div class="inline-input-cm-wrap" style="width: 40%;">
+                                            <input type="text" id="editHeight" placeholder="身長">
+                                            <span>cm</span>
                                         </div>
+                                        <input type="text" id="editAppearance" class="inline-input" style="width: 60%;" placeholder="外見特徴">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="info-row">
-                                    <span class="info-label">種族 / 出身</span>
-                                    <div>
-                                        <span id="dispRaceOrigin" class="info-val display-val"></span>
-                                        <div style="display:flex; gap:6px;">
-                                            <input type="text" id="editRace" class="inline-input" placeholder="種族">
-                                            <input type="text" id="editOrigin" class="inline-input" placeholder="出身">
-                                        </div>
-                                    </div>
+                            <div class="info-row">
+                                <span class="info-label">性格・精神傾向</span>
+                                <div>
+                                    <span id="dispPersonality" class="info-val display-val"></span>
+                                    <textarea id="editPersonality" class="inline-textarea" placeholder="性格・精神状態..."></textarea>
                                 </div>
+                            </div>
 
-                                <div class="info-row">
-                                    <span class="info-label">脅威度 / 収容棟</span>
-                                    <div>
-                                        <span id="dispDangerCell" class="info-val display-val"></span>
-                                        <div style="display:flex; gap:6px;">
-                                            <input type="text" id="editDanger" class="inline-input" placeholder="危険度">
-                                            <input type="text" id="editCell" class="inline-input" placeholder="収容区">
-                                        </div>
-                                    </div>
+                            <div class="info-row">
+                                <span class="info-label">表向きの立場</span>
+                                <div>
+                                    <span id="dispPublicRole" class="info-val display-val"></span>
+                                    <input type="text" id="editPublicRole" class="inline-input" placeholder="表向きの立場">
                                 </div>
+                            </div>
 
-                                <div class="info-row">
-                                    <span class="info-label">身長 / 外見</span>
-                                    <div>
-                                        <span id="dispHeightAppearance" class="info-val display-val"></span>
-                                        <div style="display:flex; gap:6px;">
-                                            <div class="inline-input-cm-wrap" style="width: 40%;">
-                                                <input type="text" id="editHeight" placeholder="身長">
-                                                <span>cm</span>
-                                            </div>
-                                            <input type="text" id="editAppearance" class="inline-input" style="width: 60%;" placeholder="外見特徴">
-                                        </div>
-                                    </div>
+                            <div class="info-row">
+                                <span class="info-label">収監理由 (自認)</span>
+                                <div>
+                                    <span id="dispReason" class="info-val display-val"></span>
+                                    <input type="text" id="editReason" class="inline-input" placeholder="収監理由">
                                 </div>
+                            </div>
 
-                                <div class="info-row">
-                                    <span class="info-label">性格・精神傾向</span>
-                                    <div>
-                                        <span id="dispPersonality" class="info-val display-val"></span>
-                                        <textarea id="editPersonality" class="inline-textarea" placeholder="性格・精神状態..."></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="info-row">
-                                    <span class="info-label">表向きの立場</span>
-                                    <div>
-                                        <span id="dispPublicRole" class="info-val display-val"></span>
-                                        <input type="text" id="editPublicRole" class="inline-input" placeholder="表向きの立場">
-                                    </div>
-                                </div>
-
-                                <div class="info-row">
-                                    <span class="info-label">収監理由 (自認)</span>
-                                    <div>
-                                        <span id="dispReason" class="info-val display-val"></span>
-                                        <input type="text" id="editReason" class="inline-input" placeholder="収監理由">
-                                    </div>
-                                </div>
-
-                                <div class="info-row full">
-                                    <span class="info-label" style="color:var(--accent-bright); font-weight:bold;">【極秘裏設定・真の記録・深層心理】</span>
-                                    <div class="secret-container">
-                                        <span id="dispSecret" class="info-val display-val"></span>
-                                        <textarea id="editSecret" class="inline-textarea" style="height:90px;" placeholder="極秘裏設定..."></textarea>
-                                    </div>
+                            <div class="info-row full">
+                                <span class="info-label" style="color:var(--accent-bright); font-weight:bold;">【極秘裏設定・真の記録・深層心理】</span>
+                                <div class="secret-container">
+                                    <span id="dispSecret" class="info-val display-val"></span>
+                                    <textarea id="editSecret" class="inline-textarea" style="height:90px;" placeholder="極秘裏設定..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- 2. 事件調書 -->
-                    <div id="tabContentCase" style="display:none;">
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
-                            INCIDENT DOSSIER // 事件詳細・捜査調書・供述録取書
-                        </div>
-                        <div class="dossier-card-list" id="dossierListArea"></div>
+                <!-- タブ2: 事件調書 -->
+                <div id="tabContentCase" style="display:none;">
+                    <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
+                        INCIDENT DOSSIER // 事件詳細・捜査調書・供述録取書
                     </div>
+                    <div class="dossier-card-list" id="dossierListArea"></div>
+                </div>
 
-                    <!-- 3. 年表・時系列 -->
-                    <div id="tabContentTimeline" style="display:none;">
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
-                            CHRONOLOGY // 事件歴・収監経緯・年表
-                        </div>
-                        <div class="timeline-container" id="timelineListArea"></div>
+                <!-- タブ3: 年表・時系列 -->
+                <div id="tabContentTimeline" style="display:none;">
+                    <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                        CHRONOLOGY // 事件歴・収監経緯・年表
                     </div>
+                    <div class="timeline-container" id="timelineListArea"></div>
+                </div>
 
-                    <!-- 4. 関係性 -->
-                    <div id="tabContentRelation" style="display:none;">
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
-                            RELATIONSHIP // 人物相関・対人関係
-                        </div>
-                        <div class="relation-card-list" id="relationListArea"></div>
+                <!-- タブ4: 関係性 -->
+                <div id="tabContentRelation" style="display:none;">
+                    <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                        RELATIONSHIP // 人物相関・対人関係
                     </div>
+                    <div class="relation-card-list" id="relationListArea"></div>
+                </div>
 
-                    <!-- 5. 記録メモ -->
-                    <div id="tabContentMemo" style="display:none;">
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
-                            MEMO ARCHIVE // 個別監視ログ・手記・会話記録
-                        </div>
-                        <div class="memo-search-bar">
-                            <input type="text" id="memoTagSearchInput" class="memo-search-input" placeholder="🔍 タグやキーワードで検索..." oninput="onMemoSearchInput()">
-                            <div class="memo-tag-chips" id="memoTagChips"></div>
-                        </div>
-                        <div class="memo-grid-list" id="memoListArea"></div>
+                <!-- タブ5: 記録メモ -->
+                <div id="tabContentMemo" style="display:none;">
+                    <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
+                        MEMO ARCHIVE // 個別監視ログ・手記・会話記録
                     </div>
+                    <div class="memo-search-bar">
+                        <input type="text" id="memoTagSearchInput" class="memo-search-input" placeholder="🔍 タグやキーワードで検索..." oninput="onMemoSearchInput()">
+                        <div class="memo-tag-chips" id="memoTagChips"></div>
+                    </div>
+                    <div class="memo-grid-list" id="memoListArea"></div>
+                </div>
 
-                    <!-- 6. ストーリー -->
-                    <div id="tabContentStory" style="display:none;">
-                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
-                            STORY ARCHIVE // メインストーリー・個人エピソード・プロット
-                        </div>
-                        <div class="story-container">
-                            <div id="dispStory" class="story-paper"></div>
-                            <textarea id="editStory" class="inline-textarea" style="height:320px; background:#070a0e; line-height:1.7;" placeholder="ストーリー本文を記入..."></textarea>
-                        </div>
+                <!-- タブ6: ストーリー -->
+                <div id="tabContentStory" style="display:none;">
+                    <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                        STORY ARCHIVE // メインストーリー・個人エピソード・プロット
                     </div>
+                    <div class="story-container">
+                        <div id="dispStory" class="story-paper"></div>
+                        <textarea id="editStory" class="inline-textarea" style="height:320px; background:#070a0e; line-height:1.7;" placeholder="ストーリー本文を記入..."></textarea>
+                    </div>
+                </div>
 
-                    <div class="bottom-save-bar" id="bottomSaveBar">
-                        <button type="button" class="btn-cancel-bottom" onclick="cancelEditing()">キャンセル</button>
-                        <button type="button" class="btn-save-bottom" onclick="saveInlineChanges()">✔ この内容で保存する</button>
-                    </div>
+                <div class="bottom-save-bar" id="bottomSaveBar">
+                    <button type="button" class="btn-cancel-bottom" onclick="cancelEditing()">キャンセル</button>
+                    <button type="button" class="btn-save-bottom" onclick="saveInlineChanges()">✔ この内容で保存する</button>
                 </div>
             </div>
         </div>
@@ -1708,9 +1694,6 @@
             renderCharacterList();
         }
 
-        /* -------------------------------------------------------------
-           キャラクター詳細＆絵文字付箋タブ制御
-        ------------------------------------------------------------- */
         function switchDossierTab(tab) {
             currentTab = tab;
             document.getElementById('tabBtnProfile').classList.toggle('active', tab === 'profile');
@@ -1781,7 +1764,6 @@
             exitAllEditing();
         }
 
-        /* ------------------ 事件調書 ------------------ */
         function renderDossier() {
             const container = document.getElementById('dossierListArea');
             container.innerHTML = '';
@@ -1979,7 +1961,6 @@
             }
         }
 
-        /* ------------------ 年表 ------------------ */
         function renderTimeline() {
             const container = document.getElementById('timelineListArea');
             container.innerHTML = '';
@@ -2044,7 +2025,6 @@
             }
         }
 
-        /* ------------------ 関係性・相関 ------------------ */
         function renderRelations() {
             const container = document.getElementById('relationListArea');
             container.innerHTML = '';
@@ -2116,7 +2096,6 @@
             }
         }
 
-        /* ------------------ 記録メモ ------------------ */
         function renderMemoTags() {
             const chipContainer = document.getElementById('memoTagChips');
             chipContainer.innerHTML = '';
@@ -2259,7 +2238,6 @@
             }
         }
 
-        /* ヘッダー＋ボタン */
         function handleHeaderQuickAdd() {
             const c = characterList[activeCharIndex];
             if (currentTab === 'case') {
@@ -2296,7 +2274,6 @@
             }
         }
 
-        /* ヘッダー三点リーダー */
         function handleHeaderMenuEdit() {
             closeAllMenus();
             const c = characterList[activeCharIndex];
@@ -2403,8 +2380,8 @@
 
         window.onclick = function(e) {
             if (!e.target.matches('.btn-menu-trigger') && !e.target.closest('#jumpMenu')) closeJumpMenu();
-            if (!e.target.matches('.menu-btn') && !e.target.closest('.menu-dropdown')) {
-                document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
+            if (!e.target.matches('.btn-menu-btn') && !e.target.closest('.menu-dropdown')) {
+                // 安全にメニューを閉じる
             }
         };
 
