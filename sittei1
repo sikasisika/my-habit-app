@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特殊収容施設 第十三区画 - 公式アーカイブポータル</title>
+    <style>
+        :root {
+            --bg-color: #080b0f;
+            --panel-bg: rgba(16, 22, 30, 0.92);
+            --border-color: #26303d;
+            --border-glow: #3d4f66;
+            --accent-red: #8b0000;
+            --accent-bright: #ff3333;
+            --accent-amber: #d97706;
+            --text-main: #e6edf3;
+            --text-sub: #8b949e;
+            --font-mono: 'Courier New', 'Consolas', monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            --input-bg: #090d12;
+            --input-border: #3b434f;
+            --tab-bg: #11161f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .site-backdrop {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(13, 17, 23, 0.7) 0%, rgba(8, 11, 15, 0.95) 100%),
+                        repeating-linear-gradient(rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.2) 3px, rgba(0,0,0,0.2) 4px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 20, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--accent-bright);
+            font-family: var(--font-mono);
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-size: 1.05rem;
+            cursor: pointer;
+        }
+
+        .nav-logo-icon {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--accent-bright);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transform: rotate(45deg);
+        }
+        .nav-logo-icon span {
+            transform: rotate(-45deg);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            transition: color 0.2s, border-bottom 0.2s;
+            padding: 6px 0;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            border-bottom: 2px solid var(--accent-bright);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        .nav-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .btn-menu-trigger {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+
+        .btn-menu-trigger:hover {
+            border-color: var(--accent-bright);
+            background: rgba(139, 0, 0, 0.2);
+        }
+
+        .site-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 46px;
+            background: #121820;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            width: 230px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            z-index: 101;
+            overflow: hidden;
+        }
+
+        .site-dropdown.show { display: block; }
+
+        .dropdown-group-title {
+            font-size: 0.68rem;
+            padding: 8px 12px;
+            background: #0b0f14;
+            color: var(--text-sub);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+        }
+
+        .site-dropdown a, .site-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.82rem;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-family: inherit;
+        }
+
+        .site-dropdown a:hover, .site-dropdown button:hover {
+            background: rgba(139, 0, 0, 0.25);
+            color: var(--accent-bright);
+        }
+
+        .site-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 16px 80px;
+        }
+
+        .hero-section {
+            padding: 60px 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+        }
+
+        .hero-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 51, 51, 0.12);
+            border: 1px solid var(--accent-bright);
+            color: var(--accent-bright);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-bright);
+            box-shadow: 0 0 8px var(--accent-bright);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 900;
+            letter-spacing: 3px;
+            line-height: 1.15;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 51, 51, 0.3);
+        }
+
+        .hero-title span {
+            color: var(--accent-bright);
+            display: block;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            letter-spacing: 6px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .hero-lead {
+            font-size: 1.05rem;
+            color: var(--text-sub);
+            max-width: 640px;
+            line-height: 1.8;
+            margin-top: 6px;
+        }
+
+        .page-section {
+            padding: 60px 0 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header-bar {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 10px;
+        }
+
+        .section-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .section-en-title {
+            font-size: 0.75rem;
+            color: var(--accent-bright);
+            letter-spacing: 3px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .section-ja-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .btn-section-edit {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
+        }
+
+        .btn-section-edit:hover {
+            border-color: var(--accent-bright);
+            color: #fff;
+            background: rgba(139, 0, 0, 0.2);
+        }
+
+        .story-display-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-bright);
+            border-radius: 4px;
+            padding: 30px;
+            font-size: 0.95rem;
+            line-height: 2;
+            color: #dbe4ee;
+            white-space: pre-wrap;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .facility-text-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #c9d1d9;
+        }
+
+        .hierarchy-visual-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tier-node {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 14px 18px;
+            display: grid;
+            grid-template-columns: 80px 180px 1fr;
+            align-items: center;
+            gap: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .tier-node:hover { border-color: var(--accent-bright); }
+
+        @media (max-width: 650px) {
+            .tier-node { grid-template-columns: 1fr; gap: 6px; }
+        }
+
+        .tier-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-bright);
+            font-weight: bold;
+            background: rgba(255, 51, 51, 0.1);
+            padding: 2px 8px;
+            border-radius: 3px;
+            text-align: center;
+            border: 1px solid rgba(255, 51, 51, 0.25);
+        }
+
+        .tier-name { font-weight: 700; font-size: 0.95rem; color: #fff; }
+        .tier-note { font-size: 0.82rem; color: var(--text-sub); line-height: 1.4; }
+
+        .hierarchy-divider {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--accent-bright);
+            opacity: 0.6;
+            margin: -2px 0;
+            font-family: var(--font-mono);
+        }
+
+        .guard-spec-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 24px;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #c9d1d9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guard-spec-card::after {
+            content: "SECURITY PROTOCOL";
+            position: absolute;
+            right: -20px;
+            bottom: -10px;
+            font-family: var(--font-mono);
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.02);
+            pointer-events: none;
+            letter-spacing: 4px;
+        }
+
+        .char-controls-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .char-search-field {
+            flex: 2;
+            min-width: 180px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            padding: 7px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.82rem;
+        }
+
+        .char-filter-select {
+            flex: 1;
+            min-width: 140px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            padding: 7px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.82rem;
+        }
+
+        .btn-sort-toggle {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 7px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-sort-toggle:hover {
+            border-color: var(--accent-bright);
+            color: #fff;
+        }
+
+        .char-search-field:focus, .char-filter-select:focus {
+            outline: none;
+            border-color: var(--accent-bright);
+        }
+
+        .single-column-char-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .single-char-row {
+            background: rgba(13, 17, 23, 0.85);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-bright);
+            padding: 12px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .single-char-row:hover {
+            transform: translateX(4px);
+            border-color: var(--accent-bright);
+            background: rgba(22, 27, 34, 0.95);
+            box-shadow: 0 4px 14px rgba(255, 51, 51, 0.15);
+        }
+
+        .single-char-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .single-char-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .single-char-meta {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            font-family: var(--font-mono);
+        }
+
+        .single-char-rank {
+            font-size: 0.85rem;
+            color: var(--accent-bright);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            background: rgba(255, 51, 51, 0.1);
+            border: 1px solid rgba(255, 51, 51, 0.25);
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+
+        .site-footer {
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            font-family: var(--font-mono);
+            letter-spacing: 1px;
+        }
+
+        /* -------------------------------------------------------------
+           キャラクター詳細画面：絵文字のみスリム付箋タブ
+        ------------------------------------------------------------- */
+        #detailViewContainer {
+            display: none;
+            padding-top: 20px;
+        }
+
+        .back-portal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-bright);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 16px;
+            padding: 6px 14px;
+            background: rgba(255, 51, 51, 0.1);
+            border: 1px solid var(--accent-bright);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .back-portal-btn:hover {
+            background: var(--accent-bright);
+            color: #fff;
+        }
+
+        .vertical-dossier-wrap {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        @media (max-width: 600px) {
+            .vertical-dossier-wrap {
+                flex-direction: column;
+            }
+        }
+
+        /* 左縦並び：スリムな絵文字付箋バー */
+        .vertical-tab-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 52px;
+            flex-shrink: 0;
+            padding-top: 20px;
+            z-index: 3;
+            margin-right: -1px;
+        }
+
+        @media (max-width: 600px) {
+            .vertical-tab-bar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                margin-right: 0;
+                margin-bottom: -1px;
+                padding-top: 0;
+                padding-left: 8px;
+            }
+        }
+
+        .v-sticky-tab {
+            background: var(--tab-bg);
+            border: 1px solid var(--border-color);
+            border-right: none;
+            color: var(--text-sub);
+            padding: 12px 0;
+            font-size: 1.25rem;
+            border-radius: 6px 0 0 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+            position: relative;
+            box-shadow: -2px 2px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .v-sticky-tab {
+                border-right: 1px solid var(--border-color);
+                border-bottom: none;
+                border-radius: 6px 6px 0 0;
+                padding: 8px 16px;
+            }
+        }
+
+        .v-sticky-tab:hover {
+            background: #182230;
+            color: var(--text-main);
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 600px) {
+            .v-sticky-tab:hover {
+                transform: translateY(-3px);
+            }
+        }
+
+        .v-sticky-tab.active {
+            background: var(--panel-bg);
+            color: #fff;
+            border-color: var(--border-glow);
+            border-left: 4px solid var(--accent-bright);
+            border-right: 1px solid transparent;
+            transform: translateX(-4px);
+            box-shadow: -4px 3px 12px rgba(255, 51, 51, 0.2);
+        }
+
+        @media (max-width: 600px) {
+            .v-sticky-tab.active {
+                border-left: 1px solid var(--border-glow);
+                border-top: 4px solid var(--accent-bright);
+                border-bottom: 1px solid transparent;
+                transform: translateY(-4px);
+            }
+        }
+
+        .v-tab-story-spacer {
+            margin-top: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .v-tab-story-spacer {
+                margin-top: 0;
+                margin-left: auto;
+            }
+        }
+
+        .dossier-binder {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 26px;
+            border-radius: 0 6px 6px 6px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            min-height: 540px;
+            flex-grow: 1;
+            width: 100%;
+            z-index: 2;
+        }
+
+        @media (max-width: 600px) {
+            .dossier-binder {
+                border-radius: 6px;
+            }
+        }
+
+        .top-stamp-area { text-align: center; margin-bottom: 16px; }
+
+        .confidential-stamp {
+            display: inline-block;
+            border: 2px solid var(--accent-bright);
+            color: var(--accent-bright);
+            padding: 3px 18px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            transform: rotate(-0.8deg);
+            opacity: 0.9;
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+
+        .detail-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            position: relative;
+        }
+
+        .detail-title-main { font-size: 1.4rem; font-weight: bold; color: var(--text-main); margin: 4px 0 0 0; }
+
+        .menu-container { position: relative; }
+        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 1.3rem; cursor: pointer; padding: 0 8px; line-height: 1; }
+
+        .btn-header-add {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--accent-bright);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 3px 10px;
+            border-radius: 4px;
+            line-height: 1;
+            transition: 0.15s;
+        }
+
+        .btn-header-add:hover { background: #30363d; border-color: var(--accent-bright); }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 24px;
+            background-color: #21262d;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 100px;
+            z-index: 25;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+
+        .menu-dropdown.show { display: block; }
+        .menu-dropdown button { width: 100%; background: none; border: none; color: var(--text-main); padding: 8px 10px; text-align: left; cursor: pointer; font-family: inherit; font-size: 0.8rem; }
+        .menu-dropdown button:hover { background-color: #30363d; }
+        .menu-dropdown button.delete-text { color: var(--accent-bright); }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 620px) {
+            .profile-layout { grid-template-columns: 1fr; justify-items: center; }
+        }
+
+        .detail-photo-wrap { position: relative; width: 135px; height: 180px; }
+
+        .detail-thumb {
+            width: 100%;
+            height: 100%;
+            background-color: #0b0e14;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .photo-change-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 0.75rem;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px dashed var(--accent-bright);
+        }
+
+        .is-editing-profile .photo-change-overlay { display: flex; }
+
+        .info-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+            align-items: baseline;
+        }
+
+        @media (max-width: 500px) {
+            .info-row { grid-template-columns: 1fr; gap: 4px; }
+        }
+
+        .info-row.full { grid-template-columns: 1fr; border-bottom: none; padding-bottom: 0; }
+        .info-label { font-size: 0.75rem; color: var(--text-sub); letter-spacing: 1px; text-transform: uppercase; }
+        .info-val { font-size: 0.9rem; line-height: 1.5; word-break: break-word; white-space: pre-wrap; }
+
+        .secret-container {
+            margin-top: 6px;
+            border-left: 3px solid var(--accent-bright);
+            background: rgba(139, 0, 0, 0.08);
+            padding: 12px 14px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .dossier-card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .dossier-case-item {
+            background: rgba(13, 17, 23, 0.75);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-bright);
+            padding: 14px 16px;
+            border-radius: 4px;
+        }
+
+        .dossier-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 6px;
+        }
+
+        .dossier-case-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--accent-bright);
+            letter-spacing: 0.5px;
+        }
+
+        .case-section-block {
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .case-sec-label {
+            font-size: 0.72rem;
+            color: var(--accent-bright);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .case-sec-content {
+            font-size: 0.86rem;
+            line-height: 1.45;
+            color: #dbe4ee;
+            word-break: break-word;
+        }
+
+        .case-sec-content div {
+            margin-bottom: 2px;
+        }
+
+        .victim-badge-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .victim-badge-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.82rem;
+            line-height: 1.3;
+        }
+
+        .edit-case-form {
+            background: #0f141c;
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-row-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 6px;
+        }
+
+        .btn-victim-action {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            padding-left: 18px;
+            border-left: 2px solid var(--border-color);
+            margin-left: 10px;
+        }
+
+        .timeline-item { position: relative; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -24px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            border: 2px solid var(--accent-bright);
+        }
+
+        .timeline-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+        .timeline-date { font-size: 0.82rem; color: var(--accent-bright); font-weight: bold; }
+        .timeline-body { font-size: 0.88rem; line-height: 1.5; color: var(--text-main); }
+
+        .relation-card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .relation-card-item {
+            background: rgba(13, 17, 23, 0.75);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-amber);
+            padding: 12px 16px;
+            border-radius: 4px;
+        }
+
+        .relation-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 6px;
+        }
+
+        .relation-target-name {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .relation-badge {
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            color: var(--accent-amber);
+            background: rgba(217, 119, 6, 0.12);
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 8px;
+        }
+
+        .relation-card-content {
+            font-size: 0.86rem;
+            line-height: 1.5;
+            color: #dbe4ee;
+            white-space: pre-wrap;
+        }
+
+        .memo-search-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+        .memo-search-input { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); padding: 6px 10px; border-radius: 4px; font-family: inherit; font-size: 0.8rem; }
+        .memo-search-input:focus { outline: none; border-color: var(--accent-bright); }
+        .memo-tag-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag-chip { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-sub); font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: all 0.15s; }
+        .tag-chip:hover, .tag-chip.active { background: rgba(139, 0, 0, 0.2); color: var(--accent-bright); border-color: var(--accent-bright); }
+
+        .memo-grid-list { display: flex; flex-direction: column; gap: 16px; }
+        .memo-card-item { background: transparent; border: none; padding: 2px 0 12px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.08); }
+        .memo-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .memo-card-title { font-weight: bold; font-size: 0.88rem; color: var(--accent-bright); }
+        .memo-card-date { font-size: 0.75rem; color: var(--text-sub); margin-left: 8px; }
+        .memo-tags-view { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+        .memo-tag-label { font-size: 0.68rem; color: var(--accent-bright); background: rgba(139, 0, 0, 0.1); border: 1px solid rgba(255, 77, 77, 0.2); padding: 1px 6px; border-radius: 3px; }
+        .memo-card-body { font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; color: var(--text-main); }
+
+        .story-container { display: flex; flex-direction: column; gap: 12px; }
+        .story-paper { background: #0b0f14; border: 1px solid var(--border-color); padding: 18px; border-radius: 4px; min-height: 260px; font-size: 0.92rem; line-height: 1.75; white-space: pre-wrap; color: #dbe4ee; border-left: 3px solid #6b1420; }
+
+        .inline-input, .inline-textarea { display: none; width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); padding: 7px 10px; border-radius: 4px; font-family: inherit; font-size: 0.85rem; }
+        .inline-input-cm-wrap { display: none; width: 100%; align-items: center; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 4px; padding-right: 8px; }
+        .inline-input-cm-wrap input { background: none; border: none; color: var(--text-main); padding: 7px 8px; font-family: inherit; font-size: 0.85rem; width: 100%; outline: none; }
+        .inline-input-cm-wrap span { font-size: 0.82rem; color: var(--text-sub); user-select: none; }
+        .inline-textarea { height: 75px; resize: vertical; }
+
+        .is-editing-profile .profile-layout .display-val { display: none !important; }
+        .is-editing-profile .profile-layout .inline-input, 
+        .is-editing-profile .profile-layout .inline-textarea { display: block !important; }
+        .is-editing-profile .profile-layout .inline-input-cm-wrap { display: flex !important; }
+        .is-editing-profile #editNameTitle { display: block !important; }
+        .is-editing-profile #dispNameTitle { display: none !important; }
+
+        .is-editing-story #dispStory { display: none !important; }
+        .is-editing-story #editStory { display: block !important; }
+
+        .bottom-save-bar {
+            display: none;
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-color);
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .is-editing-profile .bottom-save-bar,
+        .is-editing-story .bottom-save-bar { display: flex; }
+
+        .btn-cancel-bottom { background-color: #21262d; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 18px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-family: inherit; }
+        .btn-save-bottom { background-color: var(--accent-red); border: 1px solid var(--accent-bright); color: white; padding: 8px 24px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-family: inherit; font-weight: bold; }
+
+        .site-modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+        .site-modal-content { background: #121820; border: 1px solid var(--border-color); border-radius: 6px; width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; padding: 24px; }
+        .site-modal-title { font-size: 1.1rem; font-weight: 800; color: var(--accent-bright); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 16px; }
+        .modal-field { margin-bottom: 14px; }
+        .modal-field label { display: block; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 5px; font-family: var(--font-mono); }
+        .modal-field input, .modal-field textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); padding: 9px; border-radius: 4px; font-family: inherit; font-size: 0.85rem; }
+        .modal-field textarea { height: 180px; resize: vertical; line-height: 1.6; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+        .btn-modal-cancel { background: #21262d; border: 1px solid var(--border-color); color: var(--text-main); padding: 7px 16px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .btn-modal-save { background: var(--accent-red); border: 1px solid var(--accent-bright); color: #fff; padding: 7px 20px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+
+        .crop-container { width: 240px; height: 320px; margin: 12px auto; position: relative; overflow: hidden; background-color: #000; border: 2px solid var(--accent-bright); border-radius: 4px; cursor: grab; user-select: none; touch-action: none; }
+        .crop-container:active { cursor: grabbing; }
+        #cropImage { position: absolute; top: 0; left: 0; transform-origin: top left; pointer-events: none; }
+        .crop-guide-overlay { position: absolute; inset: 0; border: 1px dashed rgba(255, 255, 255, 0.35); pointer-events: none; }
+        .crop-slider-wrap { margin: 8px auto 14px auto; width: 240px; display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-sub); }
+        .crop-slider-wrap input[type=range] { flex-grow: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="site-backdrop"></div>
+
+    <nav class="site-nav">
+        <div class="nav-logo" onclick="showMainHome()">
+            <div class="nav-logo-icon"><span>13</span></div>
+            SECTOR-13
+        </div>
+
+        <div class="nav-links">
+            <a href="#sec-story" class="nav-link" onclick="showMainHome()">Story</a>
+            <a href="#sec-facility" class="nav-link" onclick="showMainHome()">Facility</a>
+            <a href="#sec-hierarchy" class="nav-link" onclick="showMainHome()">Hierarchy</a>
+            <a href="#sec-guards" class="nav-link" onclick="showMainHome()">Security</a>
+            <a href="#sec-characters" class="nav-link" onclick="showMainHome()">Personnel</a>
+        </div>
+
+        <div class="nav-right-actions">
+            <button class="btn-menu-trigger" onclick="toggleJumpMenu()" title="目次・移動">⋮</button>
+            <div id="jumpMenu" class="site-dropdown">
+                <div class="dropdown-group-title">NAVIGATION // 目次</div>
+                <a href="#sec-story" onclick="showMainHome(); closeJumpMenu();">📜 物語・あらすじ</a>
+                <a href="#sec-facility" onclick="showMainHome(); closeJumpMenu();">🏛️ 監獄構造・マップ設定</a>
+                <a href="#sec-hierarchy" onclick="showMainHome(); closeJumpMenu();">⚖️ 施設内階層・派閥構図</a>
+                <a href="#sec-guards" onclick="showMainHome(); closeJumpMenu();">🛡️ 看守・警備体制</a>
+                <a href="#sec-characters" onclick="showMainHome(); closeJumpMenu();">👥 収監者・事件ファイル</a>
+                <div class="dropdown-group-title">SYSTEM // 設定</div>
+                <button onclick="openBgModal()">🖼️ 監獄背景画像を設定</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="site-wrapper">
+
+        <!-- ==================== メインホーム画面 ==================== -->
+        <main id="mainHomeView">
+            <header class="hero-section">
+                <div class="hero-badge-row">
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        <span>ISOLATED UNDERGROUND // 深度300m</span>
+                    </div>
+                    <div class="status-pill" style="border-color: var(--accent-amber); color: var(--accent-amber);">
+                        <span>DEFCON 1</span>
+                    </div>
+                </div>
+
+                <h1 class="hero-title">
+                    <span>SPECIAL DETENTION ARCHIVE</span>
+                    特殊収容施設 第十三区画
+                </h1>
+
+                <p class="hero-lead">
+                    表社会の秩序から永久に抹消された重犯罪者、解明不能な狂気、そして異形の怪異を封殺する地下要塞監獄。
+                </p>
+            </header>
+
+            <section id="sec-story" class="page-section">
+                <div class="section-header-bar">
+                    <div class="section-title-wrap">
+                        <span class="section-en-title">PROLOGUE & WORLD</span>
+                        <h2 class="section-ja-title">あらすじ・世界観設定</h2>
+                    </div>
+                    <button class="btn-section-edit" onclick="openTextModal('synopsis')">EDIT // 編集</button>
+                </div>
+                <div id="dispSynopsis" class="story-display-card"></div>
+            </section>
+
+            <section id="sec-facility" class="page-section">
+                <div class="section-header-bar">
+                    <div class="section-title-wrap">
+                        <span class="section-en-title">FACILITY BLUEPRINT</span>
+                        <h2 class="section-ja-title">地下要塞の全容・構造設計</h2>
+                    </div>
+                    <button class="btn-section-edit" onclick="openTextModal('facility')">EDIT // 編集</button>
+                </div>
+                <div class="facility-layout-grid">
+                    <div id="dispFacility" class="facility-text-card"></div>
+                </div>
+            </section>
+
+            <section id="sec-hierarchy" class="page-section">
+                <div class="section-header-bar">
+                    <div class="section-title-wrap">
+                        <span class="section-en-title">INTERNAL HIERARCHY</span>
+                        <h2 class="section-ja-title">施設内階層・勢力構図</h2>
+                    </div>
+                    <button class="btn-section-edit" onclick="openHierarchyModal()">EDIT // 構成編集</button>
+                </div>
+                <div id="dispHierarchy" class="hierarchy-visual-tree"></div>
+            </section>
+
+            <section id="sec-guards" class="page-section">
+                <div class="section-header-bar">
+                    <div class="section-title-wrap">
+                        <span class="section-en-title">GUARD FORCE SPECIFICATION</span>
+                        <h2 class="section-ja-title">看守隊制服・防衛プロトコル</h2>
+                    </div>
+                    <button class="btn-section-edit" onclick="openTextModal('guards')">EDIT // 編集</button>
+                </div>
+                <div id="dispGuards" class="guard-spec-card"></div>
+            </section>
+
+            <!-- 5. キャラクター一覧 -->
+            <section id="sec-characters" class="page-section">
+                <div class="section-header-bar">
+                    <div class="section-title-wrap">
+                        <span class="section-en-title">INMATES & ENTITIES</span>
+                        <h2 class="section-ja-title">収監者・被検体一覧</h2>
+                    </div>
+                    <button class="btn-section-edit" onclick="createNewCharacter()">+ 新規キャラ登録</button>
+                </div>
+
+                <div class="char-controls-box">
+                    <input type="text" id="charNameSearchInput" class="char-search-field" placeholder="🔍 名前で検索..." oninput="handleCharFilterChange()">
+                    
+                    <select id="charRankFilterSelect" class="char-filter-select" onchange="handleCharFilterChange()">
+                        <option value="all">すべてのランク</option>
+                    </select>
+
+                    <button type="button" id="btnSortOrder" class="btn-sort-toggle" onclick="toggleSortOrder()">
+                        <span id="sortOrderLabel">降順 (Z-A / 高-低)</span>
+                    </button>
+                </div>
+
+                <div id="charGrid" class="single-column-char-list"></div>
+            </section>
+
+            <footer class="site-footer">
+                <p>PROJECT ARCHIVE // SECTOR-13 CONFIDENTIAL SYSTEM</p>
+                <p style="margin-top: 4px; opacity: 0.6;">ALL RIGHTS RESERVED. UNAUTHORIZED ACCESS IS PUNISHABLE BY DETENTION.</p>
+            </footer>
+        </main>
+
+        <!-- ==================== キャラクター詳細画面（絵文字付箋タブ） ==================== -->
+        <div id="detailViewContainer">
+            <span class="back-portal-btn" onclick="showMainHome()">&lt; ポータルに戻る</span>
+            
+            <div class="vertical-dossier-wrap">
+                <!-- 左側：絵文字のみのスリム付箋タブ -->
+                <div class="vertical-tab-bar">
+                    <button class="v-sticky-tab active" id="tabBtnProfile" onclick="switchDossierTab('profile')" title="基本調書">👤</button>
+                    <button class="v-sticky-tab" id="tabBtnCase" onclick="switchDossierTab('case')" title="事件調書">📁</button>
+                    <button class="v-sticky-tab" id="tabBtnTimeline" onclick="switchDossierTab('timeline')" title="年表・時系列">⏳</button>
+                    <button class="v-sticky-tab" id="tabBtnRelation" onclick="switchDossierTab('relation')" title="関係性">🔗</button>
+                    <button class="v-sticky-tab" id="tabBtnMemo" onclick="switchDossierTab('memo')" title="メモ">📝</button>
+                    <button class="v-sticky-tab v-tab-story-spacer" id="tabBtnStory" onclick="switchDossierTab('story')" title="ストーリー">📖</button>
+                </div>
+
+                <!-- 右側：バインダー本体 -->
+                <div class="dossier-binder">
+                    <div class="top-stamp-area">
+                        <div class="confidential-stamp">CLASSIFIED // CASE DOSSIER</div>
+                    </div>
+
+                    <div class="detail-header-row">
+                        <div style="flex-grow: 1;">
+                            <span id="detCategoryTag" class="status-pill" style="font-size:0.65rem; padding:1px 6px;"></span>
+                            <h2 id="dispNameTitle" class="detail-title-main"></h2>
+                            <input type="text" id="editNameTitle" class="inline-input" style="font-size:1.1rem; font-weight:bold; margin-top:6px;" placeholder="キャラクター氏名">
+                        </div>
+                        
+                        <div id="headerActionArea">
+                            <div class="menu-container" id="detailMenuWrap">
+                                <button class="menu-btn" onclick="toggleDetailMenu()">⋮</button>
+                                <div id="detailMenuDropdown" class="menu-dropdown">
+                                    <button id="btnMenuEditAction" onclick="handleHeaderMenuEdit()">編集</button>
+                                    <button class="delete-text" onclick="deleteCurrentCharacter()">削除</button>
+                                </div>
+                            </div>
+                            <button id="btnHeaderQuickAdd" class="btn-header-add" style="display:none;" onclick="handleHeaderQuickAdd()" title="新規事案・調書を追加">＋</button>
+                        </div>
+                    </div>
+
+                    <!-- 1. 基本調書 -->
+                    <div id="tabContentProfile">
+                        <div class="profile-layout" id="profileLayoutWrap">
+                            <div class="detail-photo-wrap">
+                                <div id="detailThumb" class="detail-thumb">No Image</div>
+                                <div class="photo-change-overlay" onclick="triggerPhotoPick()">
+                                    <span>📷 写真変更</span>
+                                    <span style="font-size:0.65rem; opacity:0.8;">タップで選択</span>
+                                </div>
+                                <input type="file" id="imageFileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+                            </div>
+                            
+                            <div class="info-list">
+                                <div class="info-row">
+                                    <span class="info-label">年齢 / 性別</span>
+                                    <div>
+                                        <span id="dispAgeGender" class="info-val display-val"></span>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="editAge" class="inline-input" placeholder="年齢">
+                                            <input type="text" id="editGender" class="inline-input" placeholder="性別">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">種族 / 出身</span>
+                                    <div>
+                                        <span id="dispRaceOrigin" class="info-val display-val"></span>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="editRace" class="inline-input" placeholder="種族">
+                                            <input type="text" id="editOrigin" class="inline-input" placeholder="出身">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">脅威度 / 収容棟</span>
+                                    <div>
+                                        <span id="dispDangerCell" class="info-val display-val"></span>
+                                        <div style="display:flex; gap:6px;">
+                                            <input type="text" id="editDanger" class="inline-input" placeholder="危険度">
+                                            <input type="text" id="editCell" class="inline-input" placeholder="収容区">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">身長 / 外見</span>
+                                    <div>
+                                        <span id="dispHeightAppearance" class="info-val display-val"></span>
+                                        <div style="display:flex; gap:6px;">
+                                            <div class="inline-input-cm-wrap" style="width: 40%;">
+                                                <input type="text" id="editHeight" placeholder="身長">
+                                                <span>cm</span>
+                                            </div>
+                                            <input type="text" id="editAppearance" class="inline-input" style="width: 60%;" placeholder="外見特徴">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">性格・精神傾向</span>
+                                    <div>
+                                        <span id="dispPersonality" class="info-val display-val"></span>
+                                        <textarea id="editPersonality" class="inline-textarea" placeholder="性格・精神状態..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">表向きの立場</span>
+                                    <div>
+                                        <span id="dispPublicRole" class="info-val display-val"></span>
+                                        <input type="text" id="editPublicRole" class="inline-input" placeholder="表向きの立場">
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <span class="info-label">収監理由 (自認)</span>
+                                    <div>
+                                        <span id="dispReason" class="info-val display-val"></span>
+                                        <input type="text" id="editReason" class="inline-input" placeholder="収監理由">
+                                    </div>
+                                </div>
+
+                                <div class="info-row full">
+                                    <span class="info-label" style="color:var(--accent-bright); font-weight:bold;">【極秘裏設定・真の記録・深層心理】</span>
+                                    <div class="secret-container">
+                                        <span id="dispSecret" class="info-val display-val"></span>
+                                        <textarea id="editSecret" class="inline-textarea" style="height:90px;" placeholder="極秘裏設定..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. 事件調書 -->
+                    <div id="tabContentCase" style="display:none;">
+                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
+                            INCIDENT DOSSIER // 事件詳細・捜査調書・供述録取書
+                        </div>
+                        <div class="dossier-card-list" id="dossierListArea"></div>
+                    </div>
+
+                    <!-- 3. 年表・時系列 -->
+                    <div id="tabContentTimeline" style="display:none;">
+                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                            CHRONOLOGY // 事件歴・収監経緯・年表
+                        </div>
+                        <div class="timeline-container" id="timelineListArea"></div>
+                    </div>
+
+                    <!-- 4. 関係性 -->
+                    <div id="tabContentRelation" style="display:none;">
+                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                            RELATIONSHIP // 人物相関・対人関係
+                        </div>
+                        <div class="relation-card-list" id="relationListArea"></div>
+                    </div>
+
+                    <!-- 5. 記録メモ -->
+                    <div id="tabContentMemo" style="display:none;">
+                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px; letter-spacing:1px; font-family:var(--font-mono);">
+                            MEMO ARCHIVE // 個別監視ログ・手記・会話記録
+                        </div>
+                        <div class="memo-search-bar">
+                            <input type="text" id="memoTagSearchInput" class="memo-search-input" placeholder="🔍 タグやキーワードで検索..." oninput="onMemoSearchInput()">
+                            <div class="memo-tag-chips" id="memoTagChips"></div>
+                        </div>
+                        <div class="memo-grid-list" id="memoListArea"></div>
+                    </div>
+
+                    <!-- 6. ストーリー -->
+                    <div id="tabContentStory" style="display:none;">
+                        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:14px; letter-spacing:1px; font-family:var(--font-mono);">
+                            STORY ARCHIVE // メインストーリー・個人エピソード・プロット
+                        </div>
+                        <div class="story-container">
+                            <div id="dispStory" class="story-paper"></div>
+                            <textarea id="editStory" class="inline-textarea" style="height:320px; background:#070a0e; line-height:1.7;" placeholder="ストーリー本文を記入..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bottom-save-bar" id="bottomSaveBar">
+                        <button type="button" class="btn-cancel-bottom" onclick="cancelEditing()">キャンセル</button>
+                        <button type="button" class="btn-save-bottom" onclick="saveInlineChanges()">✔ この内容で保存する</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 汎用テキスト編集モーダル -->
+    <div id="textModal" class="site-modal">
+        <div class="site-modal-content">
+            <h3 id="modalEditTitle" class="site-modal-title">編集</h3>
+            <form onsubmit="handleSaveText(event)">
+                <input type="hidden" id="editKey">
+                <div class="modal-field">
+                    <textarea id="editTextValue"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeSiteModal('textModal')">キャンセル</button>
+                    <button type="submit" class="btn-modal-save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 背景画像設定モーダル -->
+    <div id="bgModal" class="site-modal">
+        <div class="site-modal-content">
+            <h3 class="site-modal-title">監獄背景画像の設定</h3>
+            <form onsubmit="handleSaveBg(event)">
+                <div class="modal-field">
+                    <label>画像URL（空欄ならデフォルトの深黒グラデーション）</label>
+                    <input type="text" id="inputBgUrl" placeholder="https://... または images/prison.jpg">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeSiteModal('bgModal')">キャンセル</button>
+                    <button type="submit" class="btn-modal-save">適用</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 階層図編集モーダル -->
+    <div id="hierarchyModal" class="site-modal">
+        <div class="site-modal-content">
+            <h3 class="site-modal-title">ヒエラルキー勢力図の編集</h3>
+            <form onsubmit="handleSaveHierarchy(event)">
+                <div id="hierarchyFields"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeSiteModal('hierarchyModal')">キャンセル</button>
+                    <button type="submit" class="btn-modal-save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 証明写真トリミングモーダル (3:4) -->
+    <div id="cropModal" class="site-modal">
+        <div class="site-modal-content" style="max-width:380px; text-align:center;">
+            <h3 style="color:var(--accent-bright); font-size:1rem; margin-bottom:4px;">写真トリミング (証明写真比率)</h3>
+            <p style="font-size:0.72rem; color:var(--text-sub); margin-bottom:8px;">ドラッグで位置、スライダーで拡大率を調整</p>
+            
+            <div class="crop-container" id="cropContainer">
+                <img id="cropImage" src="" alt="crop target">
+                <div class="crop-guide-overlay"></div>
+            </div>
+
+            <div class="crop-slider-wrap">
+                <span>小</span>
+                <input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1" oninput="onZoomChange()">
+                <span>大</span>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="closeCropModal()">キャンセル</button>
+                <button type="button" class="btn-modal-save" onclick="executeCrop()">決定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let portalConfig = JSON.parse(localStorage.getItem('sector13_portal_cfg')) || {
+            bgUrl: "",
+            synopsis: "祖父の奸計により、身に覚えのない罪を着せられ地下要塞監獄「第十三区画」へと投獄された少女・アリサ。\n凶悪犯たちが蠢く底冷えした鉄格子の中で、怯えながらも「いつか真実を暴き、祖父を見返して外に出る」ことだけを胸に耐え忍んでいた。\n\nだが、その日常はけたたましい非常警戒サイレンと共に崩壊する。\n\n響き渡る絶叫、銃声、逃げ惑う看守と囚人の群れ。\nその喧騒の狭間でアリサが目撃したのは、人間を蹂躙する“名もなき異形（バケモノ）”の姿だった。\n\n避難ヘリに乗り遅れ、命からがら逃げ込んだ一室で一夜を明かしたアリサ。\n翌朝、目覚めた監獄は死の静寂に包まれていた。通信機も食料もない。籠城は死を意味する。\n\n「ここで死ぬわけにはいかない。わたしは……無実なんだから」\n\n少女は震える手で扉を開け、怪異が潜む廃墟の監獄へと歩み出す。\n逃げ遅れた他の囚人たちとの邂逅。\nそして彼女が辿り着く、“自身の事件”に隠されたあまりにも残酷な真相とは——。",
+            facility: "【地下8層 要塞全容】\n・B1F - B2F [管理外郭]：中央管制室、看守宿舎、兵器保管庫、第一受刑者受付\n・B3F - B5F [通常監房棟]：重犯罪者収容セル（C棟・D棟）、共同運動場、電磁拘束牢\n・B6F [機密研究層]：生命生体研究所、バイオハザード遮蔽区、研究員常駐ブロック\n・B7F - B8F [第十三区画]：特異生体・怪異被検体隔離深層。常時磁場遮蔽、神経毒自動散布機構配備\n\n【防衛プロトコル】\n全外壁は加圧強化コンクリートおよび対爆複合装甲。単独での脱獄成功率は統計上0.00%。",
+            guards: "【看守長 訓示録】\n「貴様らの人権は地上に置いてきたと思え。我々の職務は受刑者の更生ではない。『完全な封殺』だ」\n\n【制服・個人装備仕様】\n・耐刃・耐衝撃フルフェイス型バイザーヘルメット（素顔の露出は厳禁）\n・電磁ショックバトン、および大口径実包火器の標準携行\n・収容者との私的会話・感情的接触は重大な服務規律違反とし、即時拘束の対象となる。",
+            hierarchy: [
+                { tier: "LEVEL 1", role: "統括中枢（所長・研究主任）", desc: "最深部の実験命令権と施設全域の封鎖権限を握る絶対支配層。" },
+                { tier: "LEVEL 2", role: "特務執行隊（武装看守）", desc: "電磁火器で武装した武力制圧部隊。囚人を番号でのみ管理する。" },
+                { tier: "LEVEL 3", role: "古参収容者ブロック（獄内ボス）", desc: "配給や内部流通を裏で牛耳る凶悪犯。一部看守とも取引を行っている。" },
+                { tier: "LEVEL 4", role: "一般被収容者（底辺囚人）", desc: "冤罪者、軽犯罪被疑者、実験予備体。生存権が極めて希薄な最下層。" }
+            ]
+        };
+
+        let characterList = JSON.parse(localStorage.getItem('game_character_docs')) || [
+            {
+                category: "char",
+                name: "アリサ",
+                age: "10代後半（推定16歳）",
+                gender: "女性",
+                race: "人間",
+                origin: "旧第四自治領",
+                danger: "ランク B",
+                cell: "第十三区画 C棟 104号",
+                height: "154",
+                appearance: "黒髪・色白・華奢（本人無頓着）",
+                personality: "平時は物静かで礼儀正しい。自らの境遇に対する強烈な解離と自己欺瞞傾向がある。",
+                publicRole: "祖父の罪を被せられた無実の少女",
+                reason: "冤罪による不当投獄（本人の強い思い込み）",
+                secret: "両親を殺害した後、その遺体と数週間にわたって生活していた重度の精神異常者。自責に耐えきれず記憶を改竄し、自らを「犠牲者」と思い込んでいる。凶悪犯に対しても無自覚な狂気を見せる。",
+                image: "",
+                timeline: [
+                    { time: "幼少期", event: "旧自治領の裕福な家庭に生まれるが、厳格すぎる教育と家庭崩壊の兆候が見え始める。" },
+                    { time: "収監1年前", event: "両親殺害事件発生。直後の数週間、自覚なきまま亡骸と同居を継続。" },
+                    { time: "現在", event: "第十三区画への移送完了。本人は冤罪による投獄と信じ込んでいる。" }
+                ],
+                cases: [
+                    {
+                        title: "第04号事案：旧第四自治領資産家夫妻惨殺事件",
+                        scene: "旧第四自治領 郊外私有地・大邸宅 1階居間",
+                        discoveredAt: "帝国歴104年 11月12日 14時20分頃",
+                        informant: "邸宅専属庭師（定期訪問時に通報）",
+                        victims: [
+                            "父：トーマス・ロレイン（45歳 / 人間 / 会社役員）",
+                            "母：エレナ・ロレイン（42歳 / 人間 / 専業主婦）"
+                        ],
+                        suspect: {
+                            name: "アリサ・ロレイン",
+                            age: "推定16歳",
+                            race: "人間",
+                            condition: "意識清明・現実認識に重度の解離。返り血を浴びた状態で居間に着座、両親を「就寝中」と認識。"
+                        },
+                        weapon: "料理用ボーニングナイフ（刃長15cm / 邸宅厨房のもの）",
+                        sceneSituation: "争った形跡は極めて軽微。被害者はいずれも就寝前あるいは着座時に背後・不意から多数箇所刺突されている。現場には血文字等の儀式跡はなく、室内の家具や調度品は整然と片付けられていた。",
+                        notes: "【背景・動機考察】\n容疑者は長年にわたり祖父および厳格な両親からの精神的抑圧下にあったと推測される。衝動的かつ完全な精神崩壊に伴う犯行であるが、犯行直後に自己防衛機制として強烈な現実逃避・記憶改竄が発生。「祖父が真犯人であり、自分は無実の身代わり」という強固な偽記憶を形成している。"
+                    }
+                ],
+                relations: [
+                    {
+                        targetName: "祖父（ギルバート・ロレイン）",
+                        relationType: "憎悪・執着（本人の認識）",
+                        content: "自分を陥れて監獄送りにした黒幕と信じ切っており、「いつか外に出て罪を暴く」という生存への執着の源になっている。実際は狂気に陥ったアリサを世間から隠蔽・隔離するために施設へ送致した。"
+                    },
+                    {
+                        targetName: "同房の囚人たち",
+                        relationType: "無自覚な恐怖対象",
+                        content: "アリサ本人は「凶悪犯に怯える可憐な少女」を演じているつもりだが、時折見せる歪んだ純真さと焦点の合わない瞳に、周囲の荒くれ者たちのほうが恐怖を感じて距離を置いている。"
+                    }
+                ],
+                memos: [
+                    { title: "看守の巡回報告 #04", date: "収監12日目", tags: "観察, 異常行動", text: "他の凶悪犯と接触させても一切の動揺を見せない。むしろ相手を観察するかのような澄んだ瞳で見つめるため、相手側の囚人が気味悪がって距離を置く現象が確認されている。" },
+                    { title: "遺留品の観察", date: "収監初日", tags: "独白, 遺留品", text: "所持していたロケットペンダントの内部写真は激しく削り取られており、判別不能。本人曰く「大切なおじいちゃん」とのこと。" }
+                ],
+                story: "【プロローグ：檻の中の聖女】\n施設へ搬送されてきたその日、少女は静かに微笑んでいた。\n周囲の荒くれ者たちが怒号をあげる中、彼女だけがまるで教会の礼拝堂にでも足を踏み入れたかのように、穏やかな歩調で冷たい石畳を歩いていた。\n\n「わたしは、なにも悪いことはしていません。おじいちゃんの濡れ衣を晴らすために、ここにいるだけです」\n\nその言葉に偽りはなかった。彼女の歪んだ世界において、それは絶対の真実だったのだ——。"
+            }
+        ];
+
+        let activeCharIndex = null;
+        let currentTab = 'profile';
+        let tempEditingImage = "";
+        let memoFilterTag = "";
+        let editingTimelineIndex = null;
+        let editingCaseIndex = null;
+        let editingRelationIndex = null;
+        let editingMemoIndex = null;
+        let tempEditCase = null;
+
+        let charSearchKeyword = "";
+        let charFilterRank = "all";
+        let isSortDescending = true;
+
+        function saveConfig() { localStorage.setItem('sector13_portal_cfg', JSON.stringify(portalConfig)); }
+        function saveCharacters() { localStorage.setItem('game_character_docs', JSON.stringify(characterList)); }
+
+        function showMainHome() {
+            document.getElementById('mainHomeView').style.display = 'block';
+            document.getElementById('detailViewContainer').style.display = 'none';
+            closeAllMenus();
+            renderPage();
+            window.scrollTo(0, 0);
+        }
+
+        function openCharacterDetail(index) {
+            activeCharIndex = index;
+            document.getElementById('mainHomeView').style.display = 'none';
+            document.getElementById('detailViewContainer').style.display = 'block';
+            showDetail(index, false);
+            window.scrollTo(0, 0);
+        }
+
+        function updateRankFilterOptions() {
+            const select = document.getElementById('charRankFilterSelect');
+            const currentVal = select.value;
+            const rankSet = new Set();
+
+            characterList.forEach(c => {
+                if (c.danger && c.danger.trim()) {
+                    rankSet.add(c.danger.trim());
+                }
+            });
+
+            select.innerHTML = '<option value="all">すべてのランク</option>';
+            rankSet.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.textContent = r;
+                select.appendChild(opt);
+            });
+
+            if (rankSet.has(currentVal)) {
+                select.value = currentVal;
+            }
+        }
+
+        function handleCharFilterChange() {
+            charSearchKeyword = document.getElementById('charNameSearchInput').value.trim().toLowerCase();
+            charFilterRank = document.getElementById('charRankFilterSelect').value;
+            renderCharacterList();
+        }
+
+        function toggleSortOrder() {
+            isSortDescending = !isSortDescending;
+            document.getElementById('sortOrderLabel').textContent = isSortDescending 
+                ? "降順 (Z-A / 高-低)" 
+                : "昇順 (A-Z / 低-高)";
+            renderCharacterList();
+        }
+
+        function renderCharacterList() {
+            const cGrid = document.getElementById('charGrid');
+            cGrid.innerHTML = '';
+
+            let filtered = characterList.map((c, idx) => ({ ...c, originalIndex: idx }));
+
+            if (charSearchKeyword) {
+                filtered = filtered.filter(c => c.name && c.name.toLowerCase().includes(charSearchKeyword));
+            }
+
+            if (charFilterRank !== 'all') {
+                filtered = filtered.filter(c => c.danger && c.danger.trim() === charFilterRank);
+            }
+
+            filtered.sort((a, b) => {
+                const nameA = a.name || "";
+                const nameB = b.name || "";
+                const comp = nameA.localeCompare(nameB, 'ja');
+                return isSortDescending ? -comp : comp;
+            });
+
+            if (filtered.length === 0) {
+                cGrid.innerHTML = `<div style="font-size:0.85rem; color:var(--text-sub); padding:16px 0;">該当する収監者・被検体は見つかりませんでした。</div>`;
+                return;
+            }
+
+            filtered.forEach(c => {
+                const row = document.createElement('div');
+                row.className = 'single-char-row';
+                row.onclick = () => openCharacterDetail(c.originalIndex);
+
+                const categoryLabel = c.category === 'monster' ? '怪異' : (c.category === 'guard' ? '関係者' : '囚人');
+
+                row.innerHTML = `
+                    <div class="single-char-left">
+                        <div class="single-char-name">${c.name}</div>
+                        <div class="single-char-meta">${categoryLabel} // ${c.age || '年齢不明'}</div>
+                    </div>
+                    <div class="single-char-rank">${c.danger || 'RANK UNKNOWN'}</div>
+                `;
+                cGrid.appendChild(row);
+            });
+        }
+
+        function renderPage() {
+            document.body.style.backgroundImage = portalConfig.bgUrl ? `url('${portalConfig.bgUrl}')` : 'none';
+            document.getElementById('dispSynopsis').textContent = portalConfig.synopsis;
+            document.getElementById('dispFacility').textContent = portalConfig.facility;
+            document.getElementById('dispGuards').textContent = portalConfig.guards;
+
+            const hTree = document.getElementById('dispHierarchy');
+            hTree.innerHTML = '';
+            portalConfig.hierarchy.forEach((item, idx) => {
+                const node = document.createElement('div');
+                node.className = 'tier-node';
+                node.innerHTML = `
+                    <div class="tier-tag">${item.tier}</div>
+                    <div class="tier-name">${item.role}</div>
+                    <div class="tier-note">${item.desc}</div>
+                `;
+                hTree.appendChild(node);
+                if (idx < portalConfig.hierarchy.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = 'hierarchy-divider';
+                    arrow.textContent = '▼  CONTROL & DOMINANCE  ▼';
+                    hTree.appendChild(arrow);
+                }
+            });
+
+            updateRankFilterOptions();
+            renderCharacterList();
+        }
+
+        /* -------------------------------------------------------------
+           キャラクター詳細＆絵文字付箋タブ制御
+        ------------------------------------------------------------- */
+        function switchDossierTab(tab) {
+            currentTab = tab;
+            document.getElementById('tabBtnProfile').classList.toggle('active', tab === 'profile');
+            document.getElementById('tabBtnCase').classList.toggle('active', tab === 'case');
+            document.getElementById('tabBtnTimeline').classList.toggle('active', tab === 'timeline');
+            document.getElementById('tabBtnRelation').classList.toggle('active', tab === 'relation');
+            document.getElementById('tabBtnMemo').classList.toggle('active', tab === 'memo');
+            document.getElementById('tabBtnStory').classList.toggle('active', tab === 'story');
+
+            document.getElementById('tabContentProfile').style.display = (tab === 'profile') ? 'block' : 'none';
+            document.getElementById('tabContentCase').style.display = (tab === 'case') ? 'block' : 'none';
+            document.getElementById('tabContentTimeline').style.display = (tab === 'timeline') ? 'block' : 'none';
+            document.getElementById('tabContentRelation').style.display = (tab === 'relation') ? 'block' : 'none';
+            document.getElementById('tabContentMemo').style.display = (tab === 'memo') ? 'block' : 'none';
+            document.getElementById('tabContentStory').style.display = (tab === 'story') ? 'block' : 'none';
+
+            const menuWrap = document.getElementById('detailMenuWrap');
+            const quickAddBtn = document.getElementById('btnHeaderQuickAdd');
+
+            if (tab === 'case' || tab === 'timeline' || tab === 'relation' || tab === 'memo') {
+                menuWrap.style.display = 'none';
+                quickAddBtn.style.display = 'inline-block';
+            } else {
+                menuWrap.style.display = 'block';
+                quickAddBtn.style.display = 'none';
+            }
+
+            closeAllMenus();
+        }
+
+        function showDetail(index, keepTab = false) {
+            activeCharIndex = index;
+            const c = characterList[index];
+
+            document.getElementById('detCategoryTag').textContent = c.category === 'monster' ? '怪異' : (c.category === 'guard' ? '関係者' : '囚人');
+            document.getElementById('dispNameTitle').textContent = `ID: #${String(index + 1).padStart(3, '0')} - ${c.name}`;
+            document.getElementById('dispAgeGender').textContent = `${c.age || '不明'} / ${c.gender || '不明'}`;
+            document.getElementById('dispRaceOrigin').textContent = `${c.race || '不明'} / ${c.origin || '不明'}`;
+            document.getElementById('dispDangerCell').textContent = `${c.danger || '未分類'} / ${c.cell || '未配属'}`;
+            
+            const heightStr = c.height ? `${c.height}cm` : '未記録';
+            document.getElementById('dispHeightAppearance').textContent = `${heightStr} / ${c.appearance || '特記事項なし'}`;
+            
+            document.getElementById('dispPersonality').textContent = c.personality || '未観測';
+            document.getElementById('dispPublicRole').textContent = c.publicRole || 'なし';
+            document.getElementById('dispReason').textContent = c.reason || 'なし';
+            document.getElementById('dispSecret').textContent = c.secret || 'なし';
+
+            if (!c.timeline) c.timeline = [];
+            if (!c.cases) c.cases = [];
+            if (!c.relations) c.relations = [];
+            if (!c.memos) c.memos = [];
+            editingTimelineIndex = null;
+            editingCaseIndex = null;
+            editingRelationIndex = null;
+            editingMemoIndex = null;
+            tempEditCase = null;
+
+            renderDossier();
+            renderTimeline();
+            renderRelations();
+            renderMemos();
+
+            document.getElementById('dispStory').textContent = c.story || '（記録されたストーリーはありません）';
+            document.getElementById('detailThumb').innerHTML = c.image ? `<img src="${c.image}" alt="${c.name}">` : 'No Image';
+
+            if (!keepTab) switchDossierTab('profile');
+            exitAllEditing();
+        }
+
+        /* ------------------ 事件調書 ------------------ */
+        function renderDossier() {
+            const container = document.getElementById('dossierListArea');
+            container.innerHTML = '';
+            const c = characterList[activeCharIndex];
+            const caseData = c.cases || [];
+
+            if (caseData.length === 0 && editingCaseIndex === null) {
+                container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-sub); padding:10px 0;">登録された事件調書はありません。「＋」ボタンから追加できます。</div>`;
+                return;
+            }
+
+            caseData.forEach((cs, originalIndex) => {
+                const caseEl = document.createElement('div');
+                caseEl.className = 'dossier-case-item';
+
+                if (editingCaseIndex !== originalIndex) {
+                    const victimsHtml = (cs.victims && cs.victims.length > 0)
+                        ? cs.victims.map(v => `<div class="victim-badge-item">• ${v}</div>`).join('')
+                        : '<div style="color:var(--text-sub); font-size:0.8rem;">未記録 / なし</div>';
+
+                    caseEl.innerHTML = `
+                        <div class="dossier-case-header">
+                            <div class="dossier-case-title">📁 ${cs.title || '無題の事件調書'}</div>
+                            <div class="menu-container">
+                                <button class="menu-btn" onclick="toggleItemMenu('caseMenu_${originalIndex}')">⋮</button>
+                                <div id="caseMenu_${originalIndex}" class="menu-dropdown">
+                                    <button onclick="startEditCase(${originalIndex})">編集</button>
+                                    <button class="delete-text" onclick="deleteCaseItem(${originalIndex})">削除</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="case-section-block">
+                            <span class="case-sec-label">【事件概要】</span>
+                            <div class="case-sec-content">
+                                <div><strong>発生現場：</strong>${cs.scene || '不明'}</div>
+                                <div><strong>発見日時：</strong>${cs.discoveredAt || '不明'}</div>
+                                <div><strong>通報者：</strong>${cs.informant || '不明'}</div>
+                            </div>
+                        </div>
+
+                        <div class="case-section-block">
+                            <span class="case-sec-label">【被害者】</span>
+                            <div class="victim-badge-list">${victimsHtml}</div>
+                        </div>
+
+                        <div class="case-section-block">
+                            <span class="case-sec-label">【容疑者情報】</span>
+                            <div class="case-sec-content">
+                                <div><strong>氏名：</strong>${(cs.suspect && cs.suspect.name) || '不明'} / <strong>年齢：</strong>${(cs.suspect && cs.suspect.age) || '不明'} / <strong>種族：</strong>${(cs.suspect && cs.suspect.race) || '不明'}</div>
+                                <div><strong>状態：</strong>${(cs.suspect && cs.suspect.condition) || '未記録'}</div>
+                            </div>
+                        </div>
+
+                        <div class="case-section-block">
+                            <span class="case-sec-label">【凶器】</span>
+                            <div class="case-sec-content">${cs.weapon || '未押収 / 不明'}</div>
+                        </div>
+
+                        <div class="case-section-block">
+                            <span class="case-sec-label">【現場状況および特異事項】</span>
+                            <div class="case-sec-content">${cs.sceneSituation || '特記事項なし'}</div>
+                        </div>
+
+                        <div class="case-section-block" style="margin-bottom:0;">
+                            <span class="case-sec-label">【特記事項 (背景・動機に関する考察)】</span>
+                            <div class="case-sec-content">${cs.notes || '考察未記録'}</div>
+                        </div>
+                    `;
+                } else {
+                    const victimsInputs = (tempEditCase.victims || []).map((v, vIdx) => `
+                        <div style="display:flex; gap:6px; margin-bottom:4px;">
+                            <input type="text" class="inline-input" style="display:block; flex:1;" value="${v}" onchange="updateTempVictim(${vIdx}, this.value)">
+                            <button type="button" class="btn-victim-action" onclick="removeTempVictim(${vIdx})">✕</button>
+                        </div>
+                    `).join('');
+
+                    caseEl.innerHTML = `
+                        <div class="edit-case-form">
+                            <div>
+                                <label style="font-size:0.75rem; color:var(--accent-bright); font-weight:bold;">調書件名・事案名</label>
+                                <input type="text" id="editCaseTitle" class="inline-input" style="display:block;" value="${tempEditCase.title || ''}" placeholder="例: 第04号事案：旧第四自治領資産家夫妻惨殺事件">
+                            </div>
+
+                            <div>
+                                <label style="font-size:0.72rem; color:var(--text-sub);">【事件概要】発生現場 / 発見日時 / 通報者</label>
+                                <div class="form-row-group">
+                                    <input type="text" id="editCaseScene" class="inline-input" style="display:block;" value="${tempEditCase.scene || ''}" placeholder="発生現場">
+                                    <input type="text" id="editCaseDiscovered" class="inline-input" style="display:block;" value="${tempEditCase.discoveredAt || ''}" placeholder="発見日時">
+                                    <input type="text" id="editCaseInformant" class="inline-input" style="display:block;" value="${tempEditCase.informant || ''}" placeholder="通報者">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <label style="font-size:0.72rem; color:var(--text-sub);">【被害者】(追加・削除可能)</label>
+                                    <button type="button" class="btn-victim-action" onclick="addTempVictim()">+ 被害者を追加</button>
+                                </div>
+                                <div id="tempVictimListArea">${victimsInputs}</div>
+                            </div>
+
+                            <div>
+                                <label style="font-size:0.72rem; color:var(--text-sub);">【容疑者】氏名 / 年齢 / 種族 / 状態</label>
+                                <div class="form-row-group" style="margin-bottom:4px;">
+                                    <input type="text" id="editCaseSuspName" class="inline-input" style="display:block;" value="${(tempEditCase.suspect && tempEditCase.suspect.name) || ''}" placeholder="氏名">
+                                    <input type="text" id="editCaseSuspAge" class="inline-input" style="display:block;" value="${(tempEditCase.suspect && tempEditCase.suspect.age) || ''}" placeholder="年齢">
+                                    <input type="text" id="editCaseSuspRace" class="inline-input" style="display:block;" value="${(tempEditCase.suspect && tempEditCase.suspect.race) || ''}" placeholder="種族">
+                                </div>
+                                <input type="text" id="editCaseSuspCond" class="inline-input" style="display:block;" value="${(tempEditCase.suspect && tempEditCase.suspect.condition) || ''}" placeholder="状態">
+                            </div>
+
+                            <div>
+                                <label style="font-size:0.72rem; color:var(--text-sub);">【凶器】</label>
+                                <input type="text" id="editCaseWeapon" class="inline-input" style="display:block;" value="${tempEditCase.weapon || ''}" placeholder="凶器">
+                            </div>
+
+                            <div>
+                                <label style="font-size:0.72rem; color:var(--text-sub);">【現場状況および特異事項】</label>
+                                <textarea id="editCaseSituation" class="inline-textarea" style="display:block; height:60px;" placeholder="現場の状況...">${tempEditCase.sceneSituation || ''}</textarea>
+                            </div>
+
+                            <div>
+                                <label style="font-size:0.72rem; color:var(--text-sub);">【特記事項 (背景・動機に関する考察)】</label>
+                                <textarea id="editCaseNotes" class="inline-textarea" style="display:block; height:70px;" placeholder="背景・動機に関する考察...">${tempEditCase.notes || ''}</textarea>
+                            </div>
+
+                            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+                                <button type="button" class="btn-section-edit" onclick="cancelEditCase()">キャンセル</button>
+                                <button type="button" class="btn-save-bottom" style="font-size:0.75rem; padding:6px 16px;" onclick="saveEditCase(${originalIndex})">調書を保存</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(caseEl);
+            });
+        }
+
+        function startEditCase(index) {
+            closeAllMenus();
+            editingCaseIndex = index;
+            tempEditCase = JSON.parse(JSON.stringify(characterList[activeCharIndex].cases[index]));
+            renderDossier();
+        }
+
+        function cancelEditCase() {
+            editingCaseIndex = null;
+            tempEditCase = null;
+            renderDossier();
+        }
+
+        function addTempVictim() {
+            if (!tempEditCase.victims) tempEditCase.victims = [];
+            tempEditCase.victims.push("氏名（年齢 / 属性など）");
+            renderDossier();
+        }
+
+        function removeTempVictim(vIdx) {
+            tempEditCase.victims.splice(vIdx, 1);
+            renderDossier();
+        }
+
+        function updateTempVictim(vIdx, val) {
+            tempEditCase.victims[vIdx] = val;
+        }
+
+        function saveEditCase(index) {
+            tempEditCase.title = document.getElementById('editCaseTitle').value.trim();
+            tempEditCase.scene = document.getElementById('editCaseScene').value.trim();
+            tempEditCase.discoveredAt = document.getElementById('editCaseDiscovered').value.trim();
+            tempEditCase.informant = document.getElementById('editCaseInformant').value.trim();
+
+            if (!tempEditCase.suspect) tempEditCase.suspect = {};
+            tempEditCase.suspect.name = document.getElementById('editCaseSuspName').value.trim();
+            tempEditCase.suspect.age = document.getElementById('editCaseSuspAge').value.trim();
+            tempEditCase.suspect.race = document.getElementById('editCaseSuspRace').value.trim();
+            tempEditCase.suspect.condition = document.getElementById('editCaseSuspCond').value.trim();
+
+            tempEditCase.weapon = document.getElementById('editCaseWeapon').value.trim();
+            tempEditCase.sceneSituation = document.getElementById('editCaseSituation').value.trim();
+            tempEditCase.notes = document.getElementById('editCaseNotes').value.trim();
+
+            characterList[activeCharIndex].cases[index] = tempEditCase;
+            saveCharacters();
+            editingCaseIndex = null;
+            tempEditCase = null;
+            renderDossier();
+        }
+
+        function deleteCaseItem(index) {
+            closeAllMenus();
+            if (confirm('この事件調書を完全に消去しますか？')) {
+                characterList[activeCharIndex].cases.splice(index, 1);
+                saveCharacters();
+                renderDossier();
+            }
+        }
+
+        /* ------------------ 年表 ------------------ */
+        function renderTimeline() {
+            const container = document.getElementById('timelineListArea');
+            container.innerHTML = '';
+            const c = characterList[activeCharIndex];
+            const timelineData = c.timeline || [];
+
+            if (timelineData.length === 0 && editingTimelineIndex === null) {
+                container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-sub); padding:10px 0;">記録された時系列・出来事はありません。「＋」ボタンから追加できます。</div>`;
+                return;
+            }
+
+            timelineData.forEach((item, index) => {
+                const tlEl = document.createElement('div');
+                tlEl.className = 'timeline-item';
+
+                if (editingTimelineIndex !== index) {
+                    tlEl.innerHTML = `
+                        <div class="timeline-header">
+                            <div class="timeline-date">${item.time || '時期未設定'}</div>
+                            <div class="menu-container">
+                                <button class="menu-btn" onclick="toggleItemMenu('tlMenu_${index}')">⋮</button>
+                                <div id="tlMenu_${index}" class="menu-dropdown">
+                                    <button onclick="startEditTimeline(${index})">編集</button>
+                                    <button class="delete-text" onclick="deleteTimelineItem(${index})">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-body">${item.event || ''}</div>
+                    `;
+                } else {
+                    tlEl.innerHTML = `
+                        <div style="background:#0f141c; border:1px solid var(--border-color); padding:10px; border-radius:4px;">
+                            <input type="text" id="editTlTime_${index}" class="inline-input" style="display:block; margin-bottom:6px;" value="${item.time || ''}" placeholder="年月・時期">
+                            <textarea id="editTlEvent_${index}" class="inline-textarea" style="display:block; height:60px; margin-bottom:8px;" placeholder="事件・出来事の内容...">${item.event || ''}</textarea>
+                            <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                <button type="button" class="btn-section-edit" onclick="cancelEditTimeline()">戻る</button>
+                                <button type="button" class="btn-save-bottom" style="font-size:0.75rem; padding:4px 12px;" onclick="saveEditTimeline(${index})">保存</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(tlEl);
+            });
+        }
+
+        function startEditTimeline(index) { closeAllMenus(); editingTimelineIndex = index; renderTimeline(); }
+        function cancelEditTimeline() { editingTimelineIndex = null; renderTimeline(); }
+        function saveEditTimeline(index) {
+            const timeVal = document.getElementById(`editTlTime_${index}`).value.trim();
+            const eventVal = document.getElementById(`editTlEvent_${index}`).value.trim();
+            characterList[activeCharIndex].timeline[index] = { time: timeVal, event: eventVal };
+            saveCharacters();
+            editingTimelineIndex = null;
+            renderTimeline();
+        }
+        function deleteTimelineItem(index) {
+            closeAllMenus();
+            if (confirm('この時系列の記録を消去しますか？')) {
+                characterList[activeCharIndex].timeline.splice(index, 1);
+                saveCharacters();
+                renderTimeline();
+            }
+        }
+
+        /* ------------------ 関係性・相関 ------------------ */
+        function renderRelations() {
+            const container = document.getElementById('relationListArea');
+            container.innerHTML = '';
+            const c = characterList[activeCharIndex];
+            const relationData = c.relations || [];
+
+            if (relationData.length === 0 && editingRelationIndex === null) {
+                container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-sub); padding:10px 0;">記録された人物関係はありません。「＋」ボタンから追加できます。</div>`;
+                return;
+            }
+
+            relationData.forEach((rel, index) => {
+                const relEl = document.createElement('div');
+                relEl.className = 'relation-card-item';
+
+                if (editingRelationIndex !== index) {
+                    relEl.innerHTML = `
+                        <div class="relation-card-header">
+                            <div>
+                                <span class="relation-target-name">${rel.targetName || '対象人物未設定'}</span>
+                                <span class="relation-badge">${rel.relationType || '関係未設定'}</span>
+                            </div>
+                            <div class="menu-container">
+                                <button class="menu-btn" onclick="toggleItemMenu('relMenu_${index}')">⋮</button>
+                                <div id="relMenu_${index}" class="menu-dropdown">
+                                    <button onclick="startEditRelation(${index})">編集</button>
+                                    <button class="delete-text" onclick="deleteRelationItem(${index})">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relation-card-content">${rel.content || ''}</div>
+                    `;
+                } else {
+                    relEl.innerHTML = `
+                        <div style="background:#0f141c; border:1px solid var(--border-color); padding:10px; border-radius:4px;">
+                            <div style="display:flex; gap:6px; margin-bottom:6px;">
+                                <input type="text" id="editRelTarget_${index}" class="inline-input" style="display:block; flex:2;" value="${rel.targetName || ''}" placeholder="対象人物の名前">
+                                <input type="text" id="editRelType_${index}" class="inline-input" style="display:block; flex:1;" value="${rel.relationType || ''}" placeholder="関係柄 (例: 敵対)">
+                            </div>
+                            <textarea id="editRelContent_${index}" class="inline-textarea" style="display:block; height:65px; margin-bottom:6px;" placeholder="関係性の詳細、心理状態、エピソード...">${rel.content || ''}</textarea>
+                            <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                <button type="button" class="btn-section-edit" onclick="cancelEditRelation()">戻る</button>
+                                <button type="button" class="btn-save-bottom" style="font-size:0.75rem; padding:4px 12px;" onclick="saveEditRelation(${index})">保存</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(relEl);
+            });
+        }
+
+        function startEditRelation(index) { closeAllMenus(); editingRelationIndex = index; renderRelations(); }
+        function cancelEditRelation() { editingRelationIndex = null; renderRelations(); }
+        function saveEditRelation(index) {
+            const targetVal = document.getElementById(`editRelTarget_${index}`).value.trim();
+            const typeVal = document.getElementById(`editRelType_${index}`).value.trim();
+            const contentVal = document.getElementById(`editRelContent_${index}`).value.trim();
+            characterList[activeCharIndex].relations[index] = { targetName: targetVal, relationType: typeVal, content: contentVal };
+            saveCharacters();
+            editingRelationIndex = null;
+            renderRelations();
+        }
+        function deleteRelationItem(index) {
+            closeAllMenus();
+            if (confirm('この人物関係の記録を消去しますか？')) {
+                characterList[activeCharIndex].relations.splice(index, 1);
+                saveCharacters();
+                renderRelations();
+            }
+        }
+
+        /* ------------------ 記録メモ ------------------ */
+        function renderMemoTags() {
+            const chipContainer = document.getElementById('memoTagChips');
+            chipContainer.innerHTML = '';
+            const c = characterList[activeCharIndex];
+            const memoData = c.memos || [];
+
+            const tagSet = new Set();
+            memoData.forEach(m => {
+                if (m.tags) {
+                    m.tags.split(/[,、\s]+/).forEach(t => {
+                        const clean = t.trim().replace(/^#/, '');
+                        if (clean) tagSet.add(clean);
+                    });
+                }
+            });
+
+            if (tagSet.size === 0) return;
+
+            const allChip = document.createElement('span');
+            allChip.className = `tag-chip ${memoFilterTag === '' ? 'active' : ''}`;
+            allChip.textContent = 'すべて';
+            allChip.onclick = () => { memoFilterTag = ''; document.getElementById('memoTagSearchInput').value = ''; renderMemos(); };
+            chipContainer.appendChild(allChip);
+
+            tagSet.forEach(tag => {
+                const chip = document.createElement('span');
+                chip.className = `tag-chip ${memoFilterTag === tag ? 'active' : ''}`;
+                chip.textContent = `#${tag}`;
+                chip.onclick = () => {
+                    memoFilterTag = (memoFilterTag === tag) ? '' : tag;
+                    document.getElementById('memoTagSearchInput').value = memoFilterTag;
+                    renderMemos();
+                };
+                chipContainer.appendChild(chip);
+            });
+        }
+
+        function onMemoSearchInput() {
+            memoFilterTag = document.getElementById('memoTagSearchInput').value.trim().replace(/^#/, '');
+            renderMemos();
+        }
+
+        function renderMemos() {
+            const container = document.getElementById('memoListArea');
+            container.innerHTML = '';
+            const c = characterList[activeCharIndex];
+            const memoData = c.memos || [];
+
+            renderMemoTags();
+
+            let filtered = memoData;
+            if (memoFilterTag !== '') {
+                const q = memoFilterTag.toLowerCase();
+                filtered = memoData.filter(m => 
+                    (m.tags && m.tags.toLowerCase().includes(q)) ||
+                    (m.title && m.title.toLowerCase().includes(q)) ||
+                    (m.text && m.text.toLowerCase().includes(q))
+                );
+            }
+
+            if (filtered.length === 0 && editingMemoIndex === null) {
+                container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-sub); padding:10px 0;">該当する記録メモはありません。「＋」ボタンから追加できます。</div>`;
+                return;
+            }
+
+            filtered.forEach((m) => {
+                const originalIndex = memoData.indexOf(m);
+                const memoEl = document.createElement('div');
+                memoEl.className = 'memo-card-item';
+
+                if (editingMemoIndex !== originalIndex) {
+                    const hasTitle = m.title && m.title.trim() !== '';
+                    const hasDate = m.date && m.date.trim() !== '';
+
+                    let titleDateHtml = (hasTitle || hasDate) 
+                        ? `<div>${hasTitle ? `<span class="memo-card-title">${m.title}</span>` : ''}${hasDate ? `<span class="memo-card-date">${m.date}</span>` : ''}</div>` 
+                        : `<div></div>`;
+
+                    let tagsHtml = '';
+                    if (m.tags && m.tags.trim() !== '') {
+                        const tagList = m.tags.split(/[,、\s]+/).filter(t => t.trim() !== '');
+                        if (tagList.length > 0) {
+                            tagsHtml = `<div class="memo-tags-view">${tagList.map(t => `<span class="memo-tag-label">#${t.replace(/^#/, '')}</span>`).join('')}</div>`;
+                        }
+                    }
+
+                    memoEl.innerHTML = `
+                        <div class="memo-card-header">
+                            ${titleDateHtml}
+                            <div class="menu-container">
+                                <button class="menu-btn" onclick="toggleItemMenu('memoMenu_${originalIndex}')">⋮</button>
+                                <div id="memoMenu_${originalIndex}" class="menu-dropdown">
+                                    <button onclick="startEditMemo(${originalIndex})">編集</button>
+                                    <button class="delete-text" onclick="deleteMemoItem(${originalIndex})">削除</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="memo-card-body">${m.text || ''}</div>
+                        ${tagsHtml}
+                    `;
+                } else {
+                    memoEl.innerHTML = `
+                        <div style="background:#0f141c; border:1px solid var(--border-color); padding:10px; border-radius:4px;">
+                            <div style="display:flex; gap:6px; margin-bottom:6px;">
+                                <input type="text" id="editMemoTitle_${originalIndex}" class="inline-input" style="display:block; flex:2;" value="${m.title || ''}" placeholder="タイトル (空欄可)">
+                                <input type="text" id="editMemoDate_${originalIndex}" class="inline-input" style="display:block; flex:1;" value="${m.date || ''}" placeholder="日付 (空欄可)">
+                            </div>
+                            <textarea id="editMemoText_${originalIndex}" class="inline-textarea" style="display:block; height:65px; margin-bottom:6px;" placeholder="メモ本文...">${m.text || ''}</textarea>
+                            <input type="text" id="editMemoTags_${originalIndex}" class="inline-input" style="display:block; font-size:0.75rem; margin-bottom:8px;" value="${m.tags || ''}" placeholder="タグ (例: 観察, 重要)">
+                            <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                <button type="button" class="btn-section-edit" onclick="cancelEditMemo()">戻る</button>
+                                <button type="button" class="btn-save-bottom" style="font-size:0.75rem; padding:4px 12px;" onclick="saveEditMemo(${originalIndex})">保存</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                container.appendChild(memoEl);
+            });
+        }
+
+        function startEditMemo(index) { closeAllMenus(); editingMemoIndex = index; renderMemos(); }
+        function cancelEditMemo() { editingMemoIndex = null; renderMemos(); }
+        function saveEditMemo(index) {
+            const titleVal = document.getElementById(`editMemoTitle_${index}`).value.trim();
+            const dateVal = document.getElementById(`editMemoDate_${index}`).value.trim();
+            const textVal = document.getElementById(`editMemoText_${index}`).value.trim();
+            const tagsVal = document.getElementById(`editMemoTags_${index}`).value.trim();
+
+            characterList[activeCharIndex].memos[index] = { title: titleVal, date: dateVal, text: textVal, tags: tagsVal };
+            saveCharacters();
+            editingMemoIndex = null;
+            renderMemos();
+        }
+        function deleteMemoItem(index) {
+            closeAllMenus();
+            if (confirm('この記録メモを消去しますか？')) {
+                characterList[activeCharIndex].memos.splice(index, 1);
+                saveCharacters();
+                renderMemos();
+            }
+        }
+
+        /* ヘッダー＋ボタン */
+        function handleHeaderQuickAdd() {
+            const c = characterList[activeCharIndex];
+            if (currentTab === 'case') {
+                if (!c.cases) c.cases = [];
+                c.cases.unshift({
+                    title: "新規事件調書",
+                    scene: "",
+                    discoveredAt: "",
+                    informant: "",
+                    victims: ["被害者氏名"],
+                    suspect: { name: c.name, age: c.age, race: c.race, condition: "" },
+                    weapon: "",
+                    sceneSituation: "",
+                    notes: ""
+                });
+                editingCaseIndex = 0;
+                tempEditCase = JSON.parse(JSON.stringify(c.cases[0]));
+                renderDossier();
+            } else if (currentTab === 'timeline') {
+                if (!c.timeline) c.timeline = [];
+                c.timeline.unshift({ time: '', event: '' });
+                editingTimelineIndex = 0;
+                renderTimeline();
+            } else if (currentTab === 'relation') {
+                if (!c.relations) c.relations = [];
+                c.relations.unshift({ targetName: '', relationType: '', content: '' });
+                editingRelationIndex = 0;
+                renderRelations();
+            } else if (currentTab === 'memo') {
+                if (!c.memos) c.memos = [];
+                c.memos.unshift({ title: '', date: '', tags: '', text: '' });
+                editingMemoIndex = 0;
+                renderMemos();
+            }
+        }
+
+        /* ヘッダー三点リーダー */
+        function handleHeaderMenuEdit() {
+            closeAllMenus();
+            const c = characterList[activeCharIndex];
+            tempEditingImage = c.image || "";
+
+            if (currentTab === 'profile') {
+                document.getElementById('editNameTitle').value = c.name || "";
+                document.getElementById('editAge').value = c.age || "";
+                document.getElementById('editGender').value = c.gender || "";
+                document.getElementById('editRace').value = c.race || "";
+                document.getElementById('editOrigin').value = c.origin || "";
+                document.getElementById('editDanger').value = c.danger || "";
+                document.getElementById('editCell').value = c.cell || "";
+                document.getElementById('editHeight').value = c.height ? c.height.replace('cm', '').trim() : "";
+                document.getElementById('editAppearance').value = c.appearance || "";
+                document.getElementById('editPersonality').value = c.personality || "";
+                document.getElementById('editPublicRole').value = c.publicRole || "";
+                document.getElementById('editReason').value = c.reason || "";
+                document.getElementById('editSecret').value = c.secret || "";
+
+                document.getElementById('detailViewContainer').classList.add('is-editing-profile');
+                document.getElementById('detailMenuWrap').style.display = 'none';
+            } else if (currentTab === 'story') {
+                document.getElementById('editStory').value = c.story || "";
+                document.getElementById('detailViewContainer').classList.add('is-editing-story');
+                document.getElementById('detailMenuWrap').style.display = 'none';
+            }
+        }
+
+        function cancelEditing() {
+            exitAllEditing();
+            showDetail(activeCharIndex, true);
+        }
+
+        function exitAllEditing() {
+            document.getElementById('detailViewContainer').classList.remove('is-editing-profile', 'is-editing-story');
+            document.getElementById('detailMenuWrap').style.display = (currentTab === 'profile' || currentTab === 'story') ? 'block' : 'none';
+            closeAllMenus();
+        }
+
+        function saveInlineChanges() {
+            const c = characterList[activeCharIndex];
+
+            if (currentTab === 'profile') {
+                const nameVal = document.getElementById('editNameTitle').value.trim();
+                if (!nameVal) { alert("氏名を入力してください。"); return; }
+                c.name = nameVal;
+                c.age = document.getElementById('editAge').value.trim();
+                c.gender = document.getElementById('editGender').value.trim();
+                c.race = document.getElementById('editRace').value.trim();
+                c.origin = document.getElementById('editOrigin').value.trim();
+                c.danger = document.getElementById('editDanger').value.trim();
+                c.cell = document.getElementById('editCell').value.trim();
+                c.height = document.getElementById('editHeight').value.replace('cm', '').trim();
+                c.appearance = document.getElementById('editAppearance').value.trim();
+                c.personality = document.getElementById('editPersonality').value.trim();
+                c.publicRole = document.getElementById('editPublicRole').value.trim();
+                c.reason = document.getElementById('editReason').value.trim();
+                c.secret = document.getElementById('editSecret').value.trim();
+                c.image = tempEditingImage;
+            } else if (currentTab === 'story') {
+                c.story = document.getElementById('editStory').value.trim();
+            }
+
+            saveCharacters();
+            showDetail(activeCharIndex, true);
+            renderPage();
+        }
+
+        function createNewCharacter() {
+            const newChar = {
+                category: "char",
+                name: "新規被収容者",
+                age: "", gender: "", race: "", origin: "", danger: "ランク C", cell: "", height: "", appearance: "", personality: "", publicRole: "", reason: "", secret: "", image: "",
+                timeline: [], cases: [], relations: [], memos: [], story: ""
+            };
+            characterList.push(newChar);
+            saveCharacters();
+            openCharacterDetail(characterList.length - 1);
+            handleHeaderMenuEdit();
+        }
+
+        function deleteCurrentCharacter() {
+            closeAllMenus();
+            if (confirm(`「${characterList[activeCharIndex].name}」のデータを完全に削除しますか？`)) {
+                characterList.splice(activeCharIndex, 1);
+                saveCharacters();
+                showMainHome();
+            }
+        }
+
+        function toggleJumpMenu() { document.getElementById('jumpMenu').classList.toggle('show'); }
+        function closeJumpMenu() { document.getElementById('jumpMenu').classList.remove('show'); }
+        function toggleDetailMenu() { document.getElementById('detailMenuDropdown').classList.toggle('show'); }
+        function toggleItemMenu(menuId) {
+            const m = document.getElementById(menuId);
+            const isShow = m.classList.contains('show');
+            closeAllMenus();
+            if (!isShow) m.classList.add('show');
+        }
+        function closeAllMenus() {
+            document.querySelectorAll('.menu-dropdown, .site-dropdown').forEach(m => m.classList.remove('show'));
+        }
+
+        window.onclick = function(e) {
+            if (!e.target.matches('.btn-menu-trigger') && !e.target.closest('#jumpMenu')) closeJumpMenu();
+            if (!e.target.matches('.menu-btn') && !e.target.closest('.menu-dropdown')) {
+                document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
+            }
+        };
+
+        function openTextModal(key) {
+            document.getElementById('editKey').value = key;
+            const labels = { synopsis: "あらすじ・世界観設定の編集", facility: "要塞全容・構造設計の編集", guards: "看守隊制服・防衛プロトコルの編集" };
+            document.getElementById('modalEditTitle').textContent = labels[key];
+            document.getElementById('editTextValue').value = portalConfig[key];
+            document.getElementById('textModal').style.display = 'flex';
+        }
+
+        function handleSaveText(e) {
+            e.preventDefault();
+            const key = document.getElementById('editKey').value;
+            portalConfig[key] = document.getElementById('editTextValue').value.trim();
+            saveConfig();
+            closeSiteModal('textModal');
+            renderPage();
+        }
+
+        function openBgModal() {
+            closeJumpMenu();
+            document.getElementById('inputBgUrl').value = portalConfig.bgUrl || '';
+            document.getElementById('bgModal').style.display = 'flex';
+        }
+
+        function handleSaveBg(e) {
+            e.preventDefault();
+            portalConfig.bgUrl = document.getElementById('inputBgUrl').value.trim();
+            saveConfig();
+            closeSiteModal('bgModal');
+            renderPage();
+        }
+
+        function openHierarchyModal() {
+            const f = document.getElementById('hierarchyFields');
+            f.innerHTML = '';
+            portalConfig.hierarchy.forEach((item, idx) => {
+                const group = document.createElement('div');
+                group.className = 'modal-field';
+                group.style.borderBottom = '1px dashed var(--border-color)';
+                group.style.paddingBottom = '10px';
+                group.innerHTML = `
+                    <label>階層 ${idx + 1} 識別タグ & 名称</label>
+                    <div style="display:flex; gap:6px; margin-bottom:6px;">
+                        <input type="text" id="hTier_${idx}" value="${item.tier}" style="width:90px;">
+                        <input type="text" id="hRole_${idx}" value="${item.role}" style="flex:1;">
+                    </div>
+                    <label>立ち位置・詳細説明</label>
+                    <input type="text" id="hDesc_${idx}" value="${item.desc}">
+                `;
+                f.appendChild(group);
+            });
+            document.getElementById('hierarchyModal').style.display = 'flex';
+        }
+
+        function handleSaveHierarchy(e) {
+            e.preventDefault();
+            portalConfig.hierarchy.forEach((item, idx) => {
+                item.tier = document.getElementById(`hTier_${idx}`).value.trim();
+                item.role = document.getElementById(`hRole_${idx}`).value.trim();
+                item.desc = document.getElementById(`hDesc_${idx}`).value.trim();
+            });
+            saveConfig();
+            closeSiteModal('hierarchyModal');
+            renderPage();
+        }
+
+        function closeSiteModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        /* 写真トリミング (3:4) */
+        let rawImage = new Image();
+        const cropBoxW = 240, cropBoxH = 320;
+        let imgPosX = 0, imgPosY = 0, baseScale = 1, userZoom = 1;
+        let isDragging = false, dragStartX = 0, dragStartY = 0;
+
+        function triggerPhotoPick() { document.getElementById('imageFileInput').click(); }
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                rawImage = new Image();
+                rawImage.onload = () => openCropModal();
+                rawImage.src = evt.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openCropModal() {
+            document.getElementById('cropImage').src = rawImage.src;
+            baseScale = Math.max(cropBoxW / rawImage.width, cropBoxH / rawImage.height);
+            userZoom = 1;
+            document.getElementById('cropZoom').value = 1;
+            imgPosX = (cropBoxW - rawImage.width * baseScale) / 2;
+            imgPosY = (cropBoxH - rawImage.height * baseScale) / 2;
+            updateCropTransform();
+            document.getElementById('cropModal').style.display = 'flex';
+        }
+
+        function updateCropTransform() {
+            const cropImgEl = document.getElementById('cropImage');
+            const currentScale = baseScale * userZoom;
+            const currentW = rawImage.width * currentScale;
+            const currentH = rawImage.height * currentScale;
+
+            if (imgPosX > 0) imgPosX = 0;
+            if (imgPosY > 0) imgPosY = 0;
+            if (imgPosX < cropBoxW - currentW) imgPosX = cropBoxW - currentW;
+            if (imgPosY < cropBoxH - currentH) imgPosY = cropBoxH - currentH;
+
+            cropImgEl.style.transform = `translate(${imgPosX}px, ${imgPosY}px) scale(${currentScale})`;
+        }
+
+        function onZoomChange() {
+            userZoom = parseFloat(document.getElementById('cropZoom').value);
+            updateCropTransform();
+        }
+
+        const cropBox = document.getElementById('cropContainer');
+        function startDrag(x, y) { isDragging = true; dragStartX = x - imgPosX; dragStartY = y - imgPosY; }
+        function moveDrag(x, y) { if (!isDragging) return; imgPosX = x - dragStartX; imgPosY = y - dragStartY; updateCropTransform(); }
+        function endDrag() { isDragging = false; }
+
+        cropBox.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+        window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+        window.addEventListener('mouseup', endDrag);
+
+        cropBox.addEventListener('touchstart', e => { if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+        window.addEventListener('touchmove', e => { if (isDragging && e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+        window.addEventListener('touchend', endDrag);
+
+        function closeCropModal() {
+            document.getElementById('cropModal').style.display = 'none';
+            document.getElementById('imageFileInput').value = '';
+        }
+
+        function executeCrop() {
+            const targetW = 300, targetH = 400;
+            const canvas = document.createElement('canvas');
+            canvas.width = targetW; canvas.height = targetH;
+            const ctx = canvas.getContext('2d');
+            const currentScale = baseScale * userZoom;
+            const ratio = targetW / cropBoxW;
+
+            ctx.drawImage(
+                rawImage,
+                imgPosX * ratio, imgPosY * ratio,
+                rawImage.width * currentScale * ratio, rawImage.height * currentScale * ratio
+            );
+
+            tempEditingImage = canvas.toDataURL('image/jpeg', 0.85);
+            document.getElementById('detailThumb').innerHTML = `<img src="${tempEditingImage}" alt="thumb">`;
+            closeCropModal();
+        }
+
+        renderPage();
+    </script>
+</body>
+</html>
